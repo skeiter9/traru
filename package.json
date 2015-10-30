@@ -1,0 +1,33 @@
+{
+  "name": "traru",
+  "version": "0.1.0",
+  "main": "app/server/server.js",
+  "scripts": {
+    "pretest": "node_modules/.bin/jscs .",
+    "postinstall": "cd node_modules/webpack-analyse && npm install -d grunt-cli && cd ../..",
+    "analyse": "cd node_modules/webpack-analyse && node_modules/.bin/grunt dev"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "description": "traru, app for tracking trucks and their routes",
+  "devDependencies": {
+    "babel-core": "^5.8.30",
+    "babel-loader": "^5.3.2",
+    "css-loader": "^0.21.0",
+    "cssnext": "^1.8.4",
+    "file-loader": "^0.8.4",
+    "jade": "^1.11.0",
+    "jade-loader": "^0.7.1",
+    "jscs": "^2.4.0",
+    "jscs-loader": "^0.2.0",
+    "postcss-loader": "^0.7.0",
+    "style-loader": "^0.13.0",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.12.2",
+    "webpack-analyse": "webpack/analyse",
+    "webpack-dev-server": "^1.12.1",
+    "webpack-livereload-plugin": "^0.4.0"
+  }
+}

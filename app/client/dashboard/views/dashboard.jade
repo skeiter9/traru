@@ -1,0 +1,25 @@
+//-| {{layout.ui | json}}
+empresas-card(
+  modules = 'dashboard.modules'
+  class='mmm'
+  flex-sm='100' flex-md='50' flex-lg='33' flex-gt-lg='25')
+
+role(
+  ng-if='dashboard.role'
+  module='dashboard.role'
+  modules = 'dashboard.modules'
+  flex-sm='100' flex-md='50' flex-lg='33' flex-gt-lg='25')
+
+venta(
+  ng-if='dashboard.venta'
+  module='dashboard.venta'
+  modules = 'dashboard.modules'
+  flex-sm='100' flex-md='50' flex-lg='33' flex-gt-lg='25')
+
+//-
+  module-card(
+    ng-repeat = 'module in dashboard.modules'
+    ng-if = 'module.name != "empresa" && module.name != "trabajador"'
+    module = 'module'
+    modules = 'dashboard.modules'
+    class='mmm')
