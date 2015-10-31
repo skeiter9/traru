@@ -21,9 +21,5 @@
     "webpack-dev-middleware": "^1.2.0",
     "webpack-dev-server": "^1.12.1"
   },
-  "repository": {
-    "type": "",
-    "url": ""
-  },
   "description": "traru"
 }

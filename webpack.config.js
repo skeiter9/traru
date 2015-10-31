@@ -4,8 +4,10 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 const srcPath = path.join(__dirname, 'app', 'client');
 
-const cssnext = require('cssnext');
 const postcssImport = require('postcss-import');
+const postcssUrl = require('postcss-url');
+const autoprefixer = require('autoprefixer');
+const customProperties = require('postcss-custom-properties');
 
 const config = {
   addVendor(name, path_) {
@@ -17,10 +19,7 @@ const config = {
   context: srcPath,
   entry: {
     app: './app.js',
-    vendor: [
-      'angular-min',
-      'angular-ui-router-min'
-    ]
+    vendor: './vendor.js'
   },
   output: {
     path: path.join(srcPath, 'build'),
@@ -53,7 +52,6 @@ const config = {
   plugins: [
     new LiveReloadPlugin({appendScriptTag: true}),
     new webpack.optimize.OccurenceOrderPlugin(true),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'vendor.bundle.js',
@@ -66,10 +64,12 @@ const config = {
         postcssImport({
           addDependencyTo: webpack_
         }),
-        cssnext()
+        postcssUrl(),
+        customProperties(),
+        autoprefixer()
       ],
     };
-  },
+  }
 };
 
 config.addVendor('angular-min',

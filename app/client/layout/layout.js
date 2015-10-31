@@ -20,8 +20,6 @@ import capitalizeFilterAM from '../utils/capitalize.filter.js';
 
 require('./styles/layout.css');
 
-//require('../node_modules/angular-material/angular-material.css');
-
 export default angular
   .module('layout', [
 
