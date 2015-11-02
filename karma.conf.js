@@ -22,31 +22,27 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-
-      //'node_modules/angular/angular.js',
       'vendor.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'app.js',
-      'app.module_test.js'
+      '**/*_test.js'
     ],
 
     // list of files to exclude
-    exclude: [
-    ],
+    exclude: [],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'vendor.js': ['webpack'],
-      'app.js': ['webpack']
-
-      //'*_test.js': ['webpack']
+      'app.js': ['webpack'],
+      '**/*_test.js': ['coverage']
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
     // web server port
     port: 9876,
@@ -105,9 +101,16 @@ module.exports = function(config) {
     },
     plugins: [
       'karma-webpack',
+      'karma-coverage',
       'karma-mocha',
       'karma-chai',
       'karma-chrome-launcher'
-    ]
+    ],
+
+    // optionally, configure the reporter
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage-reporter/'
+    }
   });
 };
