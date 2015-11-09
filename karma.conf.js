@@ -1,5 +1,3 @@
-// Karma configuration
-// Generated on Fri Oct 30 2015 11:33:21 GMT-0500 (PET)
 const path = require('path');
 const srcPath = path.join(__dirname, 'app', 'client');
 

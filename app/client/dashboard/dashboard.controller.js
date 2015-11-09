@@ -1,5 +1,10 @@
-export default [function() {
-  //
+export default ['$state', function($s) {
+  //console.log($s);
+  this.trucks = [
+    {photo: 'static/images/photo.jpg', licensePlate: 'QWQQW8', model: 'erer'},
+    {photo: 'https://material.angularjs.org/latest/img/list/60.jpeg', licensePlate: 'MMER78', model: 'viod'},
+    {photo: 'https://material.angularjs.org/latest/img/list/60.jpeg', licensePlate: 'POI980', model: 'loli'},
+  ];
 }];
 /*
 export default ['layoutFactory', 'yeFindBy', dashboardControllerFn];

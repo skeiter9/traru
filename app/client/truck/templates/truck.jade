@@ -1,0 +1,11 @@
+md-subheader(ng-if='!!!truck.item' class='md-warn') there's no truck(data incomplete)
+
+md-subheader(ng-if='!!truck.item && truck.item.length === 0' class='md-warn') there's no truck selected
+
+section(ng-if='!!truck.item')
+  ye-cover(picture='{{truck.item.photo}}')
+  md-subheader {{'MODEL.TRUCK.LICENSE_PLATE' | translate}}
+  p {{truck.item.licensePlate}}
+
+  md-subheader {{'MODEL.TRUCK.MODEL' | translate}}
+  p {{truck.item.model}}

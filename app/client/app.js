@@ -4,8 +4,6 @@ import {app} from './app.module.js';
 
 (function(w) {
 
-  require('./app.css');
-
   /**
    * main function
    */

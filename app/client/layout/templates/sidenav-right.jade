@@ -1,0 +1,27 @@
+md-toolbar(md-theme = '{{layout.ui.sidenavRightTheme}}' md-theme-watch='')
+
+  div(class = 'md-toolbar-tools')
+
+    md-button(
+      ng-click = 'layout.ui.sidenavRightToolbarIconLeftAction($event)'
+      md-theme = '{{layout.ui.sidenavRightTheme}}'
+      md-theme-watch = ''
+      aria-label = 'close sidenav right'
+      class = 'md-icon-button')
+      md-icon(mdx-icon='{{layout.ui.sidenavRightToolbarIconLeft}}'
+        md-font-icon='mdi')
+    
+    span {{layout.ui.sidenavRightToolbarTitle | uppercase | translate | uppercase}}
+
+    span(flex='')
+
+    md-button(
+      ng-repeat = 'icon in layout.ui.sidenav.right.toolbar.icons.right'
+      ng-click = 'icon.click($event, icon, layout.ui.sidenav.right.toolbar.icons.right)'
+      aria-label = 'settings'
+      class = 'md-icon-button')
+      md-icon(md-font-icon='mdi mdi-{{icon.icon}}')
+
+md-content(
+  mdx-sidenav-content = ''
+  content = 'layout.ui.sidenavRightContent')

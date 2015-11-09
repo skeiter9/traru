@@ -2,17 +2,17 @@ div(class='md-toolbar-tools md-whiteframe-z1')
 
   md-button(
   	aria-label = 'settings'
-  	ng-click = 'layout.sidenavAction("left", true)'
+  	ng-click = 'layout.ui.toggleSidenav("left", true)'
     class = 'md-icon-button'
   )
     md-icon(md-font-icon='mdi mdi-menu')
 
-  span {{layout.ui.appbar.title | uppercase | translate | uppercase}}
-  
+  span {{layout.ui.title | uppercase}}
+
   span(flex = true)
 
   md-button(
-    ng-click = 'layout.refresh()'
+    ng-click = 'layout.ui.refresh()'
     aria-label = 'refresh page'
     class = 'md-icon-button'
   )

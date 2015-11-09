@@ -1,25 +1,22 @@
 export function rules(urlRouterProvider) {
-  urlRouterProvider.when('/panel-de-control', '/');
-  urlRouterProvider.when('/panel', '/');
-  urlRouterProvider.when('/home', '/');
+  urlRouterProvider.when('/acceso', '/');
 }
 
 export function routes(stateProvider) {
 
   stateProvider
 
-    .state('dashboard', {
+    .state('login', {
       parent: 'layout',
-      url: '/',
+      url: '/login',
       resolve: {
         //boot: ['layoutFactory', (lF) => lF.stateLoad('dashboard')]
       },
       views: {
         content: {
-          template: require('./templates/dashboard.jade')(),
-          controllerAs: 'dashboard',
-          controller: 'DashboardController'
+          template: 'login'
 
+          //controllerAs: 'dashboard',
           //templateProvider: ['layoutFactory', (lF) => lF.ui.viewTemplate],
           //controllerProvider: ['layoutFactory', (lF) => lF.ui.controllerName]
         }

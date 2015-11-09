@@ -1,4 +1,4 @@
-md-toolbar(ng-init = 'layout = layoutVm.vm')
+md-toolbar
 	include ./appbar.jade
 
 md-sidenav(
@@ -6,37 +6,13 @@ md-sidenav(
 	md-component-id = 'left' class = 'md-whiteframe-z2 md-sidenav-left')
 	include ./sidenav-left.jade
 
-md-content(ui-view = 'content' class = 'fx-speed-750 fx-zoom-down' ng-class='layout.ui.content.classContainer')
+md-content(
+	ui-view='content'
+	class='fx-speed-750 fx-zoom-down'
+	ng-class='layout.ui.content.classContainer')
 
 md-sidenav(
 	md-component-id = 'right'
 	class = 'md-sidenav-right'
 	ng-class = 'layout.ui.sidenav.right.type')
-
-	md-toolbar(md-theme = '{{layout.ui.sidenav.right.theme}}' md-theme-watch='')
-
-		div(class = 'md-toolbar-tools')
-	
-			md-button(
-				ng-click = 'layout.ui.sidenav.right.toolbar.icons.left.click()'
-				md-theme = '{{layout.ui.sidenav.right.theme}}'
-				md-theme-watch = ''
-				aria-label = 'close sidenav right'
-				class = 'md-icon-button')
-				md-icon(mdx-icon='{{layout.ui.sidenav.right.toolbar.icons.left.icon}}'
-					md-font-icon='mdi')
-			
-			span {{layout.ui.sidenav.right.toolbar.title | uppercase | translate | uppercase}}
-			
-			span(flex='')
-
-			md-button(
-				ng-repeat = 'icon in layout.ui.sidenav.right.toolbar.icons.right'
-				ng-click = 'icon.click($event, icon, layout.ui.sidenav.right.toolbar.icons.right)'
-				aria-label = 'settings'
-				class = 'md-icon-button')
-				md-icon(md-font-icon='mdi mdi-{{icon.icon}}')
-
-	md-content(
-		mdx-sidenav-content = ''
-		content = 'layout.ui.sidenav.right.content')
+	include ./sidenav-right.jade

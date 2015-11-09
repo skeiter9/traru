@@ -1,2 +1,55 @@
 @import 'angular-material/angular-material.css';
 @import 'mdi/css/materialdesignicons.css';
+
+:root {
+  --backgroundColor: #fff;
+  --primaryColor: #06c;
+  --accentColor: #006;
+}
+
+app {
+  display: flex;
+  background-color: var(--backgroundColor);
+}
+
+md-icon.mdi {
+  font-size: 24px;
+}
+
+/*ANIMATIONS*/
+
+/*-fade*/
+.ye-fade-add {
+  /* remember to place a 0s transition here
+     to ensure that the styles are applied instantly
+     even if the element already has a transition style */
+  transition: 0s ease-out all;
+
+  /* starting CSS styles */
+  opacity:1;
+}
+.ye-fade-add.ye-fade-add-active {
+  /* this will be the length of the animation */
+  transition: 0.75s linear all;
+  opacity: 0;
+}
+.ye-fade {
+  /*display: none !important;*/
+  pointer-events: none;
+  opacity: 0 !important;
+}
+
+/*-appear*/
+.ye-appear-add {
+  transition: 0s ease-in all;
+  opacity: 0;
+  z-index: 10;
+}
+.ye-appear-add.ye-appear-add-active {
+  transition: 0.35s ease-in all 0.4s;
+  opacity: 1;
+  z-index: 10;
+}
+.ye-appear {
+  opacity: 1 !important;
+}

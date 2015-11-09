@@ -1,0 +1,34 @@
+md-card
+
+  md-toolbar: div(class='md-toolbar-tools')
+    span trucks
+    span(flex)
+    md-button(class='md-icon-button' aria-label='new truck')
+      md-icon(md-font-icon='mdi mdi-plus' ng-click='trucks.addItem($event)')
+    
+  md-subheader(ng-if='!!!trucks.items' class='md-warn') there's no trucks(data incomplete)
+
+  md-subheader(ng-if='!!trucks.items && trucks.items.length === 0' class='md-warn') there's no trucks
+
+  md-list(ng-if='!!trucks.items && trucks.items.length > 0' class='md-2-line')
+    md-list-item(ng-repeat='truck in trucks.items' ng-click='trucks.showItem($event, truck)')
+      img(ng-src="{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
+      //-div(class="md-list-item-text")
+      //-  h3 {{truck.model}}
+      //-  h4 {{truck.licensePlate}}
+      p {{truck.model}}
+      //-md-icon(md-font-icon='mdi mdi-map-marker' ng-click='trucks.showUbication($event)' aria-label="Options" class="md-secondary")
+      md-menu(md-position-mode="target-right target" class="md-secondary")
+        md-button(aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)")
+          md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
+        md-menu-content(width="3")
+          md-menu-item
+            md-button(ng-click="trucks.ubicationItem($index, truck)")
+              div(layout="row")
+                p(flex) {{'SHOW_UBICATION' | translate | capitalize}}
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
+          md-menu-item
+            md-button(ng-click="trucks.editItem($index, truck)")
+              div(layout="row")
+                p(flex) {{'EDIT' | translate | capitalize}}
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")

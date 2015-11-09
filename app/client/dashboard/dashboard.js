@@ -13,4 +13,4 @@ module.exports = angular
     //require('../components/module-card.directive').name,
     //require('../components/module-toolbar.directive').name
   ])
-  .controller('dashboardController', dashboardControllerFn);
+  .controller('DashboardController', dashboardControllerFn);

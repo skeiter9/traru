@@ -5,6 +5,7 @@
     "node_modules/**",
     "app/node_modules/**",
     "app/client/node_modules/**",
-    "app/client/build/**"
+    "app/client/build/**",
+    "app/client/coverage-reporter/**"
   ]
 }

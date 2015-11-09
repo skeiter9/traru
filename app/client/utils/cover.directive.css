@@ -1,0 +1,6 @@
+:local .cover {
+  background-position: center;
+  background-size: cover;
+  display: block;
+  width: 100%;
+}

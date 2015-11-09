@@ -35,7 +35,11 @@ const config = {
     ],
     loaders: [
       {test: /\.js$/, loaders: ['babel'], include: [srcPath]},
-      {test: /\.css$/, loaders: ['style', 'css', 'postcss'], include: [srcPath]},
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css?localIdentName=[path][name]---[local]---[hash:base64:5]', 'postcss'],
+        include: [srcPath]
+      },
       {test: /\.jade$/, loaders: ['jade'], include: [srcPath]},
       {test: /\.(eot|ttf|svg|woff|woff2)$/, loaders: ['url?limit=40000&name=[name].[ext]']}
     ],
