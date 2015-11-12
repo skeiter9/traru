@@ -2,15 +2,13 @@ import * as dashboardRoutes from '../dashboard/dashboard.routes.js';
 import * as loginRoutes from '../login/login.routes.js';
 import * as layoutRoutes from '../layout/layout.routes.js';
 
-import layoutAM from '../layout/layout.js';
 import dashboardAM from '../dashboard/dashboard.js';
-import truckAM from '../truck/truck.js';
+import loginAM from '../login/login.js';
 
-export const routes = angular.module('routes', [
+export default angular.module('routes', [
     'ui.router',
-    layoutAM.name,
     dashboardAM.name,
-    truckAM.name
+    loginAM.name
   ])
   .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   ($sP, $uRP, $lP) => {

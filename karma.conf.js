@@ -16,14 +16,15 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    //frameworks: ['mocha', 'chai'],
+    frameworks: ['browserify', 'tap'],
 
     // list of files / patterns to load in the browser
     files: [
       'vendor.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'app.js',
-      '**/*_test.js'
+      'app-test.js',
+      '**/*_testo.js'
     ],
 
     // list of files to exclude
@@ -33,14 +34,14 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'vendor.js': ['webpack'],
-      'app.js': ['webpack'],
-      '**/*_test.js': ['coverage']
+      'app-test.js': ['webpack'],
+      '**/*_testo.js': ['browserify']//'coverage'
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'coverage'],
+    reporters: ['tape'],//'coverage'
 
     // web server port
     port: 9876,
@@ -75,7 +76,7 @@ module.exports = function(config) {
       },
       module: {
         loaders: [
-          {test: /\.js$/, loaders: ['babel'], include: [srcPath]},
+          {test: /\.js$/, loaders: ['babel'], include: [srcPath], exclude: [path.resolve(srcPath, 'api/api-lb.js')]},
           {test: /\.css$/, loaders: ['style', 'css', 'postcss'], include: [srcPath]},
           {test: /\.jade$/, loaders: ['jade'], include: [srcPath]},
           {test: /\.(eot|ttf|svg|woff|woff2)$/, loaders: ['url?limit=40000&name=[name].[ext]']}
@@ -98,6 +99,9 @@ module.exports = function(config) {
       noInfo: true //please don't spam the console when running in karma!
     },
     plugins: [
+      'karma-browserify',
+      'karma-tap',
+      'karma-tape-reporter',
       'karma-webpack',
       'karma-coverage',
       'karma-mocha',

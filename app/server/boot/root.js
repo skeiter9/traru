@@ -8,10 +8,16 @@ module.exports = function(server) {
   server.set('view engine', 'jade');
   server.set('views', path.resolve(__dirname, '../views'));
 
+  /*
   server.use((req, res, next) => {
     res.set('X-Powered-By', 'Traru');
     next();
   });
+  server.middleware('routes:before', (req, res, next) => {
+    res.set('X-Powered-By', 'Traru');
+    next();
+  });
+  */
 
   const router = server.loopback.Router();
 

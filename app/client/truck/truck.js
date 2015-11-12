@@ -1,7 +1,7 @@
 import mdxIconAM from '../utils/icon.directive';
 import sidenavAM from '../utils/sidenav.directive';
 import coverAM from '../utils/cover.directive';
-import googleMapAM from '../utils/google-map/google-map';
+import googleMapAM from '../utils/google-map';
 
 export default angular.module('truck', [
   mdxIconAM.name,
@@ -9,24 +9,24 @@ export default angular.module('truck', [
   coverAM.name,
   googleMapAM.name
 ])
+
   .config(['gmapProvider', (gmP) => {
-    //gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
+    gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
   }])
-  .directive('truckNew', ['layout', '$log', function(l, $l) {
+
+  .directive('truckNew', ['layout', '$log', (l, $l) => {
     return {
       restrict: 'E',
       scope: {},
-      bindToController: true,
-      controller: angular.noop,
-      controllerAs: 'truck',
       template: require('./templates/truck-new.jade')(),
-      link(s, elem, attrs, truck) {
-
+      controllerAs: 'tNew',
+      link(e, elem, attrs, tNew) {
+        //
       }
-
     };
   }])
-  .directive('truck', ['layout', '$log', function(l, $l) {
+
+  .directive('truck', ['layout', '$log', (l, $l) => {
     return {
       restrict: 'E',
       scope: {
@@ -59,8 +59,20 @@ export default angular.module('truck', [
       template: require('./templates/trucks.jade')(),
       link(s, elem, attrs, trucks) {
 
-        gm.validCoordinates({});
-        console.log(gm);
+        trucks.addItem = (e) => {
+          l.sidenavRightToolbarTitle = 'NEW_TRUCK';
+          l.sidenavRightToolbarIconLeft = 'close';
+          l.sidenavRightToolbarIconLeftAction = (e) => {
+            l.closeSidenav('right');
+          };
+
+          l.sidenavRightContent = {
+            html: `<truck-new />`
+          };
+
+          l.openSidenav('right');
+        };
+
         trucks.showItem = (e, item) => {
           const scope = s.$new();
           scope.item = item;
@@ -80,21 +92,16 @@ export default angular.module('truck', [
 
         trucks.editItem = (e, item) => {};
 
-        trucks.ubicationItem = (e, item) => {};
-
-        trucks.addItem = (e) => {
-          l.sidenavRightToolbarTitle = 'NEW_TRUCK';
-          l.sidenavRightToolbarIconLeft = 'close';
-          l.sidenavRightToolbarIconLeftAction = (e) => {
-            l.closeSidenav('right');
-          };
-
-          l.sidenavRightContent = {
-            html: `<truck-new />`
-          };
-
-          l.openSidenav('right');
+        trucks.ubicationItem = (e, item) => {
+          gm.launchMap({
+            event: e,
+            geoposition: item.geoposition,
+            title: item.licensePlate,
+            showMarker: true,
+            inDialog: true
+          });
         };
+
       }
 
     };

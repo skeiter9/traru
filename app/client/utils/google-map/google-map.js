@@ -1,6 +1,5 @@
-'use strict';
-
 import vergeAM from '../verge.factory';
+import styles from './google-map.css';
 
 export default angular
   .module('gmap', [
@@ -9,6 +8,37 @@ export default angular
     vergeAM.name,
     'ngMaterial'
   ])
+  .factory('utils', ['$document', ($d) => {
+    return {
+      isIntoFullScreen() {
+        return !(
+          !$d[0].fullscreenElement &&
+          !$d[0].mozFullScreenElement &&
+          !$d[0].webkitFullscreenElement &&
+          !$d[0].msFullscreenElement
+        );
+      },
+
+      toggleFullScreen(elem = $d[0].documentElement) {
+
+        const doc = $d[0];
+
+        const requestFullScreen = elem.requestFullscreen ||
+          elem.mozRequestFullScreen || elem.webkitRequestFullScreen ||
+          elem.msRequestFullscreen;
+
+        const cancelFullScreen = doc.exitFullscreen ||
+          doc.mozCancelFullScreen || doc.webkitExitFullscreen ||
+          doc.msExitFullscreen;
+
+        if (!doc.fullscreenElement && !doc.mozFullScreenElement &&
+          !doc.webkitFullscreenElement && !doc.msFullscreenElement
+        ) requestFullScreen.call(elem);
+        else cancelFullScreen.call(doc);
+
+      }
+    };
+  }])
   .config(['$provide', ($p) => {
 
     $p.provider('gmap', function() {
@@ -25,11 +55,53 @@ export default angular
         defaultCoordinates = validCoordinates(v) ? v : defaultCoordinates;
       };
 
-      this.$get = ['$log', function($l) {
+      this.$get = ['$log', '$mdDialog', '$rootScope', function($l, $mdD, $rS) {
 
-        const gmap = {
+        return {
           defaultCoordinates: defaultCoordinates,
-          validCoordinates(coordinates, defaultPossible) {
+          launchMap({
+            event: e,
+            geoposition: geoposition,
+            title: title,
+            theme: theme = 'default',
+            standalone: standalone = false,
+            fromInput: fromInput = false,
+            showMarker: showMarker = true,
+            icon: icon = false,
+            inDialog: inDialog = false
+          }) {
+            return $mdD.show({
+              targetEvent: e,
+
+              template: require('./google-map-dialog.jade')(),
+              controller: ['utils', '$document', function(u, $d) {
+                this.isIntoFullScreen = u.isIntoFullScreen();
+                this.close = () => $mdD.cancel();
+                this.fullscreen = () => {
+                  u.toggleFullScreen($d[0].querySelector('md-dialog'));
+                  this.isIntoFullScreen = u.isIntoFullScreen();
+                  $rS.$broadcast('gmapIsIntoFullScreen', u.isIntoFullScreen());
+                };
+              }],
+
+              controllerAs: 'gmapDialog',
+              bindToController: true,
+              clickOutsideToClose: true,
+              locals: {
+                geoposition: geoposition,
+                theme: theme,
+                standalone: standalone,
+                title: title,
+                fromInput: fromInput,
+                showMarker: showMarker,
+                icon: icon,
+                inDialog: inDialog
+              }
+            });
+
+          },
+
+          validCoordinates({coordinates, defaultPossible = false}) {
             return validCoordinates(coordinates) ? coordinates :
                 defaultPossible ?
                   this.defaultCoordinates : (() => {
@@ -38,49 +110,73 @@ export default angular
                   })();
           }
         };
-        return gmap;
-        /*
-        const Gmap = function() {
-          this.defaultCoordinates = defaultCoordinates;
-        };
-
-        Gmap.prototype.validCoordinates = (coordinates, defaultPossible) => {
-          return validCoordinates(coordinates) ? coordinates :
-              defaultPossible ?
-                this.defaultCoordinates : (() => {
-                  $l.warn('the coordinates entered are incorrect');
-                  return false;
-                })();
-        };
-
-        return new Gmap();
-        */
       }];
     });
 
   }])
   .value('google', window.google)
-  .factory('gmUtils', ['$mdDialog', ($mdD) => {
+  .directive('gmap', ['google', 'gmap', 'verge', (g, gm, v) => {
     return {
+      restrict: 'E',
+      scope: {
+        geoposition: '=',
+        showMarker: '=',
+        inDialog: '='
+      },
+      bindToController: true,
+      controller: angular.noop,
+      controllerAs: 'gmap',
+      link(s, elem, attrs, gmap) {
+        if (!!!gm.validCoordinates({coordinates: gmap.geoposition})) return;
 
-      launchMap(e, ngModelGeo, theme = 'default', standalone = false, title,
-        fromInput = false
-      ) {
-        return $mdD.show({
-          targetEvent: e,
+        const getHGmap = (xElem, xAttrs, inDialog, inFullScreen = false) => {
+          return inFullScreen ?
+            v.viewportH() - (v.viewportH() > 600 ? 64 : 56) : inDialog ?
+            v.viewportH() * 0.45 : xElem[0].offsetWidth * (9 / 16);
+        };
 
-          //template: require('./templates/dialog-map.jade')(),
-          controller: 'gmapGeolocationController',
-          controllerAs: 'gmap',
-          bindToController: true,
-          clickOutsideToClose: true,
-          locals: {
-            modelValue: ngModelGeo,
-            theme: theme,
-            standalone: standalone,
-            title: title,
-            fromInput: fromInput
-          }
+        elem.addClass(styles.gmap);
+        elem.css({height: `${getHGmap(elem, attrs, gmap.inDialog)}px`});
+
+        const map = new google.maps.Map(
+          elem[0], {
+          center: gmap.geoposition,
+          zoom: parseInt(attrs.gmZoom) || 14,
+          draggable: angular.isDefined(attrs.gmNoDraggable) ? false : true,
+          scrollwheel: angular.isDefined(attrs.gmNoZoomScrollwheel) ?
+            false : true,
+          zoomControl: angular.isDefined(attrs.gmNoZoomControl) ?
+            false : true,
+          disableDefaultUI: angular
+            .isDefined(attrs.gmDisableDefaultUI) || false
+        });
+
+        let marker = new google.maps.Marker({
+          position: gmap.geoposition,
+          opacity: gmap.showMarker ? 1 : 0,
+          animation: google.maps.Animation.DROP,
+          map: map,
+          draggable: angular.isDefined(attrs.fromInput) ? true : false
+
+          //place: google.maps.Place,
+          //[angular.isDefined(attrs.icon) ? 'icon' : 'nn']: pIcon(attrs.icon),
+        });
+
+        const loadMap = google.maps.event.addListenerOnce(map, 'idle', () => {
+          //console.log('idle map');
+        });
+
+        s.$on('gmapIsIntoFullScreen', (e, isIntoFullScreen) => {
+          elem.css({height: `${getHGmap(elem, attrs, gmap.inDialog, isIntoFullScreen)}px`});
+          setTimeout(() => {
+            elem.css({height: `${getHGmap(elem, attrs, gmap.inDialog, isIntoFullScreen)}px`});
+            s.$apply(() => map.setCenter(gmap.geoposition));
+          }, 500);
+
+        });
+
+        s.$on('$destroy', () => {
+          google.maps.event.removeListener(loadMap);
         });
 
       }
@@ -96,8 +192,72 @@ export default angular
   '$animate', '$mdToast', '$document', '$q', '$timeout', gmapDirectiveFn])
 .directive('gmapGeolocation', ['yePlatform', '$mdDialog', 'google',
   '$timeout', gmapGeolocationDirectiveFn]);
-*/
-/*
+
+function gmapGeolocationControllerFn(g, $mdD, $mdT, $w, $t, $rS, $l, $d) {
+
+  let gmap = this;
+
+  let toggleFullScreen = (elem) => {
+
+    let doc = window.document;
+    let docEl = elem || doc.documentElement;
+
+    let requestFullScreen = docEl.requestFullscreen ||
+      docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen ||
+      docEl.msRequestFullscreen;
+
+    let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+    if (!doc.fullscreenElement && !doc.mozFullScreenElement &&
+      !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+      requestFullScreen.call(docEl);
+    }else cancelFullScreen.call(doc);
+
+  };
+
+  let isIntoFullScreen = () => !(!$d[0].fullscreenElement &&
+    !$d[0].mozFullScreenElement && !$d[0].webkitFullscreenElement &&
+    !$d[0].msFullscreenElement);
+
+  gmap.iconFullScreen = 'fullscreen' + (isIntoFullScreen() ? '-exit' : '');
+
+  gmap.theme = angular.isDefined(gmap.theme) && gmap.theme !== '' ?
+    gmap.theme : 'default';
+
+  gmap.geolocate = () => {
+
+    if (
+      angular.isUndefined($w.navigator.geolocation)
+    ) return errGeolocation('SENTENCES.NO_SUPPORT_GEOLOCATION');
+
+    $w.navigator.geolocation.getCurrentPosition((position) => {
+      $rS.$broadcast('geolocation', {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+    }, (err) => {
+      $l.error(err);
+      errGeolocation('SENTENCES.CANNOT_GEOLOCATED');
+    });
+
+  };
+
+  gmap.save = (v) => $mdD.hide(v);
+
+  gmap.cancel = () => $mdD.cancel();
+  gmap.close = () => $mdD.cancel();
+  gmap.fullscreen = () => {
+    toggleFullScreen($d[0].querySelector('md-dialog'));
+    gmap.iconFullScreen = 'fullscreen' + (isIntoFullScreen() ? '-exit' : '');
+  };
+
+  function errGeolocation(i18n) {
+    return $t(i18n).then((t) => $mdT.showSimple(t));
+  }
+
+}
+
 function gmapUtilsControllerFn($mdDialog, gmapUF) {
 
   let gmUtils = this;
@@ -114,8 +274,7 @@ function gmapUtilsControllerFn($mdDialog, gmapUF) {
 
 }
 
-function gmapDirectiveFn(google, yeVerge, $w, $$rAF, $log, $animate,
-  $mdT, $d, $q, $t) {
+function gmapDirectiveFn(google, yeVerge, $w, $$rAF, $log, $animate, $mdT, $d, $q, $t) {
 
   return {
     scope: {
@@ -205,8 +364,6 @@ function gmapDirectiveFn(google, yeVerge, $w, $$rAF, $log, $animate,
             google.maps.event.trigger(xMap, 'resize');
           }
         };
-
-        //--
 
         let centerCoordinates = formateCoordinate(s.ngModel, attrs);
 
@@ -363,71 +520,6 @@ function gmapDirectiveFn(google, yeVerge, $w, $$rAF, $log, $animate,
 
     }
   };
-
-}
-
-function gmapGeolocationControllerFn(g, $mdD, $mdT, $w, $t, $rS, $l, $d) {
-
-  let gmap = this;
-
-  let toggleFullScreen = (elem) => {
-
-    let doc = window.document;
-    let docEl = elem || doc.documentElement;
-
-    let requestFullScreen = docEl.requestFullscreen ||
-      docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen ||
-      docEl.msRequestFullscreen;
-
-    let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen ||
-      doc.webkitExitFullscreen || doc.msExitFullscreen;
-
-    if (!doc.fullscreenElement && !doc.mozFullScreenElement &&
-      !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-      requestFullScreen.call(docEl);
-    }else cancelFullScreen.call(doc);
-
-  };
-
-  let isIntoFullScreen = () => !(!$d[0].fullscreenElement &&
-    !$d[0].mozFullScreenElement && !$d[0].webkitFullscreenElement &&
-    !$d[0].msFullscreenElement);
-
-  gmap.iconFullScreen = 'fullscreen' + (isIntoFullScreen() ? '-exit' : '');
-
-  gmap.theme = angular.isDefined(gmap.theme) && gmap.theme !== '' ?
-    gmap.theme : 'default';
-
-  gmap.geolocate = () => {
-
-    if (
-      angular.isUndefined($w.navigator.geolocation)
-    ) return errGeolocation('SENTENCES.NO_SUPPORT_GEOLOCATION');
-
-    $w.navigator.geolocation.getCurrentPosition((position) => {
-      $rS.$broadcast('geolocation', {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      });
-    }, (err) => {
-      $l.error(err);
-      errGeolocation('SENTENCES.CANNOT_GEOLOCATED');
-    });
-
-  };
-
-  gmap.save = (v) => $mdD.hide(v);
-
-  gmap.cancel = () => $mdD.cancel();
-  gmap.close = () => $mdD.cancel();
-  gmap.fullscreen = () => {
-    toggleFullScreen($d[0].querySelector('md-dialog'));
-    gmap.iconFullScreen = 'fullscreen' + (isIntoFullScreen() ? '-exit' : '');
-  };
-
-  function errGeolocation(i18n) {
-    return $t(i18n).then((t) => $mdT.showSimple(t));
-  }
 
 }
 

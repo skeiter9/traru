@@ -5,7 +5,8 @@
     "node_modules/**",
     "app/node_modules/**",
     "app/client/node_modules/**",
+    "app/client/api/api-lb.js",
     "app/client/build/**",
-    "app/client/coverage-reporter/**"
+    "app/client/coverage-reporter/**",
   ]
 }

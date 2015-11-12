@@ -1,0 +1,50 @@
+md-dialog(aria-label='map' md-theme='{{gmapDialog.theme}}' ng-class='{isIntoFullScreen: gmapDialog.isIntoFullScreen}' class='gmapDialog')
+
+	md-toolbar
+		div(class= 'md-toolbar-tools')
+			md-button(
+				ng-click = 'gmapDialog.close()'
+				aria-label = 'close gmapDialog'
+				class = 'md-icon-button')
+				md-icon(md-font-icon='mdi mdi-close')
+			span {{gmapDialog.title}}
+			span(flex)
+			md-button(
+				ng-click = 'gmapDialog.fullscreen()'
+				aria-label = 'map in fullscreen'
+				class = 'md-icon-button')
+				md-icon(md-font-icon='mdi' mdx-icon='{{"fullscreen" + (gmapDialog.isIntoFullScreen ? "-exit" : "") }}')
+
+	section(ng-if='gmapDialog.geoposition' class='md-content')
+		gmap(geoposition='gmapDialog.geoposition' show-marker='gmapDialog.showMarker' in-dialog='gmapDialog.inDialog')
+
+	section(ng-if='gmapDialog.fromInput' class='md-actions')
+
+//-
+	md-dialog(aria-label='map' md-theme='{{gmap.theme}}' class='dialog--map')
+
+		md-toolbar
+			div(class= 'md-toolbar-tools')
+				md-button(
+					ng-click = 'gmap.close()'
+					aria-label = 'close gmap'
+					class = 'md-icon-button')
+					md-icon(md-font-icon='mdi mdi-close')
+				span {{gmap.standalone ? gmap.title || 'SENTENCES.MAP' : 'ACTIONS.PICK_UBICATION' | translate | capitalize}}
+				span(flex='')
+				md-button(
+					ng-click = 'gmap.fullscreen()'
+					aria-label = 'close gmap'
+					class = 'md-icon-button')
+					md-icon(md-font-icon='mdi' mdx-icon='{{gmap.iconFullScreen}}')
+
+		section(class='md-content')
+			div(ng-if='gmap.fromInput && gmap.fromInput == 2'): gmap(ng-model='gmap.modelValue' in-dialog='' from-input='2' gm-show-marker='')
+			div(ng-if='gmap.fromInput && gmap.fromInput == 1'): gmap(ng-model='gmap.modelValue' in-dialog='' from-input='1')
+			div(ng-if='!gmap.fromInput'): gmap(ng-model='gmap.modelValue' in-dialog='' gm-show-marker='')
+
+		section(class='md-actions' ng-if = 'gmap.fromInput')
+			md-button(ng-disabled='gmap.disabled' ng-click="gmap.geolocate()" aria-label="Set currently position")
+				| {{'ACTIONS.CURRENT_UBICATION' | translate | uppercase}}
+			md-button(ng-click="gmap.cancel()" aria-label="Cancel") {{'CANCEL' | translate | uppercase}}
+			md-button(ng-disabled='gmap.disabled' ng-click="gmap.save(gmap.modelValue)" aria-label="Save") {{'SAVE' | translate | uppercase}}

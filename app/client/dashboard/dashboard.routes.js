@@ -2,6 +2,7 @@ export function rules(urlRouterProvider) {
   urlRouterProvider.when('/panel-de-control', '/');
   urlRouterProvider.when('/panel', '/');
   urlRouterProvider.when('/home', '/');
+  urlRouterProvider.when('/inicio', '/');
 }
 
 export function routes(stateProvider) {
@@ -12,16 +13,27 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/',
       resolve: {
-        //boot: ['layoutFactory', (lF) => lF.stateLoad('dashboard')]
+        resolve: ['routing', '$q', (r, $q) => {
+          return $q((resolve, reject) => {
+            r.state.loggued = r.isLoggued();
+            resolve();
+          });
+        }]
       },
       views: {
         content: {
-          template: require('./templates/dashboard.jade')(),
           controllerAs: 'dashboard',
-          controller: 'DashboardController'
+          templateProvider: ['routing', (r) => {
+            return r.state.loggued ?
+              require('./templates/dashboard.jade')() :
+              require('../login/templates/login.jade')();
+          }],
 
-          //templateProvider: ['layoutFactory', (lF) => lF.ui.viewTemplate],
-          //controllerProvider: ['layoutFactory', (lF) => lF.ui.controllerName]
+          controllerProvider: ['routing', (r) => r.state.loggued ?
+            'DashboardController' : 'LoginController'
+          ]
+
+          //controller: 'DashboardController'
         }
       }
     });

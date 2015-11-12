@@ -1,6 +1,8 @@
 {
   "initial:before": {
-    "loopback#favicon": {}
+    "loopback#favicon": {
+      "params": "$!./public/favicons/favicon.ico"
+    }
   },
   "initial": {
     "compression": {},
@@ -12,21 +14,27 @@
       }
     }
   },
-  "session": {
-  },
-  "auth": {
-  },
-  "parse": {
+  "session": {},
+  "auth": {},
+  "parse": {},
+  "routes:before": {
+    "./middleware/x-powered-by": {
+      "params": {
+        "name": "Traru"
+      }
+    }
   },
   "routes": {
     "loopback#rest": {
-      "paths": ["${restApiRoot}"]
+      "paths": [
+        "${restApiRoot}"
+      ]
     }
   },
   "files": {
     "loopback#static": {
-      "params": "$!./public",
-      "paths": "/static"
+      "paths": "/static",
+      "params": "$!./public"
     }
   },
   "final": {

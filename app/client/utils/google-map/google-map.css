@@ -1,0 +1,10 @@
+:local .gmap {
+  display: block;
+}
+
+.gmapDialog.isIntoFullScreen {
+  max-height: none;
+  max-width: none;
+  height: 100%;
+  width: 100%;
+}

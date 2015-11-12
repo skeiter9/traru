@@ -28,13 +28,13 @@ const config = {
     pathinfo: true,
   },
   module: {
-    noParse: /\.min\.js/,
+    noParse: [/\.min\.js/],
     preLoaders: [
 
       //{test:/\.js$/, loaders: ['jscs'], include: [srcPath]},
     ],
     loaders: [
-      {test: /\.js$/, loaders: ['babel'], include: [srcPath]},
+      {test: /\.js$/, loaders: ['babel'], include: [srcPath], exclude: [path.resolve(srcPath, 'api/api-lb.js')]},
       {
         test: /\.css$/,
         loaders: ['style', 'css?localIdentName=[path][name]---[local]---[hash:base64:5]', 'postcss'],
@@ -54,7 +54,10 @@ const config = {
     ],
   },
   plugins: [
-    new LiveReloadPlugin({appendScriptTag: true}),
+    new LiveReloadPlugin({
+      appendScriptTag: true,
+      port: 35721
+    }),
     new webpack.optimize.OccurenceOrderPlugin(true),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -82,5 +85,7 @@ config.addVendor('angular-min',
 config.addVendor('angular-ui-router-min',
   path.join(srcPath, 'node_modules') +
   '/angular-ui-router/release/angular-ui-router.min.js');
+
+config.module.noParse.push(/api-lb\.js/);
 
 module.exports = config;

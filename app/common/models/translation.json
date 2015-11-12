@@ -1,0 +1,25 @@
+{
+  "name": "translation",
+  "plural": "translations",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "translationParts": {
+      "type": "hasMany",
+      "model": "translationPart",
+      "foreignKey": "translationId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

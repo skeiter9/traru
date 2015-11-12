@@ -1,3 +1,4 @@
 {
+  "name": "google-map-directive",
   "main": "./google-map.js"
 }
