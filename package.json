@@ -1,6 +1,6 @@
 {
   "name": "traru",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "app/server/server.js",
   "author": "Omar Lozada @Skeiter9 <skeiter9@yetsu.com> (http://twitter.com/skeiter9.com/)",
   "license": "MIT",
@@ -8,12 +8,11 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-    "postinstall": "cd app/client && npm install && cd ../../ &&cd node_modules/webpack-analyse && npm install -d grunt-cli && cd ../..",
+    "postinstall": "cd app && npm install && cd client && cd ../.. && cd node_modules/webpack-analyse && npm install -d grunt-cli && cd ../..",
     "pretest": "jscs .",
     "start": "nodemon app/server/server.js",
     "test": "karma start --single-run",
     "test:watch": "karma start",
-    "posttest": "echo open reporters in browser",
     "analyse": "cd node_modules/webpack-analyse && node_modules/.bin/grunt dev"
   },
   "repository": {

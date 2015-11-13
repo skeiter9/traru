@@ -13,23 +13,18 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/',
       resolve: {
-        resolve: ['routing', '$q', (r, $q) => {
-          return $q((resolve, reject) => {
-            r.state.loggued = r.isLoggued();
-            resolve();
-          });
-        }]
+        resolve: ['layout', l => l.loadState('dashboard')]
       },
       views: {
         content: {
           controllerAs: 'dashboard',
-          templateProvider: ['routing', (r) => {
-            return r.state.loggued ?
+          templateProvider: ['layout', (l) => {
+            return l.loggued ?
               require('./templates/dashboard.jade')() :
               require('../login/templates/login.jade')();
           }],
 
-          controllerProvider: ['routing', (r) => r.state.loggued ?
+          controllerProvider: ['layout', (l) => l.loggued ?
             'DashboardController' : 'LoginController'
           ]
 
