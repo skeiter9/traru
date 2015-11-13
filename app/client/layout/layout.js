@@ -1,12 +1,8 @@
-//import LayoutController from './layout.controller.js';
-
 import angularAria from 'angular-aria/angular-aria.min.js';
 import angularSanitize from 'angular-sanitize/angular-sanitize.min.js';
 import angularAnimate from 'angular-animate/angular-animate.min.js';
 
 import angularMessages from 'angular-messages/angular-messages.min';
-
-//import angularResource from 'angular-resource';
 
 import angularMaterial from 'angular-material/angular-material.min.js';
 
@@ -22,7 +18,6 @@ require('./styles/layout.css');
 export default angular
   .module('layout', [
 
-    //ngResource,
     'ngMessages',
     'ngMaterial',
     'ngSanitize',
@@ -34,23 +29,42 @@ export default angular
     formAM.name
   ])
   .config(['$translateProvider', 'tmhDynamicLocaleProvider',
-  function($trP, tmhDLP) {
-
-    //$trP.useSanitizeValueStrategy('sanitize');
+  '$translatePartialLoaderProvider', '$provide',
+  function($trP, tmhDLP, $tPLP, $p) {
 
     //$trP.useMissingTranslationHandlerLog();
-    tmhDLP.localeLocationPattern('/i18n/ngLocale/angular-locale_{{locale}}.js');
+    tmhDLP.localeLocationPattern('/i18n/angular-locale_{{locale}}.js');
 
     $trP
-      .useSanitizeValueStrategy('sanitize');
+      .useSanitizeValueStrategy('sanitize')
+      /*
+      .fallbackLanguage('en')
+      .registerAvailableLanguageKeys(['en', 'es'], {
+        'en_*': 'en',
+        'es_*': 'es'
+      })
+      .determinePreferredLanguage()
+      */
+      .useLoader('$translatePartialLoader', {
+        urlTemplate: '/api/settings/i18n/{part}/{lang}'
+      });
 
-    //.addInterpolation('$translateMessageFormatInterpolation')
-    //.useLoader('$translatePartialLoader', {
-    //  urlTemplate: '/i18n/{part}/{part}-{lang}.json'
-    //});
+    $p.provider('appConfig', function() {
+
+      let name = 'traru';
+
+      this.setName = newName => name = newName;
+
+      this.$get = [() => {
+        return {
+          name: name
+        };
+      }];
+    });
 
   }])
-  .run([() => {
+
+  .run(['$translate', 'tmhDynamicLocale', '$window', ($tr, tmhD, $w) => {
     const throttle = (type, name, obj = window) => {
       //const obj = obj || window;
       let running = false;
@@ -67,39 +81,44 @@ export default angular
     };
     /* init - you can init any event */
     throttle('resize', 'optimizedResize');
+
   }])
 
   .controller('LayoutController', ['layout', '$state', function(layout, $st) {
     //console.log($st);
     this.ui = layout;
-    this.title = 'traru';
   }])
 
-  .factory('routing', ['$state', 'User', function($s, U) {
+  .service('layout', ['$state', '$mdSidenav', 'User', '$translate',
+  '$translatePartialLoader', 'appConfig', 'Settings', '$q', '$log',
+  'tmhDynamicLocale',
+  function($st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD) {
 
-    let State = {
-      loggued: false
-    };
-
-    return {
-      state: Object.create(State),
-      isLoggued() {
-        return U.isAuthenticated();
-      }
-    };
-  }])
-
-  .service('layout', ['$state', '$mdSidenav', 'User', function($st, $mdS, U) {
-
+    this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
     this.sidenavRightToolbarIconLeft = 'close';
+    this.stateName = '';
+    this.loggued = false;
+    this.loaded = [];
+    this.initialized = false;
 
     this.refresh = () => $st.reload();
     this.isLoggued = () => U.isAuthenticated();
-    this.logout = () => U.logout().$promise.then(() => $st.reload());
+
     this.toggleSidenav = (idS) => $mdS(idS).toggle();
     this.openSidenav = (idS) => $mdS(idS).open();
     this.closeSidenav = (idS) => $mdS(idS).close();
+    this.logout = () => U.logout().$promise.then(() => {
+      this.loggued = false;
+      return $st.reload();
+    });
+    this.changeLanguage = lang => {
+      $tr.use(lang);
+      return $q.all([
+        $tr.refresh(),
+        tmhD.set(lang)
+      ]);
+    };
 
     this.settings = () => {
 
@@ -114,6 +133,40 @@ export default angular
       };
 
       return this.openSidenav('right');
+    };
+
+    this.loadState = (stateName) => {
+      const isLoggued = this.isLoggued();
+      stateName = stateName === 'dashboard' && !isLoggued ? 'login' : stateName;
+
+      if (this.loaded.indexOf('layout') === -1) $tPL.addPart('layout');
+      if (this.loaded.indexOf(stateName) === -1) $tPL.addPart(stateName);
+
+      this.stateName = stateName;
+      this.loggued = isLoggued;
+
+      return $q.all([
+        !this.initialized && !this.loggued ?
+          S.findOne({filter: {where: {userId: 'public'}}}).$promise :
+        !this.initialized && this.loggued ?
+          S.findOne({filter: {where: {userId: U.getCurrentId}}}).$promise :
+          $q.when()
+      ])
+        .then((s) => {
+          if (angular.isUndefined(s)) return $q.when();
+          this.preferredLanguage = $tr.preferredLanguage = s[0].preferredLanguage;
+          this.langFallback = $tr.fallbackLanguage = s[0].langFallback;
+          this.langsAvailables = s[0].langsAvailables;
+          $tr.use(this.preferredLanguage);
+          return $q.all([
+            $tr.refresh(),
+            tmhD.set(this.preferredLanguage)
+          ]);
+        })
+        .catch((err) => {
+          $l.error(err);
+        });
+
     };
 
   }]);

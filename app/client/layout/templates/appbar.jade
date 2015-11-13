@@ -7,7 +7,7 @@ div(class='md-toolbar-tools md-whiteframe-z1')
   )
     md-icon(md-font-icon='mdi mdi-menu')
 
-  span {{layout.title | uppercase}}
+  span {{layout.ui.title | uppercase}}
 
   span(flex = true)
 
@@ -18,25 +18,19 @@ div(class='md-toolbar-tools md-whiteframe-z1')
   )
     md-icon(md-font-icon='mdi mdi-refresh')
 
-  md-menu(md-position-mode="target-right target"
-    ng-if='layout.data.dataUser.settings.langsAvaibles.length > 1')
+  md-menu(
+    md-position-mode="target-right target"
+    ng-if='layout.ui.langsAvailables.length > 1'
+  )
     md-button(class='md-icon-button' aria-label="show settings", ng-click="$mdOpenMenu()")
       md-icon(md-menu-origin="", md-font-icon="mdi mdi-flag")
     md-menu-content
-      md-menu-item(ng-repeat = 'lang in layout.data.dataUser.settings.langsAvaibles')
-        md-button(ng-click="layout.changeLanguage(lang)"): span {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
-
-  md-button(
-    ng-if = 'layout.data.loggued && !layout.data.initialize'
-    ng-click = 'layout.settings()'
-    aria-label = 'user config'
-    class = 'md-icon-button'
-  )
-    md-icon(md-font-icon='mdi mdi-account')
+      md-menu-item(ng-repeat = 'lang in layout.ui.langsAvailables')
+        md-button(ng-click="layout.ui.changeLanguage(lang)"): span {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
 
   md-menu(ng-if='layout.ui.isLoggued()' md-position-mode="target-right target")
     md-button(class='md-icon-button' aria-label="show settings", ng-click="$mdOpenMenu()")
       md-icon(md-menu-origin="", md-font-icon="mdi mdi-dots-vertical")
     md-menu-content
-      md-menu-item: md-button(ng-click="layout.ui.settings()"): span {{'SETTINGS' | uppercase | translate | capitalize}}
-      md-menu-item: md-button(ng-click="layout.ui.logout()"): span {{'LOGOUT' | uppercase | translate | capitalize}}
+      md-menu-item: md-button(ng-click="layout.ui.settings()"): span {{'ACTIONS.SETTINGS' | uppercase | translate | capitalize}}
+      md-menu-item: md-button(ng-click="layout.ui.logout()"): span {{'ACTIONS.LOGOUT' | uppercase | translate | capitalize}}
