@@ -1,0 +1,29 @@
+{
+  "name": "settings",
+  "plural": "settings",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "preferredLanguage": {
+      "type": "string",
+      "required": true
+    },
+    "langsAvailables": {
+      "type": [
+        "string"
+      ],
+      "required": true
+    },
+    "langFallback": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,10 @@
+{
+  "ACTIONS": {
+    "LOGOUT": "cerrar sesion",
+    "SETTINGS": "configuración"
+  },
+  "LANGUAGES": {
+    "EN": "ingles",
+    "ES": "español"
+  }
+}

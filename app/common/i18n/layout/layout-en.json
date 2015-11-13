@@ -1,0 +1,10 @@
+{
+  "ACTIONS": {
+    "LOGOUT": "logout",
+    "SETTINGS": "settings"
+  },
+  "LANGUAGES": {
+    "EN": "english",
+    "ES": "spanish"
+  }
+}
