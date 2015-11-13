@@ -33,19 +33,15 @@
     "dataSource": "db",
     "public": false
   },
-  "translation": {
-    "dataSource": "mongoDs",
-    "public": true
-  },
-  "translationPart": {
-    "dataSource": "mongoDs",
-    "public": true
-  },
   "user": {
     "dataSource": "mongoDs",
     "public": true
   },
   "accessToken": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "settings": {
     "dataSource": "mongoDs",
     "public": true
   }

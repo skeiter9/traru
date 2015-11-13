@@ -32,10 +32,16 @@
     }
   },
   "files": {
-    "loopback#static": {
-      "paths": "/static",
-      "params": "$!./public"
-    }
+    "loopback#static": [
+      {
+        "paths": "/static",
+        "params": "$!./public"
+      },
+      {
+        "paths": "/i18n",
+        "params": "$!../node_modules/angular-i18n"
+      }
+    ]
   },
   "final": {
     "loopback#urlNotFound": {}
