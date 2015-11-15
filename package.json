@@ -8,12 +8,12 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-    "postinstall": "cd app && npm install && cd client && cd ../.. && cd node_modules/webpack-analyse && npm install -d grunt-cli && cd ../..",
+    "postinstall": "cd app && npm install && cd client && npm install",
     "pretest": "jscs .",
     "start": "cd app && nodemon server/server.js",
     "test": "karma start --single-run",
     "test:watch": "karma start",
-    "analyse": "cd node_modules/webpack-analyse && node_modules/.bin/grunt dev"
+    "analyse": "cd node_modules/webpack-analyse &&  npm install && npm i -d grunt-cli && node_modules/.bin/grunt dev"
   },
   "repository": {
     "type": "git",
