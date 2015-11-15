@@ -10,7 +10,7 @@
   "scripts": {
     "postinstall": "cd app && npm install && cd client && cd ../.. && cd node_modules/webpack-analyse && npm install -d grunt-cli && cd ../..",
     "pretest": "jscs .",
-    "start": "nodemon app/server/server.js",
+    "start": "cd app && nodemon server/server.js",
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "analyse": "cd node_modules/webpack-analyse && node_modules/.bin/grunt dev"

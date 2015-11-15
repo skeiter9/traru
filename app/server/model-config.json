@@ -44,5 +44,13 @@
   "settings": {
     "dataSource": "mongoDs",
     "public": true
+  },
+  "truck": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "picture": {
+    "dataSource": "storage",
+    "public": true
   }
 }

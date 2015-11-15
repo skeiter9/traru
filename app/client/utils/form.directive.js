@@ -187,10 +187,12 @@ export default angular
     return {
       restrict: 'E',
       compile(tE, tA) {
+        //tE.attr('layout', 'row');
+        //tE.attr('layout-align', 'end center');
         tA.mForm = angular.isDefined(tA.mForm) ? tA.mForm : 'mForm';
         const label = !!tA.label ?
           `{{'${tA.label}' | translate | capitalize}}` :
-          `{{${tA.mForm}.update ? 'UPDATE': 'REGISTER' | translate | capitalize}}`;
+          `{{'ACTIONS.' + (${tA.mForm}.update ? 'UPDATE': 'REGISTER') | translate | capitalize}}`;
         tE.append(angular.element(`
           <md-button
             ng-click = '${tA.mForm}.save(form)'

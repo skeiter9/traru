@@ -1,10 +1,43 @@
 {
   "ACTIONS": {
     "LOGOUT": "logout",
-    "SETTINGS": "settings"
+    "SETTINGS": "settings",
+    "UPDATE": "update",
+    "REGISTER": "register"
   },
   "LANGUAGES": {
     "EN": "english",
     "ES": "spanish"
+  },
+  "FORM": {
+    "WRONG": "form is wrong",
+    "CORRECT": "form is correct",
+    "NEW_SUCCESS": "item {{itemName}} added",
+    "NEW_FAIL": "couldn't add {{itemName}}",
+    "UPDATE_SUCCESS": "update {{itemName}} successful",
+    "UPDATE_FAIL": "update fail: {{itemName}}",
+    "DELETE_SUCCESS": "delete item {{itemName}} successful",
+    "DELETE_FAIL": "couldn't delete {{itemName}}",
+    "PASSWORD_VERIFICATION_FAIL": "password doesn't match with second password",
+    "FIELD_ERROR": {
+      "REQUIRED": "this field is required",
+      "IS_NUMBER": "this field must be a number",
+      "IS_EMAIL": "this field must be an email",
+      "MIN_LENGTH": "this field should have {{min}} as minimum",
+      "MAX_LENGTH": "this field should have {{max}} as maximum"
+    },
+    "FIELD_SUBMITED_ERROR": {
+      "ERROR_DEFAULT": "form data is wrong",
+      "ERROR": "{{field}} is wrong",
+      "REQUIRED": "{{field}} is required",
+      "IS_EMAIL": "{{field}} is not a email",
+      "IS_NUMBER": "{{field}} is not a number",
+      "IS_URL": "{{field}} is not a url",
+      "IS_DATE": "{{field}} is not a date",
+      "IS_TIME": "{{field}} is not a time",
+      "IS_WEEK": "{{field}} is not a week",
+      "IS_MONTH": "{{field}} is not a month",
+      "PATTERN": "{{field}} doesn't meet its pattern"
+    }
   }
 }

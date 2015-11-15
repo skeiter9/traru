@@ -1,0 +1,16 @@
+{
+  "MODEL": {
+    "TRUCK": "camion",
+    "TRUCK_PLURAL": "camiones"
+  },
+  "FIELDS": {
+    "LICENSEPLATE": "placa",
+    "LICENSEPLATELATERAL": "placa lateral",
+    "MODEL": "modelo",
+    "BRAND": "marca",
+    "UBICATION": "ubicación",
+    "AKA": "aka",
+    "TARE": "peso tara",
+    "DESCRIPTION": "descripción"
+  }
+}

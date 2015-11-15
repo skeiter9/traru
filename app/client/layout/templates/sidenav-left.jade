@@ -1,34 +1,32 @@
-//- var picture = require('./../assets/images/cover.jpg');
-
-//- ye-cover(picture = "#{picture}")
 ye-cover(picture='static/images/cover.jpg')
 
 md-list
 
   md-list-item(
     ng-hide = 'layout.data.initialize'
-    ng-click='layout.go(layout.data.loggued ? "dashboard" : "login")'
+    ng-click='layout.go(layout.ui.loggued ? "dashboard" : "login")'
   )
-    md-icon(md-font-icon='mdi mdi-{{layout.data.loggued ? "view-dashboard" : "key"}}')
-    p {{layout.data.loggued ? 'SECTIONS.DASHBOARD' : "SECTIONS.LOGIN" | uppercase | translate | capitalize}}
-
+    md-icon(md-font-icon='mdi mdi-{{layout.ui.loggued ? "view-dashboard" : "key"}}')
+    p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD' : "SECTIONS.LOGIN" | uppercase | translate | capitalize}}
+    
   md-list-item(
-    ng-if='layout.data.loggued && !item.noDisplay'
+    ng-repeat='item in layout.menu'
+    ng-if='layout.ui.loggued && !item.noDisplay'
     ng-click='layout.go(item.pluralName , true)'
-    ng-repeat='item in layout.menu')
+  )
     md-icon(md-font-icon = 'mdi mdi-{{item.icon}}')
     p {{item.name | uppercase | translate | capitalize}}
 
-  md-divider(ng-hide = 'layout.data.initialize')
-
-  md-list-item(ng-click = 'layout.settings("inSL", true)' ng-if ='layout.data.loggued')
-    md-icon(md-font-icon = 'mdi mdi-settings')
-    p {{'SETTINGS' | uppercase | translate | capitalize}}
+  md-divider
 
   md-list-item(ng-click='layout.go("help", true)')
     md-icon(md-font-icon='mdi mdi-help-circle')
     p {{'SECTIONS.HELP' | uppercase | translate | capitalize}}
 
-  md-list-item(ng-click = 'layout.logout(true)' ng-if = 'layout.data.loggued')
+  md-list-item(ng-click = 'layout.ui.settings()' ng-if ='layout.ui.loggued')
+    md-icon(md-font-icon = 'mdi mdi-settings')
+    p {{'ACTIONS.SETTINGS' | uppercase | translate | capitalize}}
+
+  md-list-item(ng-click = 'layout.ui.logout()' ng-if = 'layout.ui.loggued')
     md-icon(md-font-icon = 'mdi mdi-logout')
-    p {{'LOGOUT' | uppercase | translate | capitalize}}
+    p {{'ACTIONS.LOGOUT' | uppercase | translate | capitalize}}

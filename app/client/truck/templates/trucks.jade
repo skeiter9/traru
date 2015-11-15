@@ -1,10 +1,10 @@
 md-card
 
   md-toolbar: div(class='md-toolbar-tools')
-    span trucks
+    span {{'MODEL.TRUCK_PLURAL' | translate | capitalize}}
     span(flex)
-    md-button(class='md-icon-button' aria-label='new truck')
-      md-icon(md-font-icon='mdi mdi-plus' ng-click='trucks.addItem($event)')
+    md-button(ng-click='trucks.addItem($event)' class='md-icon-button' aria-label='new truck')
+      md-icon(md-font-icon='mdi mdi-plus')
     
   md-subheader(ng-if='!!!trucks.items' class='md-warn') there's no trucks(data incomplete)
 
@@ -12,7 +12,7 @@ md-card
 
   md-list(ng-if='!!trucks.items && trucks.items.length > 0' class='md-2-line')
     md-list-item(ng-repeat='truck in trucks.items' ng-click='trucks.showItem($event, truck)')
-      img(ng-src="{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
+      img(ng-src="api/pictures/trucks/download/{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
       //-div(class="md-list-item-text")
       //-  h3 {{truck.model}}
       //-  h4 {{truck.licensePlate}}

@@ -66,7 +66,6 @@ export default angular
 
   .run(['$translate', 'tmhDynamicLocale', '$window', ($tr, tmhD, $w) => {
     const throttle = (type, name, obj = window) => {
-      //const obj = obj || window;
       let running = false;
       const func = () => {
         if (running) return;
@@ -114,10 +113,7 @@ export default angular
     });
     this.changeLanguage = lang => {
       $tr.use(lang);
-      return $q.all([
-        $tr.refresh(),
-        tmhD.set(lang)
-      ]);
+      return tmhD.set(lang);
     };
 
     this.settings = () => {
@@ -135,22 +131,25 @@ export default angular
       return this.openSidenav('right');
     };
 
-    this.loadState = (stateName) => {
-      const isLoggued = this.isLoggued();
-      stateName = stateName === 'dashboard' && !isLoggued ? 'login' : stateName;
+    this.loadTranslatePart = section => {
+      $tPL.addPart('truck');
+    };
 
-      if (this.loaded.indexOf('layout') === -1) $tPL.addPart('layout');
-      if (this.loaded.indexOf(stateName) === -1) $tPL.addPart(stateName);
+    this.loadState = (stateName, fn) => {
 
-      this.stateName = stateName;
-      this.loggued = isLoggued;
+      this.loggued = this.isLoggued();
+      this.stateName = !this.loggued ? 'login' : stateName;
+
+      if (this.loaded.indexOf('layout') === -1) this.loadTranslatePart('layout');
+      if (this.loaded.indexOf(stateName) === -1) this.loadTranslatePart(stateName);
 
       return $q.all([
         !this.initialized && !this.loggued ?
           S.findOne({filter: {where: {userId: 'public'}}}).$promise :
         !this.initialized && this.loggued ?
           S.findOne({filter: {where: {userId: U.getCurrentId}}}).$promise :
-          $q.when()
+          $q.when(),
+        !!fn ? fn() : $q.when()
       ])
         .then((s) => {
           if (angular.isUndefined(s)) return $q.when();
@@ -161,7 +160,11 @@ export default angular
           return $q.all([
             $tr.refresh(),
             tmhD.set(this.preferredLanguage)
-          ]);
+          ])
+          .then(() => {
+            if (!!!s[1]) $l.debug('the fn from resolve not return a value');
+            return s[1];
+          });
         })
         .catch((err) => {
           $l.error(err);

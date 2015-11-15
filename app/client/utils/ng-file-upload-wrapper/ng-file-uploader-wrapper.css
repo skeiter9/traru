@@ -1,0 +1,47 @@
+:local .ngF {
+  display: block;
+  position: relative;
+}
+
+:local .ngF :global .drop-box {
+  align-items: center;
+  background-color: #eee;
+  background-position: center;
+  /*background-size: cover;*/
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  position: relative;
+  /*height: 171;*/
+  width: 100%;
+}
+:local .ngF :global .h-cover {
+  width: 100%;
+}
+:local .ngF :global .h-cover[ngf-thumbnail] {
+  background-position: center top;
+  background-color: rgba(0, 0, 0, 0.62);
+  background-repeat: no-repeat;
+}
+
+:local .ngF :global .drop-box :global .mdi {
+  font-size: 56px;
+  width: 100%;
+  /*height: 56px;*/
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:local .ngF :global .md-fab {
+  bottom: -28px;
+  position: absolute;
+  right: 16px;
+}
+
+:local .ngF :global md-progress-linear {
+  bottom: 0;
+  position: absolute;
+}

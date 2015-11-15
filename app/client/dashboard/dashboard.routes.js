@@ -13,7 +13,10 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/',
       resolve: {
-        resolve: ['layout', l => l.loadState('dashboard')]
+        resolve: ['layout', 'Truck', (l, T) => l.loadState('dashboard', () => {
+          l.loadTranslatePart('truck');
+          return T.find().$promise;
+        })]
       },
       views: {
         content: {

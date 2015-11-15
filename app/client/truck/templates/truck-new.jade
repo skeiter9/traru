@@ -1,11 +1,14 @@
 form(name = "form" novalidate = '' md-theme='default')
+
+  file-uploader(font-icon='mdi mdi-camera' font-icon-bg='mdi mdi-truck' storage='trucks' ng-model='mForm.form.photo')
+
   ye-input(label='fields.licensePlate' field='licensePlate' required)
   ye-input(label='fields.licensePlateLateral' field='licensePlateLateral' required)
   ye-input(label='fields.model' field='model' required)
   ye-input(label='fields.brand' field='brand' required)
   ye-input(label='fields.ubication' field='ubication' geoposition theme='flota' required)
   ye-input(label='fields.aka' field='aka')
-  ye-input(label='fields.tareWeight' field='tareWeight' type='number')
+  ye-input(label='fields.tare' field='tare' type='number')
   ye-input(label='fields.description' field='description' textarea maxlength)
 
-  form-actions(ctrl='mForm')
+  form-actions

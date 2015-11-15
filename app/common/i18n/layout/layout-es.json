@@ -1,7 +1,9 @@
 {
   "ACTIONS": {
     "LOGOUT": "cerrar sesion",
-    "SETTINGS": "configuración"
+    "SETTINGS": "configuración",
+    "UPDATE": "actualizar",
+    "REGISTER": "registrar"
   },
   "LANGUAGES": {
     "EN": "ingles",
