@@ -25,21 +25,29 @@ module.exports = function(Truck) {
 
     if (item.photo === 'default.jpg') return next(null);
 
-    const tmpPhoto = path.join(storage, 'tmp', item.photo);
-    const photoName = item.licensePlate + path.extname(item.photo)
-      .replace(/ /g, '-');
-    const source = fs.createReadStream(tmpPhoto);
-    const dest = fs.createWriteStream(path.join(storage, 'trucks', photoName));
+    const uploadPhoto = () => {
+      const tmpPhoto = path.join(storage, 'tmp', item.photo);
+      const photoName = item.licensePlate + path.extname(item.photo)
+        .replace(/ /g, '-');
+      const source = fs.createReadStream(tmpPhoto);
+      const dest = fs.createWriteStream(path.join(storage, 'trucks', photoName));
 
-    source.pipe(dest);
-    source.on('end', () => fs.unlink(tmpPhoto, (err) => {
-      if (err) next(err);
-      else {
-        item.photo = photoName;
-        next(err);
-      }
-    }));
-    source.on('error', (err) => next(err));
+      source.pipe(dest);
+      source.on('end', () => fs.unlink(tmpPhoto, (err) => {
+        if (err) next(err);
+        else {
+          item.photo = photoName;
+          next(err);
+        }
+      }));
+      source.on('error', (err) => next(err));
+    };
+
+    if (!!item.id) fs.exists(path.join(storage, 'trucks', item.photo), (err) => {
+      if (!err) uploadPhoto();
+      else next(null);
+    });
+    else uploadPhoto();
 
   });
 

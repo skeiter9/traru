@@ -27,15 +27,16 @@ export default angular.module('truck', [
       bindToController: true,
       controller: angular.noop,
       controllerAs: 'mForm',
+      priority: 10,
       template: require('./templates/truck-form.jade')(),
       link(e, elem, attrs, mForm) {
-        console.log(mForm.item);
-        mForm.form = mForm.item;
+        //console.log(mForm.item);
+        mForm.form = angular.extend({}, mForm.item);
 
         mForm.save = (form) => vForm(form)
           .then((result) => $q.all([!!mForm.item ?
-            T.prototype$updateAttributes({where: {id: mForm.item.is}})
-              .$promise :
+            T.prototype$updateAttributes({where: {id: mForm.item.id}},
+              mForm.form).$promise :
             T.create(mForm.form).$promise
           ]))
           .then((truck) => {

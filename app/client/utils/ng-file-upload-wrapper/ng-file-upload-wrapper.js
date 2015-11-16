@@ -3,7 +3,8 @@ import styles from './ng-file-uploader-wrapper.css';
 
 export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
 
-  .directive('fileUploader', ['Upload', '$timeout', '$log', (u, $t, $l) => {
+  .directive('fileUploader', ['Upload', '$timeout', '$log', 'appConfig',
+  (u, $t, $l, appC) => {
     return {
       scope: {
         fileResult: '=ngModel'
@@ -15,38 +16,38 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
       compile(tE, tA) {
         tE.addClass(styles.ngF);
 
-        tE[0].querySelectorAll('md-icon')[0].setAttribute('md-font-icon',
-          tA.fontIconBg || 'mdi mdi-camera');
-        tE[0].querySelectorAll('md-icon')[1].setAttribute('md-font-icon',
-          tA.fontIcon || 'mdi mdi-star');
+        tE[0].querySelectorAll('md-icon')[0]
+          .setAttribute('md-font-icon', tA.fontIconBg || 'mdi mdi-camera');
+        tE[0].querySelectorAll('md-icon')[1]
+          .setAttribute('md-font-icon', tA.fontIcon || 'mdi mdi-star');
 
         return (s, elem, attrs, ngF) => {
-
-          attrs.url = attrs.url ||
-            'https://angular-file-upload-cors-srv.appspot.com/upload';
 
           let t2 = $t(() => {}, 0);
           const t1 = $t(() => {
             t2 = $t(() => {
+
+              attrs.url = attrs.url ||
+                'https://angular-file-upload-cors-srv.appspot.com/upload';
               const h = (elem[0].offsetWidth * (9 / 16)) - 4;
               ngF.hCover = {height: h + 'px'};
-              /*
-              for (let i = 0; i < elem[0].querySelectorAll('.h-cover').length; i++) {
-                elem[0].querySelectorAll('.h-cover')[i].style
-                  .height = `${h}px`;
-              }*/
+              ngF.preBg = {height: h + 'px'};
+              if (!!ngF.fileResult) ngF.preBg
+                .backgroundImage = `url("${appC.apiUrl}/pictures/trucks/download/${ngF.fileResult}")`;
             }, 0);
           }, 0);
 
           ngF.upload = (file) => {
-            console.log(file);
             if (!!!file) return;
+
+            if (ngF.preBg.backgroundImage !== 'none') ngF
+              .preBg.backgroundImage = 'none';
             u.upload({
               url: 'api/pictures/tmp/upload',
               data: {file: file},
             })
             .then(function(response) {
-              console.log(response);
+              //console.log(response);
               ngF.fileResult = response.data.result.files.file[0].name;
             }, (responseFail) => {
 

@@ -12,9 +12,9 @@ form(name='formNgF')
     ngf-resize="{width: 720, height: 404}"
 
     class="drop-box h-cover"
-    ng-style='ngF.hCover'
+    ng-style='ngF.preBg'
   )
-    md-icon(md-font-icon='' ng-hide='ngF.picFile.progress')
+    md-icon(md-font-icon='' ng-hide='ngF.picFile.progress || !!ngF.preBg.backgroundImage || ngF.preBg.backgroundImage == "none" ')
     div(
       ngf-thumbnail="ngF.picFile"
       ngf-size="{width: 290, height: 163.125, ratio: '16x9'}"
