@@ -7,6 +7,17 @@ module.exports = function(Truck) {
 
   const storage = path.resolve(__dirname, '../../server/storage');
 
+  Truck.observe('before delete', (ctx, next) => {
+    Truck.findById(ctx.where.id, (err, item) => {
+      if (err) return next(err);
+      if (item.photo === 'default.jpg') return next(null);
+      const photoPath = path.join(storage, 'trucks', item.photo);
+      fs.unlink(photoPath, (errInner) => {
+        next(!!errInner ? errInner : null);
+      });
+    });
+  });
+
   Truck.observe('before save', function(ctx, next) {
 
     let item = ctx.instance ? ctx.instance : ctx.data;

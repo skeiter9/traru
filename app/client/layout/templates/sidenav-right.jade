@@ -11,7 +11,7 @@ md-toolbar(md-theme = '{{layout.ui.sidenavRightTheme}}' md-theme-watch='')
       md-icon(mdx-icon='{{layout.ui.sidenavRightToolbarIconLeft}}'
         md-font-icon='mdi')
     
-    span {{layout.ui.sidenavRightToolbarTitle | uppercase | translate | uppercase}}
+    span {{layout.ui.sidenavRightToolbarTitle | uppercase | translate: layout.ui.sidenavRightToolbarTitleVars | uppercase}}
 
     span(flex='')
 

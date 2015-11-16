@@ -57,7 +57,8 @@ export default angular
 
       this.$get = [() => {
         return {
-          name: name
+          name: name,
+          apiUrl: 'api'
         };
       }];
     });
@@ -95,6 +96,7 @@ export default angular
 
     this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
+    this.sidenavRightToolbarTitleVars = {};
     this.sidenavRightToolbarIconLeft = 'close';
     this.stateName = '';
     this.loggued = false;
@@ -131,17 +133,18 @@ export default angular
       return this.openSidenav('right');
     };
 
-    this.loadTranslatePart = section => {
-      $tPL.addPart('truck');
-    };
+    this.loadTranslatePart = section => $tPL.addPart(section);
 
     this.loadState = (stateName, fn) => {
 
       this.loggued = this.isLoggued();
-      this.stateName = !this.loggued ? 'login' : stateName;
+      this.stateName = this.loggued && stateName === 'login' ?
+        stateName : 'login';
 
-      if (this.loaded.indexOf('layout') === -1) this.loadTranslatePart('layout');
-      if (this.loaded.indexOf(stateName) === -1) this.loadTranslatePart(stateName);
+      if (this.loaded.indexOf('layout') === -1) this
+        .loadTranslatePart('layout');
+      if (this.loaded.indexOf(this.stateName) === -1) this
+        .loadTranslatePart(this.stateName);
 
       return $q.all([
         !this.initialized && !this.loggued ?

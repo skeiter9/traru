@@ -1,6 +1,0 @@
-{
-  "verbose": true,
-  "watch": ["app/server", "app/common", "webpack.config.js", "package.json"],
-  "ext": "js json",
-  "delay": 0
-}

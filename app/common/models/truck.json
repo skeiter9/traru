@@ -10,6 +10,35 @@
     "licensePlate": {
       "type": "string",
       "required": true
+    },
+    "licensePlateLateral": {
+      "type": "string",
+      "required": true
+    },
+    "model": {
+      "type": "string",
+      "required": true
+    },
+    "brand": {
+      "type": "string",
+      "required": true
+    },
+    "aka": {
+      "type": "string",
+      "required": true
+    },
+    "geoposition": {
+      "type": "string"
+    },
+    "tare": {
+      "type": "number",
+      "required": true
+    },
+    "photo": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
     }
   },
   "validations": [],

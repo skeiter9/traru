@@ -16,41 +16,37 @@ export default angular.module('truck', [
     gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
   }])
 
-  .directive('truckNew', ['layout', '$log', 'yeValidForm', 'Truck', '$mdToast',
-  '$translate',
-  (l, $l, vForm, T, $mdT, $tr) => {
+  .directive('truckForm', ['layout', '$log', 'yeValidForm', 'Truck', '$mdToast',
+  '$translate', 'validFormUtils', '$q',
+  (l, $l, vForm, T, $mdT, $tr, vFormU, $q) => {
     return {
       restrict: 'E',
-      scope: {},
+      scope: {
+        item: '='
+      },
       bindToController: true,
       controller: angular.noop,
       controllerAs: 'mForm',
-      template: require('./templates/truck-new.jade')(),
+      template: require('./templates/truck-form.jade')(),
       link(e, elem, attrs, mForm) {
+        console.log(mForm.item);
+        mForm.form = mForm.item;
+
         mForm.save = (form) => vForm(form)
-        .then((result) => T.create(mForm.form).$promise)
-        .then((truck) => {
-          $l.debug('truck is registered: ', truck);
-          l.closeSidenav('right');
-        })
-        .catch((err) => {
-          //$l.debug(err);
+          .then((result) => $q.all([!!mForm.item ?
+            T.prototype$updateAttributes({where: {id: mForm.item.is}})
+              .$promise :
+            T.create(mForm.form).$promise
+          ]))
+          .then((truck) => {
+            $l.debug('truck is registered: ', truck);
+            l.closeSidenav('right');
+          })
+          .catch((err) => {
+            $l.debug(err);
+            vFormU.catchError(err);
+          });
 
-          const errCode = !!err.errorOne ? err.errorOne.messageCode :
-            !!err.data && !!err.data.error && !!err.data.error.code ?
-            err.data.error.code : 'FORM.WRONG';
-
-          const fieldOne = (!!err.errorOne ? err.errorOne.field : '')
-            .toUpperCase();
-
-          return $mdT.showSimple($tr.instant(errCode, {
-            field: $tr.instant('FIELDS.' + fieldOne)
-          }));
-
-          //if (!!err.errorOne) $mdT.showSimple(err.errorOne.messageCode);
-          //else if (!!err.data && !!err.data.error && !!err.data.error.code
-          //) $mdT.showSimple(err.data.error.code);
-        });
       }
     };
   }])
@@ -89,6 +85,22 @@ export default angular.module('truck', [
       template: require('./templates/trucks.jade')(),
       link(s, elem, attrs, trucks) {
 
+        const sidenavRightAction = ({title, tag, item, titleVars = {}}) => {
+          const scope = s.$new();
+          scope.item = item;
+          l.sidenavRightToolbarTitle = title;
+          l.sidenavRightToolbarTitleVars = titleVars;
+          l.sidenavRightToolbarIconLeft = 'close';
+          l.sidenavRightToolbarIconLeftAction = (e) => l.closeSidenav('right');
+
+          l.sidenavRightContent = {
+            html: `<${tag} item='item' />`,
+            scope: scope
+          };
+
+          return l.openSidenav('right');
+        };
+
         trucks.addItem = (e) => {
           l.sidenavRightToolbarTitle = 'NEW_TRUCK';
           l.sidenavRightToolbarIconLeft = 'close';
@@ -97,30 +109,24 @@ export default angular.module('truck', [
           };
 
           l.sidenavRightContent = {
-            html: `<truck-new />`
+            html: `<truck-form />`
           };
 
           l.openSidenav('right');
         };
 
-        trucks.showItem = (e, item) => {
-          const scope = s.$new();
-          scope.item = item;
-          l.sidenavRightToolbarTitle = item.licensePlate;
-          l.sidenavRightToolbarIconLeft = 'close';
-          l.sidenavRightToolbarIconLeftAction = (e) => {
-            l.closeSidenav('right');
-          };
+        trucks.showItem = (e, item) => sidenavRightAction({
+          title: item.licensePlate,
+          tag: 'truck',
+          item: item
+        });
 
-          l.sidenavRightContent = {
-            html: `<truck item='item' />`,
-            scope: scope
-          };
-
-          l.openSidenav('right');
-        };
-
-        trucks.editItem = (e, item) => {};
+        trucks.editItem = (e, item) =>sidenavRightAction({
+          title: `SENTENCES.EDIT`,
+          tag: 'truck-form',
+          item: item,
+          titleVars: {item: item.licensePlate}
+        });
 
         trucks.ubicationItem = (e, item) => {
           gm.launchMap({

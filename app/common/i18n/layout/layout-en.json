@@ -1,4 +1,10 @@
 {
+  "SENTENCES": {
+    "EDIT": "edit: {{item}}"
+  },
+  "API": {
+    "LOGIN_FAILED": "username or password is wrong"
+  },
   "ACTIONS": {
     "LOGOUT": "logout",
     "SETTINGS": "settings",

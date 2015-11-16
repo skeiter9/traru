@@ -10,7 +10,7 @@
   "scripts": {
     "postinstall": "cd app && npm install && cd client && npm install",
     "pretest": "jscs .",
-    "start": "cd app && nodemon server/server.js",
+    "start": "cd app && node_modules/.bin/nodemon server/server.js",
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "analyse": "cd node_modules/webpack-analyse &&  npm install && npm i -d grunt-cli && node_modules/.bin/grunt dev"
@@ -38,7 +38,6 @@
     "karma-tap": "^1.0.3",
     "karma-tape-reporter": "^1.0.3",
     "karma-webpack": "^1.7.0",
-    "nodemon": "^1.8.1",
     "postcss-loader": "^0.7.0",
     "protractor": "^2.5.1",
     "style-loader": "^0.13.0",

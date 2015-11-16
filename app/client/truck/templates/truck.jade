@@ -4,8 +4,23 @@ md-subheader(ng-if='!!truck.item && truck.item.length === 0' class='md-warn') th
 
 section(ng-if='!!truck.item')
   ye-cover(picture='api/pictures/trucks/download/{{truck.item.photo}}')
-  md-subheader {{'MODEL.TRUCK.LICENSE_PLATE' | translate}}
+  md-subheader {{'FIELDS.LICENSEPLATE' | translate}}
   p {{truck.item.licensePlate}}
 
-  md-subheader {{'MODEL.TRUCK.MODEL' | translate}}
+  md-subheader {{'FIELDS.LICENSEPLATELATERAL' | translate}}
+  p {{truck.item.licensePlateLateral}}
+
+  md-subheader {{'FIELDS.MODEL' | translate}}
   p {{truck.item.model}}
+
+  md-subheader {{'FIELDS.BRAND' | translate}}
+  p {{truck.item.brand}}
+
+  md-subheader {{'FIELDS.AKA' | translate}}
+  p {{truck.item.aka}}
+
+  md-subheader {{'FIELDS.TARE' | translate}}
+  p {{truck.item.tare}}
+
+  md-subheader {{'FIELDS.UCICATION' | translate}}
+  p {{truck.item.ubication}}

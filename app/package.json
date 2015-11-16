@@ -20,6 +20,7 @@
   "devDependencies": {
     "jade": "^1.11.0",
     "loopback-connector-mongodb": "^1.13.0",
+    "nodemon": "^1.8.1",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.2.0"
   },

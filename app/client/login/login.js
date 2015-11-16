@@ -17,7 +17,8 @@ module.exports = angular
   }])
 
   .directive('loginForm', ['$log', 'yeValidForm', 'User', '$mdToast', '$q',
-  ($l, vForm, U, $mdT, $q) => {
+  '$state', '$translate', 'validFormUtils',
+  ($l, vForm, U, $mdT, $q, $st, $tr, vFormU) => {
     return {
       scope: {},
       bindToController: true,
@@ -31,12 +32,11 @@ module.exports = angular
           .then((result) => U.login(mForm.form).$promise)
           .then((user) => {
             $l.debug('user is loggued: ', user);
+            $st.reload();
           })
           .catch((err) => {
             $l.debug(err);
-            if (!!err.errorOne) $mdT.showSimple(err.errorOne.messageCode);
-            else if (!!err.data && !!err.data.error && !!err.data.error.code
-            ) $mdT.showSimple(err.data.error.code);
+            vFormU.catchError(err);
           });
         };
       }

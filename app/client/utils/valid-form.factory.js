@@ -27,11 +27,26 @@ export default angular
       }
       return msgID;
 
-      //return $translate(field.toUpperCase())
-      //  .then((fieldName) => $translate(msgID, {field: fieldName.toUpperCase()}));
-
     };
 
+  }])
+
+  .factory('validFormUtils', ['$translate', '$mdToast', ($tr, $mdT) => {
+    return {
+      catchError(err) {
+        const errCode = !!err.errorOne ?
+          err.errorOne.messageCode :
+          !!err.data && !!err.data.error && !!err.data.error.code ?
+          `API.${err.data.error.code}` : 'FORM.WRONG';
+
+        const fieldOne = (!!err.errorOne ? err.errorOne.field : '')
+          .toUpperCase();
+
+        return $mdT.showSimple($tr.instant(errCode, {
+          field: $tr.instant('FIELDS.' + fieldOne)
+        }));
+      }
+    };
   }])
 
   .factory('yeValidForm', ['yeValidFormMessage', '$q', 'async', validForm]);
