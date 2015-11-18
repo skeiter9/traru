@@ -1,15 +1,12 @@
 @import 'angular-material/angular-material.css';
 @import 'mdi/css/materialdesignicons.css';
+@import '_alias.css';
+@import 'base.css';
 
 :root {
   --backgroundColor: #fff;
   --primaryColor: #06c;
   --accentColor: #006;
-}
-
-app {
-  display: flex;
-  background-color: var(--backgroundColor);
 }
 
 md-icon.mdi {

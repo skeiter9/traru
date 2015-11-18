@@ -1,0 +1,26 @@
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  line-height: 1.5;
+}
+
+h3 {
+  font-weight: 400;
+}
+
+h4 {
+  font-weight: 300;
+}
+
+.md-list-item-text {
+  width: 100%;
+  @nest & h3 {
+    color: rgba(0, 0, 0, .85);
+  }
+  @nest & h4 {
+    color: rgba(0, 0, 0, .65);
+  }
+}
+
+md-menu-item > .md-button md-icon {
+  margin-right: 0;
+}

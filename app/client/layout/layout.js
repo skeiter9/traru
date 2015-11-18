@@ -36,15 +36,7 @@ export default angular
     tmhDLP.localeLocationPattern('/i18n/angular-locale_{{locale}}.js');
 
     $trP
-      .useSanitizeValueStrategy('sanitize')
-      /*
-      .fallbackLanguage('en')
-      .registerAvailableLanguageKeys(['en', 'es'], {
-        'en_*': 'en',
-        'es_*': 'es'
-      })
-      .determinePreferredLanguage()
-      */
+      .useSanitizeValueStrategy('escape')
       .useLoader('$translatePartialLoader', {
         urlTemplate: '/api/settings/i18n/{part}/{lang}'
       });
@@ -91,8 +83,9 @@ export default angular
 
   .service('layout', ['$state', '$mdSidenav', 'User', '$translate',
   '$translatePartialLoader', 'appConfig', 'Settings', '$q', '$log',
-  'tmhDynamicLocale',
-  function($st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD) {
+  'tmhDynamicLocale', '$mdDialog', 'capitalizeFilter', '$mdToast',
+  function($st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD, $mdD, capitalizeF,
+  $mdT) {
 
     this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
@@ -106,14 +99,15 @@ export default angular
     this.refresh = () => $st.reload();
     this.isLoggued = () => U.isAuthenticated();
 
-    this.toggleSidenav = (idS) => $mdS(idS).toggle();
-    this.openSidenav = (idS) => $mdS(idS).open();
-    this.closeSidenav = (idS) => $mdS(idS).close();
+    this.toggleSidenav = idS => $mdS(idS).toggle();
+    this.openSidenav = idS => $mdS(idS).open();
+    this.closeSidenav = idS => $mdS(idS).close();
     this.logout = () => U.logout().$promise.then(() => {
       this.loggued = false;
       return $st.reload();
     });
     this.changeLanguage = lang => {
+      $l.debug('change language to ' + lang);
       $tr.use(lang);
       return tmhD.set(lang);
     };
@@ -175,4 +169,35 @@ export default angular
 
     };
 
+    this.removeItem = ({evt, item, title, model}) => {
+      return $tr([
+        'DIALOG.DELETE_TITLE',
+        'DIALOG.DELETE_CONTENT',
+        'ACTIONS.CANCEL',
+        'ACTIONS.DELETE',
+        'ITEM.DELETED_MODULE',
+        'ITEM.DELETED_MODULE_FAIL'
+      ], {moduleItem: title || 'item'})
+        .then((t) => {
+          const confirm = $mdD.confirm()
+            .title(t['DIALOG.DELETE_TITLE'].toUpperCase())
+            .content(capitalizeF(t['DIALOG.DELETE_CONTENT']))
+            .ok(t['ACTIONS.DELETE'])
+            .cancel(t['ACTIONS.CANCEL'])
+            .theme('default')
+            .ariaLabel(`remove ${title}`)
+            .targetEvent(evt);
+
+          return $mdD.show(confirm).then(() => t);
+        })
+        .then((t) => model.deleteById({id: item.id}))
+        .then((v) => $q.all([
+          this.closeSidenav('right'),
+          $mdT.showSimple($tr.instant('API.ITEM_DELETED',
+            {moduleItem: title}))
+        ]))
+        .catch((err) => {
+          if (!!err) $l.debug(err);
+        });
+    };
   }]);
