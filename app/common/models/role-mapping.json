@@ -1,7 +1,7 @@
 {
-  "name": "accessToken",
-  "plural": "accessTokens",
-  "base": "AccessToken",
+  "name": "roleMapping",
+  "plural": "roleMapping",
+  "base": "RoleMapping",
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -12,7 +12,12 @@
     "user": {
       "type": "belongsTo",
       "model": "user",
-      "foreignKey": "userId"
+      "foreignKey": "principalId"
+    },
+    "role": {
+      "type": "belongsTo",
+      "model": "role",
+      "foreignKey": "roleId"
     }
   },
   "acls": [],

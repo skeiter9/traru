@@ -13,8 +13,27 @@
       "type": "hasMany",
       "model": "accessToken",
       "foreignKey": "userId"
+    },
+    "roles": {
+      "type": "hasMany",
+      "model": "role",
+      "foreignKey": "principalId",
+      "through": "roleMapping"
+    },
+    "settings": {
+      "type": "hasOne",
+      "model": "settings",
+      "foreignKey": "userId"
     }
   },
-  "acls": [],
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "find"
+    }
+  ],
   "methods": {}
 }

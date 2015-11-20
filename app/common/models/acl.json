@@ -1,7 +1,6 @@
 {
-  "name": "accessToken",
-  "plural": "accessTokens",
-  "base": "AccessToken",
+  "name": "acl",
+  "base": "ACL",
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -9,10 +8,10 @@
   "properties": {},
   "validations": [],
   "relations": {
-    "user": {
+    "role": {
       "type": "belongsTo",
-      "model": "user",
-      "foreignKey": "userId"
+      "model": "role",
+      "foreignKey": "roleId"
     }
   },
   "acls": [],

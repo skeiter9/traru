@@ -27,9 +27,6 @@
       "type": "string",
       "required": true
     },
-    "geoposition": {
-      "type": "string"
-    },
     "tare": {
       "type": "number",
       "required": true
@@ -39,10 +36,21 @@
     },
     "description": {
       "type": "string"
+    },
+    "ubication": {
+      "type": "geopoint",
+      "required": true
     }
   },
   "validations": [],
   "relations": {},
-  "acls": [],
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    }
+  ],
   "methods": {}
 }

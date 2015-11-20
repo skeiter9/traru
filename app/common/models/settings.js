@@ -7,10 +7,13 @@ module.exports = function(Settings) {
   const pathI18n = path.resolve(__dirname, '../i18n');
 
   Settings.translate = (part, lang, cb) => {
-    fs.readFile(path.join(pathI18n, part, `${part}-${lang}.json`), (err, data) => {
-      if (err) cb(null, {msg: `${part}-${lang} is not registered`});
-      else cb(null, JSON.parse(data));
-    });
+    fs.readFile(
+      path.join(pathI18n, part, `${part}-${lang}.json`),
+      (err, data) => {
+        if (err) cb(null, {msg: `${part}-${lang} is not registered`});
+        else cb(null, JSON.parse(data));
+      }
+    );
   };
 
   Settings.remoteMethod('translate', {
