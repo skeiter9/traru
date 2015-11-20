@@ -1,15 +1,28 @@
 {
+  "DIALOG": {
+    "DELETE_TITLE": "delete {{moduleItem}}?",
+    "DELETE_CONTENT": "if this item is not required for other records, this item will be delete."
+  },
   "SENTENCES": {
-    "EDIT": "edit: {{item}}"
+    "EDIT": "edit: {{item}}",
+    "NEW": "new {{modelName}}"
   },
   "API": {
-    "LOGIN_FAILED": "username or password is wrong"
+    "LOGIN_FAILED": "username or password is wrong",
+    "ITEM_DELETED": "{{moduleItem}} has been removed",
+    "AUTHORIZATION_REQUIRED": "you don't have permit to {{operation}} {{modelPlural}}"
   },
   "ACTIONS": {
     "LOGOUT": "logout",
     "SETTINGS": "settings",
     "UPDATE": "update",
-    "REGISTER": "register"
+    "REGISTER": "register",
+    "PICK_UBICATION": "pick ubication",
+    "SAVE": "save",
+    "SHOW_UBICATION": "show ubication",
+    "EDIT": "edit",
+    "DELETE": "delete",
+    "CANCEL": "cancel"
   },
   "LANGUAGES": {
     "EN": "english",

@@ -7,7 +7,7 @@ md-dialog(aria-label='map' md-theme='{{gmapDialog.theme}}' ng-class='{isIntoFull
 				aria-label = 'close gmapDialog'
 				class = 'md-icon-button')
 				md-icon(md-font-icon='mdi mdi-close')
-			span {{gmapDialog.title}}
+			span {{gmapDialog.title | uppercase | translate | capitalize}}
 			span(flex)
 			md-button(
 				ng-click = 'gmapDialog.fullscreen()'
@@ -16,9 +16,10 @@ md-dialog(aria-label='map' md-theme='{{gmapDialog.theme}}' ng-class='{isIntoFull
 				md-icon(md-font-icon='mdi' mdx-icon='{{"fullscreen" + (gmapDialog.isIntoFullScreen ? "-exit" : "") }}')
 
 	section(ng-if='gmapDialog.geoposition' class='md-content')
-		gmap(geoposition='gmapDialog.geoposition' show-marker='gmapDialog.showMarker' in-dialog='gmapDialog.inDialog')
+		gmap(geoposition='gmapDialog.geoposition' geoposition-text='gmapDialog.geopositionText' gmap-geolocable='gmapDialog.geolocable' show-marker='gmapDialog.showMarker' in-dialog='gmapDialog.inDialog')
 
-	section(ng-if='gmapDialog.fromInput' class='md-actions')
+	section(ng-if='gmapDialog.geolocable' class='md-actions')
+		md-button(ng-disabled='gmapDialog.disabled' ng-click="gmapDialog.save(gmapDialog.geoposition, gmapDialog.geopositionText)" aria-label="Save") {{'ACTIONS.SAVE' | translate | uppercase}}
 
 //-
 	md-dialog(aria-label='map' md-theme='{{gmap.theme}}' class='dialog--map')

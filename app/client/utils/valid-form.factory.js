@@ -33,7 +33,7 @@ export default angular
 
   .factory('validFormUtils', ['$translate', '$mdToast', ($tr, $mdT) => {
     return {
-      catchError(err) {
+      catchError({err, modelName, operation}) {
         const errCode = !!err.errorOne ?
           err.errorOne.messageCode :
           !!err.data && !!err.data.error && !!err.data.error.code ?
@@ -43,7 +43,9 @@ export default angular
           .toUpperCase();
 
         return $mdT.showSimple($tr.instant(errCode, {
-          field: $tr.instant('FIELDS.' + fieldOne)
+          field: $tr.instant('FIELDS.' + fieldOne),
+          operation: $tr.instant(`ACTIONS.${operation.toUpperCase()}`),
+          modelPlural: $tr.instant(`MODEL.${modelName.toUpperCase()}_PLURAL`)
         }));
       }
     };
@@ -99,7 +101,7 @@ function validForm(yeValidFormMessage, $q, async) {
 
           });
 
-      }) : $q.when(true);
+      }) : $q.when({status: true});
 
   };
 }

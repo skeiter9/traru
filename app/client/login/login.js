@@ -13,8 +13,7 @@ module.exports = angular
     'ngMaterial'
   ])
 
-  .controller('LoginController', ['$state', function($st) {
-  }])
+  .controller('LoginController', ['$state', function($st) {}])
 
   .directive('loginForm', ['$log', 'yeValidForm', 'User', '$mdToast', '$q',
   '$state', '$translate', 'validFormUtils',
@@ -31,6 +30,7 @@ module.exports = angular
           return vForm(form)
           .then((result) => U.login(mForm.form).$promise)
           .then((user) => {
+            localStorage.removeItem('traruSettings');
             $l.debug('user is loggued: ', user);
             $st.reload();
           })

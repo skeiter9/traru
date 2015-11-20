@@ -13,9 +13,15 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/',
       resolve: {
-        resolve: ['layout', 'Truck', (l, T) => l.loadState('dashboard', () => {
-          l.loadTranslatePart('truck');
-          return T.find().$promise;
+        resolve: ['layout', 'Truck', '$q', (l, T, $q) => l.loadState({
+          stateName: 'dashboard',
+          models: [
+            {name:'truck', model: T}
+          ],
+          fn: () => {
+            if (l.loggued) l.loadTranslatePart('truck');
+            return l.loggued ? T.find().$promise : $q.when([]);
+          }
         })]
       },
       views: {
@@ -30,8 +36,6 @@ export function routes(stateProvider) {
           controllerProvider: ['layout', (l) => l.loggued ?
             'DashboardController' : 'LoginController'
           ]
-
-          //controller: 'DashboardController'
         }
       }
     });

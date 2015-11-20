@@ -4,7 +4,6 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 const srcPath = path.join(__dirname, 'app', 'client');
 
-const postcssImport = require('postcss-import');
 const postcssUrl = require('postcss-url');
 const autoprefixer = require('autoprefixer');
 const customProperties = require('postcss-custom-properties');
@@ -68,9 +67,11 @@ const config = {
   postcss(webpack_) {
     return {
       defaults: [
-        postcssImport({
+        require('postcss-import')({
           addDependencyTo: webpack_
         }),
+        require('postcss-alias')(),
+        require('postcss-nesting')(),
         postcssUrl(),
         customProperties(),
         autoprefixer()

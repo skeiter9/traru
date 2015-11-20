@@ -52,5 +52,17 @@
   "picture": {
     "dataSource": "storage",
     "public": true
+  },
+  "acl": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "role": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "roleMapping": {
+    "dataSource": "mongoDs",
+    "public": true
   }
 }

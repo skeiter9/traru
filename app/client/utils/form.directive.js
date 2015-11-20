@@ -78,8 +78,9 @@ export default angular
             `<input
               gmap-geolocation
               theme = '${tA.theme}'
+              title = '${tA.title}'
               ng-model-geo="${tA.mForm}.form.${tA.field}"
-              ng-model="${tA.mForm}.${formOrformAux}Aux.${tA.field}"
+              ng-model="${tA.mForm}.formAux.${tA.field}"
               name="${tA.name}"
               ${isDefined(tA.required) ? 'required' : ''}
             />`
@@ -187,8 +188,8 @@ export default angular
     return {
       restrict: 'E',
       compile(tE, tA) {
-        //tE.attr('layout', 'row');
-        //tE.attr('layout-align', 'end center');
+        tE.css({marginTop: '16px', marginBottom: '20px'});
+        tE.addClass('layout-row layout-align-end-center');
         tA.mForm = angular.isDefined(tA.mForm) ? tA.mForm : 'mForm';
         const label = !!tA.label ?
           `{{'${tA.label}' | translate | capitalize}}` :

@@ -3,20 +3,23 @@ md-card
   md-toolbar: div(class='md-toolbar-tools')
     span {{'MODEL.TRUCK_PLURAL' | translate | capitalize}}
     span(flex)
-    md-button(ng-click='trucks.addItem($event)' class='md-icon-button' aria-label='new truck')
+    md-button(ng-if='trucks.model.crud.c.status' ng-click='trucks.addItem($event)' class='md-icon-button' aria-label='new truck')
       md-icon(md-font-icon='mdi mdi-plus')
-    
-  md-subheader(ng-if='!!!trucks.items' class='md-warn') there's no trucks(data incomplete)
 
-  md-subheader(ng-if='!!trucks.items && trucks.items.length === 0' class='md-warn') there's no trucks
+  div(layout layout-align='center center' ng-if='!trucks.initialize' )
+    md-progress-circular(class="md-primary" md-mode="indeterminate" md-diameter="40")
 
-  md-list(ng-if='!!trucks.items && trucks.items.length > 0' class='md-2-line')
+  md-subheader(ng-if='trucks.initialize && !trucks.model.crud.r.status' class='md-warn') don't have permit to read trucks
+  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!!trucks.items' class='md-warn') there's no trucks(data incomplete)
+  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!trucks.items && trucks.items.length === 0' class='md-warn') there's no trucks
+
+  md-list(ng-if='trucks.initialize && trucks.model.crud.r.status && !!trucks.items && trucks.items.length > 0' class='md-2-line')
     md-list-item(ng-repeat='truck in trucks.items' ng-click='trucks.showItem($event, truck)')
       img(ng-src="api/pictures/trucks/download/{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
       //-div(class="md-list-item-text")
       //-  h3 {{truck.model}}
       //-  h4 {{truck.licensePlate}}
-      p {{truck.model}}
+      p {{truck.licensePlate}}
       //-md-icon(md-font-icon='mdi mdi-map-marker' ng-click='trucks.showUbication($event)' aria-label="Options" class="md-secondary")
       md-menu(md-position-mode="target-right target" class="md-secondary")
         md-button(aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)")
@@ -24,11 +27,16 @@ md-card
         md-menu-content(width="3")
           md-menu-item
             md-button(ng-click="trucks.ubicationItem($event, truck)")
-              div(layout="row")
-                p(flex) {{'SHOW_UBICATION' | translate | capitalize}}
+              div(layout="row"  layout-align="space-between center")
+                p(flex) {{'ACTIONS.SHOW_UBICATION' | translate | capitalize}}
                 md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
-          md-menu-item
+          md-menu-item(ng-if='trucks.model.crud.u.status')
             md-button(ng-click="trucks.editItem($event, truck)")
-              div(layout="row")
-                p(flex) {{'EDIT' | translate | capitalize}}
+              div(layout="row"  layout-align="space-between center")
+                p(flex) {{'ACTIONS.EDIT' | translate | capitalize}}
                 md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
+          md-menu-item(ng-if='trucks.model.crud.d.status')
+            md-button(ng-click="trucks.removeItem($event, truck)")
+              div(layout="row"  layout-align="space-between center")
+                p(flex) {{'ACTIONS.DELETE' | translate | capitalize}}
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")

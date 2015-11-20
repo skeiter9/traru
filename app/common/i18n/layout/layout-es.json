@@ -1,49 +1,62 @@
 {
+  "DIALOG": {
+    "DELETE_TITLE": "¿eliminar {{moduleItem}}?",
+    "DELETE_CONTENT": "sí este item no es requerido por otros registros, este item se eliminara."
+  },
   "SENTENCES": {
-    "EDIT": "editar: {{item}}"
+    "EDIT": "editar: {{item}}",
+    "NEW": "nuevo {{modelName}}"
   },
   "API": {
-    "LOGIN_FAILED": "el usuario o la contraseña son incorrectos"
+    "LOGIN_FAILED": "el usuario o la contraseña son incorrectos",
+    "ITEM_DELETED": "{{moduleItem}} ha sido eliminado",
+    "AUTHORIZATION_REQUIRED": "no tiene permiso para {{operation}} {{modelPlural}}"
   },
   "ACTIONS": {
     "LOGOUT": "cerrar sesion",
     "SETTINGS": "configuración",
     "UPDATE": "actualizar",
-    "REGISTER": "registrar"
+    "REGISTER": "registrar",
+    "PICK_UBICATION": "selecciona la ubicación",
+    "SAVE": "guardar",
+    "SHOW_UBICATION": "ver ubicación",
+    "EDIT": "editar",
+    "DELETE": "eliminar",
+    "CANCEL": "cancelar"
   },
   "LANGUAGES": {
     "EN": "ingles",
     "ES": "español"
   },
   "FORM": {
-  "WRONG": "el formulario está errado",
-  "CORRECT": "el formulario es correcto",
-  "NEW_SUCCESS": "item {{itemName}} added",
-  "NEW_FAIL": "couldn't add {{itemName}}",
-  "UPDATE_SUCCESS": "update {{itemName}} successful",
-  "UPDATE_FAIL": "update fail: {{itemName}}",
-  "DELETE_SUCCESS": "delete item {{itemName}} successful",
-  "DELETE_FAIL": "couldn't delete {{itemName}}",
-  "PASSWORD_VERIFICATION_FAIL": "password doesn't match with second password",
-  "FIELD_ERROR": {
-    "REQUIRED": "este campo es obligatorio",
-    "IS_NUMBER": "este campo debe ser un número",
-    "IS_EMAIL": "este campo debe ser un email",
-    "MIN_LENGTH": "este campo debe tener {{min}} como minimo",
-    "MAX_LENGTH": "este campo debe tener {{max}} como maximo"
-  },
-  "FIELD_SUBMITED_ERROR": {
-    "ERROR_DEFAULT": "la información enviada está errada",
-    "ERROR": "{{field}} está errado",
-    "REQUIRED": "{{field}} es obligatorio",
-    "IS_EMAIL": "{{field}} no es un email",
-    "IS_NUMBER": "{{field}} no es un número",
-    "IS_URL": "{{field}} no es una url",
-    "IS_DATE": "{{field}} no es una fecha",
-    "IS_TIME": "{{field}} is not a time",
-    "IS_WEEK": "{{field}} is not a week",
-    "IS_MONTH": "{{field}} is not a month",
-    "PATTERN": "{{field}} doesn't meet its pattern"
+    "WRONG": "el formulario está errado",
+    "CORRECT": "el formulario es correcto",
+    "NEW_SUCCESS": "item {{itemName}} added",
+    "NEW_FAIL": "couldn't add {{itemName}}",
+    "UPDATE_SUCCESS": "update {{itemName}} successful",
+    "UPDATE_FAIL": "update fail: {{itemName}}",
+    "DELETE_SUCCESS": "delete item {{itemName}} successful",
+    "DELETE_FAIL": "couldn't delete {{itemName}}",
+    "PASSWORD_VERIFICATION_FAIL": "password doesn't match with second password",
+    "FIELD_ERROR": {
+      "REQUIRED": "este campo es obligatorio",
+      "IS_NUMBER": "este campo debe ser un número",
+      "IS_EMAIL": "este campo debe ser un email",
+      "MIN_LENGTH": "este campo debe tener {{min}} como minimo",
+      "MAX_LENGTH": "este campo debe tener {{max}} como maximo"
+    },
+    "FIELD_SUBMITED_ERROR": {
+      "ERROR_DEFAULT": "la información enviada está errada",
+      "ERROR": "{{field}} está errado",
+      "REQUIRED": "{{field}} es obligatorio",
+      "IS_EMAIL": "{{field}} no es un email",
+      "IS_NUMBER": "{{field}} no es un número",
+      "IS_URL": "{{field}} no es una url",
+      "IS_DATE": "{{field}} no es una fecha",
+      "IS_TIME": "{{field}} is not a time",
+      "IS_WEEK": "{{field}} is not a week",
+      "IS_MONTH": "{{field}} is not a month",
+      "PATTERN": "{{field}} doesn't meet its pattern"
+    }
   }
-},
 }

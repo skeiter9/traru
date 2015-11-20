@@ -28,6 +28,7 @@
 }
 
 :local .ngF :global .drop-box :global .mdi {
+  color: rgba(255, 255, 255, .85);
   font-size: 56px;
   width: 100%;
   /*height: 56px;*/

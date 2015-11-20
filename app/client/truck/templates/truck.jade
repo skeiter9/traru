@@ -4,23 +4,38 @@ md-subheader(ng-if='!!truck.item && truck.item.length === 0' class='md-warn') th
 
 section(ng-if='!!truck.item')
   ye-cover(picture='api/pictures/trucks/download/{{truck.item.photo}}')
-  md-subheader {{'FIELDS.LICENSEPLATE' | translate}}
-  p {{truck.item.licensePlate}}
+  md-list
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.LICENSEPLATE' | translate}}
+        h4 {{::truck.item.licensePlate}}
 
-  md-subheader {{'FIELDS.LICENSEPLATELATERAL' | translate}}
-  p {{truck.item.licensePlateLateral}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.LICENSEPLATELATERAL' | translate}}
+        h4 {{::truck.item.licensePlateLateral}}
 
-  md-subheader {{'FIELDS.MODEL' | translate}}
-  p {{truck.item.model}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.MODEL' | translate}}
+        h4 {{::truck.item.model}}
 
-  md-subheader {{'FIELDS.BRAND' | translate}}
-  p {{truck.item.brand}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.BRAND' | translate}}
+        h4 {{::truck.item.brand}}
 
-  md-subheader {{'FIELDS.AKA' | translate}}
-  p {{truck.item.aka}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.AKA' | translate}}
+        h4 {{::truck.item.aka}}
 
-  md-subheader {{'FIELDS.TARE' | translate}}
-  p {{truck.item.tare}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.TARE' | translate}}
+        h4 {{::truck.item.tare}}
 
-  md-subheader {{'FIELDS.UCICATION' | translate}}
-  p {{truck.item.ubication}}
+    md-list-item(cclass='md-2-line')
+      div(class="md-list-item-text")
+        h3 {{'FIELDS.UBICATION' | translate}}
+        h4(geo-text='truck.item.ubication')

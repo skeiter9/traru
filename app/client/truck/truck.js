@@ -27,25 +27,34 @@ export default angular.module('truck', [
       bindToController: true,
       controller: angular.noop,
       controllerAs: 'mForm',
-      priority: 10,
       template: require('./templates/truck-form.jade')(),
       link(e, elem, attrs, mForm) {
-        //console.log(mForm.item);
-        mForm.form = angular.extend({}, mForm.item);
+
+        mForm.form = angular.isObject(mForm.item) ?
+          angular.extend({}, mForm.item) : {};
+
+        mForm.formAux = {};
+        mForm.update = !!mForm.form.id ? true : false;
+        if (angular.isObject(mForm.form.ubication)
+        ) mForm.formAux.ubication = JSON.stringify(mForm.form.ubication);
 
         mForm.save = (form) => vForm(form)
-          .then((result) => $q.all([!!mForm.item ?
+          .then(() => $q.all([!!mForm.item ?
             T.prototype$updateAttributes({where: {id: mForm.item.id}},
               mForm.form).$promise :
             T.create(mForm.form).$promise
           ]))
           .then((truck) => {
-            $l.debug('truck is registered: ', truck);
+            $l.debug('truck is registered: ', truck[0]);
             l.closeSidenav('right');
           })
           .catch((err) => {
             $l.debug(err);
-            vFormU.catchError(err);
+            vFormU.catchError({
+              err: err,
+              modelName: 'truck',
+              operation: mForm.update ? 'edit' : 'new'
+            });
           });
 
       }
@@ -74,11 +83,12 @@ export default angular.module('truck', [
     };
   }])
 
-  .directive('trucks', ['layout', 'gmap', function(l, gm) {
+  .directive('trucks', ['layout', 'gmap', 'Truck', '$translate', '$log',
+  (l, gm, T, $tr, $l) => {
     return {
       restrict: 'E',
       scope: {
-        items: '='
+        model: '='
       },
       bindToController: true,
       controller: angular.noop,
@@ -86,58 +96,57 @@ export default angular.module('truck', [
       template: require('./templates/trucks.jade')(),
       link(s, elem, attrs, trucks) {
 
-        const sidenavRightAction = ({title, tag, item, titleVars = {}}) => {
-          const scope = s.$new();
-          scope.item = item;
-          l.sidenavRightToolbarTitle = title;
-          l.sidenavRightToolbarTitleVars = titleVars;
-          l.sidenavRightToolbarIconLeft = 'close';
-          l.sidenavRightToolbarIconLeftAction = (e) => l.closeSidenav('right');
+        trucks.initialize = false;
 
-          l.sidenavRightContent = {
-            html: `<${tag} item='item' />`,
-            scope: scope
-          };
+        if (trucks.model.crud.r.status) {
+          trucks.model.model.find().$promise
+          .then((items) => {
+            trucks.items = items;
+            trucks.initialize = true;
+          })
+          .catch((err) => {
+            console.warn(err);
+            trucks.initialize = true;
+          });
+        }
 
-          return l.openSidenav('right');
-        };
+        trucks.ubicationItem = (e, item) => gm.launchMap({
+          event: e,
+          geoposition: item.ubication,
+          title: item.licensePlate,
+          showMarker: true,
+          inDialog: true
+        });
 
-        trucks.addItem = (e) => {
-          l.sidenavRightToolbarTitle = 'NEW_TRUCK';
-          l.sidenavRightToolbarIconLeft = 'close';
-          l.sidenavRightToolbarIconLeftAction = (e) => {
-            l.closeSidenav('right');
-          };
-
-          l.sidenavRightContent = {
-            html: `<truck-form />`
-          };
-
-          l.openSidenav('right');
-        };
-
-        trucks.showItem = (e, item) => sidenavRightAction({
+        trucks.showItem = (e, item) => l.sideavRightAction({
+          scope: s,
           title: item.licensePlate,
           tag: 'truck',
           item: item
         });
 
-        trucks.editItem = (e, item) =>sidenavRightAction({
-          title: `SENTENCES.EDIT`,
-          tag: 'truck-form',
-          item: item,
-          titleVars: {item: item.licensePlate}
+        trucks.addItem = (e) => l.sideavRightAction({
+          scope: s,
+          title: `SENTENCES.NEW`,
+          titleVars: {modelName: $tr.instant('MODEL.TRUCK')},
+          tag: 'truck-form'
         });
 
-        trucks.ubicationItem = (e, item) => {
-          gm.launchMap({
-            event: e,
-            geoposition: item.geoposition,
-            title: item.licensePlate,
-            showMarker: true,
-            inDialog: true
-          });
-        };
+        trucks.editItem = (e, item) => l.sideavRightAction({
+          scope: s,
+          title: `SENTENCES.EDIT`,
+          titleVars: {item: item.licensePlate},
+          tag: 'truck-form',
+          item: item
+        });
+
+        trucks.removeItem = (e, item) => l.removeItem({
+          evt: e,
+          model: T,
+          item: item,
+          title: item.licensePlate,
+          modelName: 'truck'
+        });
 
       }
 
