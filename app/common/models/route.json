@@ -1,0 +1,35 @@
+{
+  "name": "route",
+  "plural": "routes",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "geopointInitial": {
+      "type": "geopoint",
+      "required": true
+    },
+    "geopointFinal": {
+      "type": "geopoint",
+      "required": true
+    },
+    "waypoints": {
+      "type": [
+        "geopoint"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "truck": {
+      "type": "belongsTo",
+      "model": "truck",
+      "foreignKey": "truckId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

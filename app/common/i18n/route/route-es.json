@@ -1,0 +1,16 @@
+{
+  "SENTENCES": {
+    "SELECT_TRUCK": "elegir camion"
+  },
+  "MODEL": {
+    "ROUTE": "ruta",
+    "ROUTE_PLURAL": "rutas"
+  },
+  "FIELDS": {
+    "WEIGHT": "carga",
+    "GEOPOINT_INITIAL": "posición inicial",
+    "GEOPOINT_FINAL": "posición final",
+    "WAYPOINTS": "paradas",
+    "WAYPOINT": "parada"
+  }
+}

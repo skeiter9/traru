@@ -1,4 +1,10 @@
 {
+  "SENTENCES": {
+    "AVAILABLE": "disponible",
+    "IN_ROUTE": "en ruta",
+    "IN_MECHANIC": "en taller",
+    "OUT_SERVICE": "fuera de servicio"
+  },
   "MODEL": {
     "TRUCK": "camion",
     "TRUCK_PLURAL": "camiones"

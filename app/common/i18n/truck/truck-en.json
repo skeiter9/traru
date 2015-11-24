@@ -1,4 +1,10 @@
 {
+  "SENTENCES": {
+    "AVAILABLE": "available",
+    "IN_ROUTE": "in route",
+    "IN_MECHANIC": "in mechanic",
+    "OUT_SERVICE": "out service"
+  },
   "MODEL": {
     "TRUCK": "truck",
     "TRUCK_PLURAL": "trucks"

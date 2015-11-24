@@ -1,0 +1,16 @@
+{
+  "SENTENCES": {
+    "SELECT_TRUCK": "select truck"
+  },
+  "MODEL": {
+    "ROUTE": "route",
+    "ROUTE_PLURAL": "routes"
+  },
+  "FIELDS": {
+    "WEIGHT": "weight",
+    "GEOPOINT_INITIAL": "initial position",
+    "GEOPOINT_FINAL": "final position",
+    "WAYPOINTS": "waypoints",
+    "WAYPOINT": "waypoint"
+  }
+}
