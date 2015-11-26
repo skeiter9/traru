@@ -6,6 +6,11 @@
   "options": {
     "validateUpsert": true
   },
+  "mixins": {
+    "Photo": {
+      "photoName": "licensePlate"
+    }
+  },
   "properties": {
     "licensePlate": {
       "type": "string",
@@ -31,6 +36,10 @@
       "type": "number",
       "required": true
     },
+    "status": {
+      "type": "number",
+      "required": true
+    },
     "photo": {
       "type": "string"
     },
@@ -50,6 +59,13 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "permission": "DENY"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "createRoute",
+      "permission": "ALLOW",
+      "property": "find"
     }
   ],
   "methods": {}

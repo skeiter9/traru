@@ -6,9 +6,23 @@
   "options": {
     "validateUpsert": true
   },
+  "mixins": {
+    "CreationDate": {}
+  },
   "properties": {},
   "validations": [],
-  "relations": {},
+  "relations": {
+    "person": {
+      "type": "belongsTo",
+      "model": "person",
+      "foreignKey": "typeId"
+    },
+    "company": {
+      "type": "belongsTo",
+      "model": "company",
+      "foreignKey": "typeId"
+    }
+  },
   "acls": [],
   "methods": {}
 }

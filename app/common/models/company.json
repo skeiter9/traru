@@ -1,6 +1,6 @@
 {
-  "name": "person",
-  "plural": "persons",
+  "name": "company",
+  "plural": "companies",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -8,19 +8,11 @@
   },
   "mixins": {
     "Photo": {
-      "photoName": "email"
+      "photoName": "socialName"
     }
   },
   "properties": {
-    "firstName": {
-      "type": "string",
-      "required": true
-    },
-    "lastName": {
-      "type": "string",
-      "required": true
-    },
-    "email": {
+    "socialName": {
       "type": "string",
       "required": true
     }

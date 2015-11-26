@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(Truck) {
-
+  /*
   const fs = require('fs');
   const path = require('path');
 
@@ -24,11 +24,10 @@ module.exports = function(Truck) {
     item.photo = !!item.photo ? item.photo : 'default.jpg';
 
     if (item.photo === 'default.jpg') return next(null);
+    if (item.photo === item.licensePlate + path.extname(item.photo)) return next(null);
 
-    const uploadPhoto = () => {
-      const tmpPhoto = path.join(storage, 'tmp', item.photo);
-      const photoName = item.licensePlate + path.extname(item.photo)
-        .replace(/ /g, '-');
+    const uploadPhoto = (tmpPhoto, photoName) => {
+      photoName = photoName.replace(/ /g, '-');
       const source = fs.createReadStream(tmpPhoto);
       const dest = fs.createWriteStream(path.join(storage, 'trucks', photoName));
 
@@ -43,12 +42,20 @@ module.exports = function(Truck) {
       source.on('error', (err) => next(err));
     };
 
-    if (!!item.id) fs.exists(path.join(storage, 'trucks', item.photo), (err) => {
-      if (!err) uploadPhoto();
-      else next(null);
+    if (!!item.id) fs.access(path.join(storage, 'trucks', item.photo), fs.F_OK,
+    (err) => {
+      uploadPhoto(
+        err ?
+          path.join(storage, 'tmp', item.photo) :
+          path.join(storage, 'trucks', item.photo),
+        item.licensePlate + path.extname(item.photo)
+      );
     });
-    else uploadPhoto();
+    else uploadPhoto(
+      path.join(storage, 'tmp', item.photo),
+      item.licensePlate + path.extname(item.photo)
+    );
 
   });
-
+  */
 };
