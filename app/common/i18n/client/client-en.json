@@ -1,0 +1,12 @@
+{
+  "SENTENCES": {
+    "SELECT_PERSON": "select or create person",
+    "SELECT_COMPANY": "select or create company",
+    "REGISTER_PERSON": "register person",
+    "REGISTER_COMPANY": "register company"
+  },
+  "MODEL": {
+    "CLIENT": "client",
+    "CLIENT_PLURAL": "clients"
+  }
+}

@@ -1,6 +1,8 @@
 {
   "SENTENCES": {
-    "SELECT_TRUCK": "select truck"
+    "SELECT_TRUCK": "select truck",
+    "SELECT_CLIENT": "select client",
+    "SELECT_DRIVER": "select driver"
   },
   "MODEL": {
     "ROUTE": "route",

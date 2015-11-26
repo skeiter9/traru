@@ -1,4 +1,9 @@
 {
+  "MODULE": {
+    "NO_READ_PERMIT": "no tienes permiso para listar {{modulePlural}}",
+    "NO_FETCH_ITEMS": "no hay {{modulePlural}} registrados (data incompleta)",
+    "NO_ITEMS": "no hay {{modulePlural}} registrados"
+  },
   "DIALOG": {
     "DELETE_TITLE": "¿eliminar {{moduleItem}}?",
     "DELETE_CONTENT": "sí este item no es requerido por otros registros, este item se eliminara."

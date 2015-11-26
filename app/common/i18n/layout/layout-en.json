@@ -1,4 +1,12 @@
 {
+  "SECTIONS": {
+    "HELP": "help"
+  },
+  "MODULE": {
+    "NO_READ_PERMIT": "don't have permit to read {{modulePlural}}",
+    "NO_FETCH_ITEMS": "there's no {{modulePlural}}(data incomplete)",
+    "NO_ITEMS": "there's no {{modulePlural}}"
+  },
   "DIALOG": {
     "DELETE_TITLE": "delete {{moduleItem}}?",
     "DELETE_CONTENT": "if this item is not required for other records, this item will be delete."
