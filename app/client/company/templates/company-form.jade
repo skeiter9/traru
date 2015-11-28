@@ -1,0 +1,14 @@
+- var moduleName = 'company';
+
+section(md-theme='#{moduleName}')
+
+  form(name="form" novalidate='')
+
+    file-uploader(font-icon-bg='mdi mdi-factory' ng-model='mForm.form.photo' theme='#{moduleName}')
+
+    ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
+    ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)
+    ye-input(label='FIELDS.RUC' field='ruc' type='number' required)
+    ye-input(label='FIELDS.PHONE' field='phone' type='tel' required)
+
+    form-actions
