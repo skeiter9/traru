@@ -1,0 +1,6 @@
+{
+  "MODEL": {
+    "WORKER": "worker",
+    "WORKER_PLURAL": "workers"
+  }
+}

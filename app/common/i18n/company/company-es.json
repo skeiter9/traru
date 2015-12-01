@@ -1,18 +1,18 @@
 {
   "API": {
-    "DEPARTMENT_HAS_CARGOS" : "this department has cargos, remove their cargos first"
+    "DEPARTMENT_HAS_CARGOS" : "esta área tiene cargos, primero elimine los cargos"
   },
   "MODULE": {
     "NUM_CARGOS": "{cargos, plural, one {1 cargo} other {# cargos}}",
-    "NO_CARGOS": "there aren't cargos",
-    "ADD_CARGO": "add cargo"
+    "NO_CARGOS": "no hay cargos registrados",
+    "ADD_CARGO": "agregar cargo"
   },
   "MODEL": {
-    "COMPANY": "company",
-    "COMPANY_PLURAL": "companies"
+    "COMPANY": "empresa",
+    "COMPANY_PLURAL": "empresas"
   },
   "SENTENCES": { 
-    "SUMMARY": "summary"
+    "SUMMARY": "resumen"
   },
   "FIELDS": {
     "NAME": "name",

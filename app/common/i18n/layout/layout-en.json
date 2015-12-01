@@ -5,7 +5,9 @@
   "MODULE": {
     "NO_READ_PERMIT": "don't have permit to read {{modulePlural}}",
     "NO_FETCH_ITEMS": "there's no {{modulePlural}}(data incomplete)",
-    "NO_ITEMS": "there's no {{modulePlural}}"
+    "NO_ITEMS": "there's no {{modulePlural}}",
+    "EDIT" : "edit",
+    "DELETE": "delete"
   },
   "DIALOG": {
     "DELETE_TITLE": "delete {{moduleItem}}?",
@@ -13,11 +15,13 @@
   },
   "SENTENCES": {
     "EDIT": "edit: {{item}}",
-    "NEW": "new {{modelName}}"
+    "NEW": "new {{moduleName}}"
   },
   "API": {
     "LOGIN_FAILED": "username or password is wrong",
     "ITEM_DELETED": "{{moduleItem}} has been removed",
+    "ITEM_ADD": "{{itemName}} has been added",
+    "ITEM_ADD_ALONE": "item added",
     "AUTHORIZATION_REQUIRED": "you don't have permit to {{operation}} {{modelPlural}}"
   },
   "ACTIONS": {

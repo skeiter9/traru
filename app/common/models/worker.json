@@ -6,14 +6,15 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {
-    "contratationDate": {
-      "type": "date",
-      "required": true
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "person": {
+      "type": "belongsTo",
+      "model": "person",
+      "foreignKey": "personId"
     }
   },
-  "validations": [],
-  "relations": {},
   "acls": [],
   "methods": {}
 }

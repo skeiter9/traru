@@ -1,29 +1,24 @@
 {
-  "name": "company",
-  "plural": "companies",
+  "name": "department",
+  "plural": "departments",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
-  "mixins": {
-    "Photo": {
-      "photoName": "socialName"
-    }
-  },
   "properties": {
-    "socialName": {
+    "name": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
   "relations": {
-    "departments": {
+    "cargos": {
       "type": "hasMany",
-      "model": "department",
-      "foreignKey": "companyId"
-    } 
+      "model": "cargo",
+      "foreignKey": "departmentId"
+    }
   },
   "acls": [],
   "methods": {}
