@@ -1,0 +1,4 @@
+@define-placeholder text-overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

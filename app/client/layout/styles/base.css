@@ -11,16 +11,152 @@ h4 {
   font-weight: 300;
 }
 
-.md-list-item-text {
-  width: 100%;
-  @nest & h3 {
-    color: rgba(0, 0, 0, .85);
+.mr-0 {
+  margin-right: 0;
+  @nest & .md-subheader-inner {
+    padding-left: 0;
   }
-  @nest & h4 {
-    color: rgba(0, 0, 0, .65);
+}
+
+.section--inner {
+
+  @nest & md-toolbar {
+    width: 8px;
   }
+
+  @nest & > *:not(md-toolbar) {
+    width: calc(100% - 8px);
+  }
+
 }
 
 md-menu-item > .md-button md-icon {
   margin-right: 0;
 }
+
+ye-input {
+  display: block;
+}
+
+/*
+  // Reset and fix angular-material
+*/
+
+md-icon.mdi {
+  font-size: 24px;
+}
+
+md-radio-group[ng-model][role],
+md-radio-button[role][aria-label] {
+  background-color: transparent;
+}
+
+md-radio-button[role][aria-label] {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+md-tabs {
+  border-radius: 0;
+}
+
+md-toolbar {
+  @nest & span:first-of-type {
+    @extend text-overflow;
+  }
+}
+
+md-dialog {
+  @media (--screen-sm) {
+    width: 450px;
+  }
+  @media (--screen-md) {
+    width: 720px;
+  }
+}
+
+md-sidenav {
+
+  @media (max-width: 360px) {
+    min-width: auto;
+    width: calc(100% - 48px);
+  }
+
+  @nest &.x2 {
+    @media (--screen-sm) {
+      width: 450px;
+      max-width: none;
+    }
+  }
+
+}
+
+/*
+//  FIX
+*/
+md-tabs.md-client-theme .md-tab.md-active,
+md-tabs.md-client-theme .md-tab.md-active md-icon,
+md-tabs.md-client-theme .md-tab.md-focused,
+md-tabs.md-client-theme .md-tab.md-focused md-icon {
+  color: rgb(0,150,136);
+}
+
+md-toolbar .md-menu {
+  @media screen and (max-width: 600px) {
+    position: relative;
+    top: -4px;
+  }
+}
+
+md-backdrop,
+md-toast,
+md-sidenav {
+  position: fixed;
+}
+
+md-list-item {
+
+  position: relative;
+  margin: 8px 0;
+
+  @nest & .md-list-item-text {
+    width: 100%;
+    @nest & h3 {
+      color: rgba(0, 0, 0, .85);
+    }
+    @nest & h4 {
+      color: rgba(0, 0, 0, .65);
+    }
+  }
+
+  @nest & p:first-of-type {
+    @extend text-overflow;
+  }
+
+  @nest & md-menu {
+    position: absolute;
+    right: 2px;
+    top: calc(50% - 32px);
+    z-index: 1;
+  }
+
+  @nest &.md-3-line,
+  @nest &.md-3-line > .md-no-style {
+    @media screen and (max-width: 600px) {
+      min-height: 72px;
+    }
+    @media (--screen-sm) {
+      min-height: 86px;
+    }
+  }
+
+  @nest &.md-2-line {
+    @media screen and (max-width: 600px) {
+      min-height: 48px;
+    }
+    @media (--screen-sm) {
+      min-height: 56px;
+    }
+  }
+
+}
+
