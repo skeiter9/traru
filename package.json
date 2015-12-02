@@ -51,7 +51,9 @@
   "dependencies": {
     "autoprefixer": "^6.0.3",
     "postcss-alias": "^0.2.2",
+    "postcss-custom-media": "^5.0.0",
     "postcss-custom-properties": "^5.0.0",
+    "postcss-extend": "^1.0.1",
     "postcss-import": "^7.1.0",
     "postcss-nesting": "^2.0.6",
     "postcss-url": "^5.0.2"

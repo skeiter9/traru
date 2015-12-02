@@ -16,7 +16,7 @@
   width: 100%;
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.62);
+  background-color: #848484;
 }
 :local .ngF :global .h-cover {
   width: 100%;
@@ -31,9 +31,7 @@
   color: rgba(255, 255, 255, .85);
   font-size: 56px;
   width: 100%;
-  /*height: 56px;*/
   pointer-events: none;
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;

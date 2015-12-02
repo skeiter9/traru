@@ -1,6 +1,6 @@
 {
   "name": "traru",
-  "version": "1.0.0",
+  "version": "0.4.0",
   "main": "server/server.js",
   "scripts": {
     "build:angular": "lb-ng server/server.js client/api/api-lb.js -m apiLb"

@@ -1,11 +1,12 @@
-md-toolbar(md-theme = '{{layout.ui.sidenavRightTheme}}' md-theme-watch='')
+md-toolbar(
+  md-theme='{{layout.ui.sidenavRighTheme}}'
+  md-theme-watch
+)
 
   div(class = 'md-toolbar-tools')
 
     md-button(
       ng-click = 'layout.ui.sidenavRightToolbarIconLeftAction($event)'
-      md-theme = '{{layout.ui.sidenavRightTheme}}'
-      md-theme-watch = ''
       aria-label = 'close sidenav right'
       class = 'md-icon-button')
       md-icon(mdx-icon='{{layout.ui.sidenavRightToolbarIconLeft}}'

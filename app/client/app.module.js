@@ -15,6 +15,9 @@ import routesAM from './routes/routes.js';
 }
 
 export default angular.module('app', [routesAM.name])
-  .config(['$logProvider', ($lP) => {
+  .config(['$logProvider', 'appConfigProvider', 'gmapProvider',
+  ($lP, appCP, gmP) => {
+    gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
     $lP.debugEnabled(true);
+    appCP.setName('consama');
   }]);

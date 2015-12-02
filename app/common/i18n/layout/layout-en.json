@@ -55,7 +55,8 @@
       "IS_NUMBER": "this field must be a number",
       "IS_EMAIL": "this field must be an email",
       "MIN_LENGTH": "this field should have {{min}} as minimum",
-      "MAX_LENGTH": "this field should have {{max}} as maximum"
+      "MAX_LENGTH": "this field should have {{max}} as maximum",
+      "ANONYMOUS": "at least one field is wrong"
     },
     "FIELD_SUBMITED_ERROR": {
       "ERROR_DEFAULT": "form data is wrong",

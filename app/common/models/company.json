@@ -23,7 +23,7 @@
       "type": "hasMany",
       "model": "department",
       "foreignKey": "companyId"
-    } 
+    }
   },
   "acls": [],
   "methods": {}

@@ -1,0 +1,23 @@
+section
+  ye-cover(picture='api/pictures/persons/download/{{vm.item.photo}}')
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.FIRSTNAME' | translate | capitalize}}
+    h3 {{vm.item.firstName}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.LASTNAME' | translate | capitalize}}
+    h3 {{vm.item.lastName}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.EMAIL' | translate | capitalize}}
+    h3 {{vm.item.email}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.PHONE' | translate | capitalize}}
+    h3 {{vm.item.phone}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.BIRTHDAYDATE' | translate | capitalize}}
+    h3 {{vm.item.birthdayDate | date}}
+

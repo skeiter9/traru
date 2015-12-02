@@ -4,7 +4,12 @@ section(md-theme='#{moduleName}')
 
   form(name="form" novalidate='')
 
-    file-uploader(font-icon-bg='mdi mdi-factory' ng-model='mForm.form.photo' theme='#{moduleName}')
+    file-uploader(
+      font-icon-bg='mdi mdi-factory'
+      ng-model='mForm.form.photo'
+      container='companies'
+      theme='#{moduleName}'
+    )
 
     ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
     ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)

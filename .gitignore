@@ -4,3 +4,5 @@ app/client/node_modules
 app/client/coverage-reporter
 npm-debug.log
 app/npm-debug.log
+app/server/storage
+*.swp

@@ -1,0 +1,19 @@
+md-card(md-theme='worker')
+
+  md-toolbar: div(class='md-toolbar-tools')
+    span {{'MODEL.WORKER_PLURAL' | translate | capitalize}}
+    span(flex)
+    md-button(ng-if='vm.module.crud.c.status'
+      ng-click='vm.addItem($event)' class='md-icon-button'
+      aria-label='new client'
+    )
+      md-icon(md-font-icon='mdi mdi-plus')
+
+  module-list-wrapper(
+    module='vm.module'
+    items='vm.items'
+    initialize='{{vm.initialize}}'
+  )
+    md-list
+      md-list-item(ng-repeat='moduleItem in vm.items')
+        p hi

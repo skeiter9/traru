@@ -3,4 +3,7 @@
   background-size: cover;
   display: block;
   width: 100%;
+  @nest & :global .content-spinner {
+    height: 100%;
+  }
 }

@@ -13,6 +13,12 @@
       "type": "belongsTo",
       "model": "person",
       "foreignKey": "personId"
+    },
+    "cargos": {
+      "type": "hasMany",
+      "model": "cargo",
+      "foreignKey": "workerId",
+      "through": "cargoMapping"
     }
   },
   "acls": [],

@@ -1,22 +1,18 @@
-module.exports = function(Client) {
+const getApp = require('../utils/utils.js').getApp;
 
+module.exports = function(Client) {
   //Client.validatesPresenceOf('title');
 
-  const getApp = Model => new Promise((resolve, reject) => {
-    Model.getApp((err, app) => {
-      if (err) reject(err);
-      else resolve(app);
-    });
-  });
-
   Client.upsertItem = (data, cb) => {
-    console.log(data);
+
     getApp(Client)
+
     .then((app) => data.clientType === 0 ?
       app.models.person.create(data.person) :
       data.clientType === 1 ?
         app.models.company.create(data.company) :
         new Promise((resolve, r) => r(new Error('select person or company'))))
+
     .then(personOrCompany => {
       data.personOrCompany = personOrCompany;
       return Client.create({
@@ -25,7 +21,9 @@ module.exports = function(Client) {
         typeId: personOrCompany.id
       });
     })
+
     .then(res => cb(null))
+
     .catch(err => {
       if (!!data.personOrCompany) getApp(Client)
         .then((app) => data.personOrCompany.destroy())

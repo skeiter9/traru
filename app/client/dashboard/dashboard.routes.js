@@ -13,15 +13,17 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/',
       resolve: {
-        resolve: ['layout', 'Truck', '$q', (l, T, $q) => l.loadState({
+        resolve: ['layout', '$q', 'Truck', 'Route', 'Client', 'Worker',
+				'Company',
+        (l, $q, T, R, C, W, Co) => l.loadState({
           stateName: 'dashboard',
           models: [
-            {name:'truck', model: T}
-          ],
-          fn: () => {
-            if (l.loggued) l.loadTranslatePart('truck');
-            return l.loggued ? T.find().$promise : $q.when([]);
-          }
+            {name: 'truck', model: T},
+            {name: 'company', model: Co},
+            {name: 'route', model: R},
+            {name: 'client', model: C},
+            {name: 'worker', model: W}
+          ]
         })]
       },
       views: {

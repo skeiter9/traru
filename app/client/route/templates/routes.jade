@@ -1,0 +1,37 @@
+md-card(ng-if='module.model' md-theme='route')
+
+  md-toolbar: div(class='md-toolbar-tools')
+    span {{'MODEL.ROUTE_PLURAL' | translate | capitalize}}
+    span(flex)
+    md-button(ng-if='module.model.crud.c.status' ng-click='module.addItem($event)' class='md-icon-button' aria-label='new truck')
+      md-icon(md-font-icon='mdi mdi-plus')
+
+  module-list-wrapper(module='module.model' items='module.items'
+    initialize='{{module.initialize}}')
+    md-list(class='md-2-line')
+      md-list-item(ng-repeat='truck in module.items' ng-click='module.showItem($event, truck)')
+        img(ng-src="api/pictures/trucks/download/{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
+        //-div(class="md-list-item-text")
+        //-  h3 {{truck.model}}
+        //-  h4 {{truck.licensePlate}}
+        p {{truck.licensePlate}}
+        //-md-icon(md-font-icon='mdi mdi-map-marker' ng-click='module.showUbication($event)' aria-label="Options" class="md-secondary")
+        md-menu(md-position-mode="target-right target" class="md-secondary")
+          md-button(aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)")
+            md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
+          md-menu-content(width="3")
+            md-menu-item
+              md-button(ng-click="module.ubicationItem($event, truck)")
+                div(layout="row"  layout-align="space-between center")
+                  p(flex) {{'ACTIONS.SHOW_UBICATION' | translate | capitalize}}
+                  md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
+            md-menu-item(ng-if='module.model.crud.u.status')
+              md-button(ng-click="module.editItem($event, truck)")
+                div(layout="row"  layout-align="space-between center")
+                  p(flex) {{'ACTIONS.EDIT' | translate | capitalize}}
+                  md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
+            md-menu-item(ng-if='module.model.crud.d.status')
+              md-button(ng-click="module.removeItem($event, truck)")
+                div(layout="row"  layout-align="space-between center")
+                  p(flex) {{'ACTIONS.DELETE' | translate | capitalize}}
+                  md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")

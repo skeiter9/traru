@@ -1,6 +1,12 @@
 {
+  "WORKER": {
+    "ADD_CARGO": "add one cargo as minimum for this worker"
+  },
   "MODEL": {
     "WORKER": "worker",
     "WORKER_PLURAL": "workers"
+  },
+  "SENTENCES": {
+    "WARN_WORKER_NO_CARGOS": "there aren't cargos, please register at least one cargo to register new worker"
   }
 }

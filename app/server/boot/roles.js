@@ -39,7 +39,7 @@ module.exports = function(server) {
     });
   });
 
-  const getOperationName = (operation) => operation === 'u' ? 'prototype_updateAttributes' :
+  const getOperationName = (operation) => operation === 'u' ? 'updateAttributes' :
     operation === 'r' ? 'find' :
     operation === 'd' ? 'deleteById' : 'create';
 
@@ -140,7 +140,7 @@ module.exports = function(server) {
           principalId: res[1].id
         }) :
         Promise.resolve(res[2][0]),
-      parseAclsToSend(res[0], res[4], res[3], ['r', 'u']),
+      parseAclsToSend(res[0], res[4], res[3], ['c', 'r', 'u', 'd']),
       res[5].length === 0 ?
         server.models.settings.create({
           userId: res[1].id,
@@ -166,5 +166,48 @@ module.exports = function(server) {
     .catch((err) => {
       console.log(err);
     });
+
+  const Acl = server.models.Acl;
+  const User = server.models.User;
+  const Role = server.models.Role;
+
+  Role.registerResolver('createRoute', createRoute);
+
+  //--
+  function createRoute(role, ctx, cb) {
+
+    // if the target model is not project
+    if (ctx.modelName !== 'route') return reject(cb);
+
+    // do not allow anonymous users
+    if (!ctx.accessToken.userId) return reject(cb);
+
+    User.findById(userId, {include: 'roles'}, (err, user) => {
+
+      if (err) return reject(cb);
+
+      async.detect(user.roles,
+      (role, callback) => {
+        Acl.findOne({where: {principalType: 'ROLE', principalId:
+          role.name, model: 'route', property: 'create',
+          accessType: 'WRITE'}},
+        (err, acl) => {
+          if (err) callback(false);
+          else if (acl === null) callback(false);
+          else callback(true);
+        });
+      },
+
+      (results) => {
+        if (results) cb(null, true);
+        else reject(cb);
+      });
+
+    });
+  }
+
+  function reject(cb) {
+    process.nextTick(() => cb(null, false));
+  }
 
 };

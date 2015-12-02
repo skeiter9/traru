@@ -1,0 +1,84 @@
+section
+
+  md-subheader(
+    ng-if='mForm.noCargos'
+    class='md-no-sticky md-warn'
+  ) {{'SENTENCES.WARN_WORKER_NO_CARGOS' | translate | capitalize}}   
+
+  md-select(
+    ng-if='mForm.formAux.personId != 0 && !mForm.noCargos'
+    ng-model="mForm.formAux.personId"
+    placeholder='{{"SENTENCES.SELECT_PERSON" | translate | capitalize}}'
+    md-on-open="mForm.loadPersons()"
+    aria-label='select truck'
+  )
+    md-option(ng-repeat="p in mForm.persons"
+      ng-value="p.id") {{p.firstName}}
+    md-option(value='0') {{'SENTENCES.REGISTER_PERSON' | translate | capitalize}}
+
+  form(name='form' novalidate ng-if='!!mForm.formAux.personId')
+
+    person-form(
+      ng-if='mForm.formAux.personId == 0'
+      form-data='mForm.form.person'
+      in-worker
+    )
+
+    //- Cargos
+    md-subheader(class='md-no-sticky md-primary'
+    ) {{'MODEL.CARGO_PLURAL' | translate | capitalize}}   
+
+    div(ng-repeat='d in mForm.departments')
+      md-subheader(class='md-no-sticky'
+      ) {{d.name | translate | capitalize}}   
+
+      md-input-container: md-checkbox(
+        ng-repeat='c in d.cargos'
+        ng-model='mForm.formAux.cargos[c.id]'
+      ) {{c.name | translate | capitalize}}
+
+    md-list-item
+      p {{'SENTENCES.ADD_USER' | translate | capitalize}}
+      md-switch(class='md-secondary' ng-model='mForm.addUser')
+
+    section(ng-if='mForm.addUser')
+
+      ye-input(
+        label='fields.username'
+        field='user.username'
+        icon='mdi mdi-account'
+        md-no-float
+        ng-required='mForm.addUser'
+      )
+
+      ye-input(
+        label='fields.password'
+        field='user.password'
+        icon='mdi mdi-key'
+        type='password'
+        ng-required='mForm.addUser'
+        md-no-float
+      )
+
+      ye-input(
+        label='fields.passwordReiterer'
+        field='passwordReiter'
+        mForm='mFormAux'
+        icon='mdi mdi-key'
+        type='password'
+        ng-required='mForm.addUser'
+        md-no-float
+      )
+
+      md-select(
+        placeholder='{{"SENTENCES.PREFERRED_LANGUAGE"| translate | capitalize}}'
+        ng-model='mForm.form.user.settings.preferredLanguage'
+        name='preferredLanguage'
+        required
+      )
+        md-option(
+          ng-repeat='lang in ["en", "es"]'
+          ng-value='lang'
+        ) {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
+
+    form-actions

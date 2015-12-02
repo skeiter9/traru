@@ -64,5 +64,37 @@
   "roleMapping": {
     "dataSource": "mongoDs",
     "public": true
+  },
+  "route": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "person": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "client": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "company": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "worker": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "department": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "cargo": {
+    "dataSource": "mongoDs",
+    "public": true
+  },
+  "cargoMapping": {
+    "dataSource": "mongoDs",
+    "public": true
   }
 }

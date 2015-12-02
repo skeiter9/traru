@@ -24,31 +24,38 @@ export default angular
 
         let maxlengthAttr = isDefined(tA.preMdMaxlength) ?
           'md-maxlength = \'' +
-            (parseInt(tA.preMdMaxlength) ? tA.preMdMaxlength : 140) + '\'' :
-          '';
+            (parseInt(tA.preMdMaxlength) ?
+              tA.preMdMaxlength : 140) + '\'' :
+              '';
 
         let mdInputContainer = angular.element(`
           <md-input-container
             ${isDefined(tA.checkbox) ? 'checkbox' : ''}
             ${isDefined(tA.switch) ? 'switch' : ''}
+            ${isDefined(tA.mdNoFloat) ? 'md-no-float' : ''}
             ${tA.radio && tA.icon ? 'radio-icon' : ''}
-            class = "${tA.icon ? 'md-icon-float' : ''}"
+            class = "${!tA.mdNoFloat && tA.icon ? 'md-icon-float' : ''}"
           >
           </md-input-container>
         `);
 
         let label = isDefined(tA.checkbox) ||
-          isDefined(tA.switch)  ||
+          isDefined(tA.switch) ||
+          isDefined(tA.mdNoFloat) ||
           isDefined(tA.radio) ?
           tA.label === '' ?
-            '' :
-            `{{'${tA.label}' |uppercase | translate | capitalize}}` :
+            '' : `{{'${tA.label}' | uppercase | translate | capitalize}}` :
           angular.element(`
             <label>
               {{'${tA.label}' |uppercase | translate | capitalize}}
+              {{${tA.labelComplement}}}
             </label>
-            ${tA.icon ? '<md-icon md-font-icon = "' + tA.icon + '"/>' : ''}
           `);
+
+        const iconTag = `${tA.icon ? 
+          '<md-icon md-font-icon = "' + tA.icon + '"/>' :
+          ''
+        }`;
 
         let inputOTextarea = isDefined(tA.radio) ? angular.element(
           `
@@ -77,11 +84,12 @@ export default angular
           ) : isDefined(tA.geoposition) ? angular.element(
             `<input
               gmap-geolocation
-              theme = '${tA.theme}'
+              theme = '{{:: ${tA.mForm}.theme || ${tA.theme}}}'
               title = '${tA.title}'
               ng-model-geo="${tA.mForm}.form.${tA.field}"
               ng-model="${tA.mForm}.formAux.${tA.field}"
               name="${tA.name}"
+              ${isDefined(tA.waypoint) ? 'waypoint' : ''}
               ${isDefined(tA.required) ? 'required' : ''}
             />`
           ) : isDefined(tA.textarea) ? angular.element(
@@ -110,9 +118,16 @@ export default angular
             type="${isDefined(tA.type) ? tA.type : 'text'}"
             ng-model="${tA.mForm}.${formOrformAux}.${tA.field}"
             name="${tA.name}"
+            ${tA.mdNoFloat ? 'placeholder="' + label + '"' : ''}
             ${isDefined(tA.required) ? 'required' : ''}
+            ${isDefined(tA.ngRequired) ?
+              'ng-required="' + tA.ngRequired + '"' :
+              ''
+            }
             ${isDefined(tA.maxlength) ?
-              'maxlength="' + tA.maxlength + '"'  : ''}
+              'maxlength="' + tA.maxlength + '"'  :
+              ''
+            }
             ${maxlengthAttr}
             ng-model-options="{ updateOn: 'default', debounce: {'blur': 200} }"
           />`
@@ -124,7 +139,8 @@ export default angular
           </div>`
         );
 
-        if (isDefined(tA.required)) messages.append(angular.element(`
+        if (isDefined(tA.required) || isDefined(tA.ngRequired)
+        ) messages.append(angular.element(`
           <div ng-message="required">
             {{'FORM.FIELD_ERROR.REQUIRED' | translate | capitalize}}
           </div>`
@@ -161,8 +177,11 @@ export default angular
         if (
           angular.isUndefined(tA.checkbox) &&
           angular.isUndefined(tA.radio) &&
-          angular.isUndefined(tA.switch)
+          angular.isUndefined(tA.switch) &&
+          angular.isUndefined(tA.mdNoFloat)
         ) mdInputContainer.append(label);
+
+        if (!!iconTag) mdInputContainer.append(iconTag);
 
         mdInputContainer.append(inputOTextarea);
 
@@ -188,7 +207,7 @@ export default angular
     return {
       restrict: 'E',
       compile(tE, tA) {
-        tE.css({marginTop: '16px', marginBottom: '20px'});
+        //tE.css({marginTop: '16px', marginBottom: '20px'});
         tE.addClass('layout-row layout-align-end-center');
         tA.mForm = angular.isDefined(tA.mForm) ? tA.mForm : 'mForm';
         const label = !!tA.label ?

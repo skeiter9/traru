@@ -9,14 +9,143 @@ md-card(md-theme='traru')
     )
       md-icon(md-font-icon='mdi mdi-plus')
 
-
   module-list-wrapper(module='vm.module' items='vm.items'
     initialize='{{vm.initialize}}'
   )
-    md-list Traru
 
-  md-tabs
-    md-tab
-      md-tab-label {{ 'MODEL.DEPARTMENT_PLURAL' | translate | capitalize }} 
-      md-tab-body aqui los cargos
+    md-tabs(
+      class='md-primary'
+      md-dynamic-height
+      ng-init='company = vm.items[0]'
+    )
+
+      md-tab
+        md-tab-label {{ 'SENTENCES.SUMMARY' | translate | capitalize }} 
+        md-tab-body
+
+          company-show(item='company')
+
+          md-divider
+          section(layout layout-align='end center')
+            md-button(
+              class='md-icon-button'
+              aria-label='new Department'
+              ng-click='vm.formItem($event, company, null, "department")'
+            ): md-icon(md-font-icon='mdi mdi-pencil')
+
+      md-tab
+        md-tab-label {{ 'MODEL.DEPARTMENT_PLURAL' | translate | capitalize }} 
+        md-tab-body
+
+          md-subheader(
+            class='md-warn md-no-sticky'
+            ng-show='company.departments.length == 0'
+          ) {{'API.NO_ITEMS' | translate | capitalize}}
+
+          md-content(style={'max-height': '220px'}): md-list
+
+            md-list-item(
+              ng-repeat-start='d in company.departments'
+              ng-click='vm.showItem($event, d, d.name, "department")'
+              ng-init='aux.departments[$index] = 0'
+              class='md-3-line fx-stagger-150 fx-fade-down fx-dur-750 fx-ease-none'
+            )
+              div(class='md-list-item-text')
+                h3 {{d.name}} 
+                h4 {{d.description}}
+                p {{'MODULE.NUM_CARGOS' | translate: {cargos: d.cargos.length} :
+                  | 'messageformat' | capitalize}}
+
+              md-menu(
+                md-position-mode="target-right target"
+                class='md-menu-in-list-item'
+              )
+                md-button(
+                  aria-label="menu for department {{d.name}}"
+                  class="md-icon-button"
+                  ng-click="$mdOpenMenu($event)"
+                ): md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
+                md-menu-content(width="3")
+                  md-menu-item
+                    md-button(
+                      ng-click="d.cargos.length > 0 ? aux.departments[$index] = aux.departments[$index] == 0 ? '1' : '0' : vm.formItem($event, d, null, 'cargo')"
+                    )
+                      div(layout="row" layout-align="space-between center")
+                        p(flex) {{d.cargos.length > 0 ? 'MODEL.CARGO_PLURAL' :
+                          | 'MODULE.ADD_CARGO' | translate | capitalize}}
+                        md-icon(md-menu-align-target md-font-icon="mdi mdi-chevron-down")
+                  md-menu-item
+                    md-button(
+                      ng-click="vm.formItem($event, company, d, 'department')"
+                    )
+                      div(layout="row" layout-align="space-between center")
+                        p(flex) {{'MODULE.EDIT' | translate | capitalize}}
+                        md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
+                  md-menu-item
+                    md-button(
+                      ng-click="vm.deleteItem($event, d, 'department')"
+                    )
+                      div(layout="row" layout-align="space-between center")
+                        p(flex) {{'MODULE.DELETE' | translate | capitalize}}
+                        md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")
+
+            section-inner(
+              ng-repeat-end
+              ng-if='d.cargos.length > 0'
+              ng-show='aux.departments[$index] == 1'
+            )
+              md-divider
+              md-subheader(class='md-primary md-no-sticky')
+                | {{'MODEL.CARGO_PLURAL' | translate | capitalize}}
+
+              md-list
+                md-list-item(
+                  ng-repeat='cargo in d.cargos'
+                  ng-click='vm.showItem($event, cargo, cargo.name, "cargo")'
+                  class='md-2-line'
+                )
+                  div(class='md-list-item-text')
+                    h3 {{cargo.name}}
+                    p {{cargo.description}}
+
+                  md-menu(
+                    md-position-mode="target-right target"
+                    class='md-menu-in-list-item'
+                  )
+                    md-button(
+                      aria-label="opstions for cargo: {{cargo.name}}"
+                      class="md-icon-button"
+                      ng-click="$mdOpenMenu($event)"
+                    )
+                      md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
+                    md-menu-content(width="3")
+                      md-menu-item
+                        md-button(ng-click="vm.formItem($event, d, cargo, 'cargo')")
+                          div(layout="row"  layout-align="space-between center")
+                            p(flex) {{'MODULE.EDIT' | translate | capitalize}}
+                            md-icon(md-menu-align-target
+                              md-font-icon="mdi mdi-pencil")
+                      md-menu-item
+                        md-button(ng-click="vm.deleteItem($event, cargo, 'cargo')")
+                          div(layout="row"  layout-align="space-between center")
+                            p(flex) {{'MODULE.DELETE' | translate | capitalize}}
+                            md-icon(md-menu-align-target
+                              md-font-icon="mdi mdi-delete")
+
+              md-divider
+              section(layout layout-align='end center')
+                md-button(
+                  class='md-icon-button'
+                  aria-label='new Department'
+                  ng-click='vm.formItem($event, d, null, "cargo")'
+                ): md-icon(md-font-icon='mdi mdi-plus')
+              md-divider
+
+          md-divider
+          section(layout layout-align='end center')
+            md-button(
+              class='md-icon-button'
+              aria-label='new Department'
+              ng-click='vm.formItem($event, company, null, "department")'
+            ): md-icon(md-font-icon='mdi mdi-plus')
 

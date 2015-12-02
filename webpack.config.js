@@ -4,10 +4,6 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 const srcPath = path.join(__dirname, 'app', 'client');
 
-const postcssUrl = require('postcss-url');
-const autoprefixer = require('autoprefixer');
-const customProperties = require('postcss-custom-properties');
-
 const config = {
   addVendor(name, path_) {
     this.resolve.alias[name] = path_;
@@ -45,7 +41,7 @@ const config = {
   },
   resolve: {
     alias: [],
-    modulesDirectories: ['node_modules']
+    modulesDirectories: ['node_modules', 'lib_components']
   },
   resolveLoader: {
     modulesDirectories: [
@@ -72,9 +68,11 @@ const config = {
         }),
         require('postcss-alias')(),
         require('postcss-nesting')(),
-        postcssUrl(),
-        customProperties(),
-        autoprefixer()
+        require('postcss-extend')(),
+        require('postcss-url')(),
+        require('postcss-custom-properties')(),
+        require('postcss-custom-media')(),
+        require('autoprefixer')()
       ],
     };
   }
@@ -90,3 +88,4 @@ config.addVendor('angular-ui-router-min',
 config.module.noParse.push(/api-lb\.js/);
 
 module.exports = config;
+

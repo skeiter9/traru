@@ -2,8 +2,9 @@ md-toolbar
 	include ./appbar.jade
 
 md-sidenav(
-	fix-overlay=''
-	md-component-id = 'left' class = 'md-whiteframe-z2 md-sidenav-left')
+	md-component-id='left'
+	class='md-sidenav-left md-whiteframe-z2'
+)
 	include ./sidenav-left.jade
 
 md-content(
@@ -12,7 +13,8 @@ md-content(
 	ng-class='layout.ui.content.classContainer')
 
 md-sidenav(
-	md-component-id = 'right'
-	class = 'md-sidenav-right'
-	ng-class = 'layout.ui.sidenav.right.type')
+	md-component-id='right'
+	class = 'md-sidenav-right md-whiteframe-z2'
+	ng-class='layout.ui.sidenavRightContentClass'
+)
 	include ./sidenav-right.jade

@@ -1,0 +1,54 @@
+md-card(md-theme='client')
+
+  md-toolbar: div(class='md-toolbar-tools')
+    span {{'MODEL.CLIENT_PLURAL' | translate | capitalize}}
+    span(flex)
+    md-button(ng-if='module.model.crud.c.status'
+      ng-click="module.formItem($event)"
+      class='md-icon-button'
+      aria-label='new client'
+    ): md-icon(md-font-icon='mdi mdi-plus')
+
+  module-list-wrapper(
+    module='module.model'
+    items='module.items'
+    initialize='{{module.initialize}}'
+  )
+    md-list
+      md-list-item(
+        ng-repeat='client in module.items'
+        ng-click='module.showItem(event, client)'
+        class='md-2-list fx-rotate-up-left fx-stagger-245'
+      )
+        img(
+          ng-src="api/pictures/{{!!client.person ? 'persons' : 'companies'}}/download/{{!!client.person ? client.person.photo : client.company.photo}}"
+          class="md-avatar"
+          alt='client photo'
+        )
+        div(class='md-list-item-text')
+          h3 {{!!client.person ? client.person.firstName : client.company.socialName}}
+          h4 {{!!client.person ? (client.person.nacionalityId.number) : client.company.ruc}}
+
+        md-menu(
+          md-position-mode="target-right target"
+          class='md-menu-in-list-item'
+        )
+          md-button(
+            aria-label="opstions for client"
+            class="md-icon-button"
+            ng-click="$mdOpenMenu($event)"
+          )
+            md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
+          md-menu-content(width="3")
+            md-menu-item
+              md-button(ng-click="module.formItem($event, client)")
+                div(layout="row"  layout-align="space-between center")
+                  p(flex) {{'MODULE.EDIT' | translate | capitalize}}
+                  md-icon(md-menu-align-target
+                    md-font-icon="mdi mdi-pencil")
+            md-menu-item
+              md-button(ng-click="module.deleteItem($event, client)")
+                div(layout="row"  layout-align="space-between center")
+                  p(flex) {{'MODULE.DELETE' | translate | capitalize}}
+                  md-icon(md-menu-align-target
+                    md-font-icon="mdi mdi-delete")

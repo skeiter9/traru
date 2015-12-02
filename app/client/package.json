@@ -1,4 +1,5 @@
 {
+  "name": "traru-client-web",
   "devDependencies": {},
   "dependencies": {
     "angular": "^1.4.7",
@@ -15,6 +16,7 @@
     "async": "^1.5.0",
     "mdi": "^1.2.65",
     "ng-file-upload": "^10.0.2",
+    "ng-fx": "^2.0.4",
     "verge": "^1.9.1"
   }
 }

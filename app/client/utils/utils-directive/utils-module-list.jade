@@ -1,0 +1,35 @@
+div(
+  layout 
+  layout-align='center center'
+  ng-if='!vm.initialize'
+)
+  md-progress-circular(
+    class="md-primary"
+    md-mode="indeterminate"
+    md-diameter="40"
+  )
+
+md-subheader(
+  ng-if='vm.initialize && !vm.module.crud.r.status'
+  class='md-warn md-no-sticky'
+) {{'MODULE.NO_READ_PERMIT' | translate:{modulePlural: vm.pluralName} |
+  | capitalize}}
+
+md-subheader(
+  ng-if='vm.initialize && vm.module.crud.r.status && !!!vm.items'
+  class='md-warn md-no-sticky'
+) {{'MODULE.NO_FETCH_ITEMS' | translate:{modulePlural: vm.pluralName} |
+  | capitalize}}
+
+md-subheader(
+  ng-if='vm.initialize && vm.module.crud.r.status && !!vm.items &&\
+    vm.items.length === 0'
+  class='md-warn md-no-sticky'
+) {{'MODULE.NO_ITEMS' | translate:{modulePlural: vm.pluralName} |
+  | capitalize}}
+
+div(
+  ng-if='vm.initialize && vm.module.crud.r.status && \
+    !!vm.items && vm.items.length > 0' 
+  ng-transclude
+)

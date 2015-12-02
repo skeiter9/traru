@@ -1,3 +1,10 @@
 form[name] ye-input md-input-container {
   background-image: none;
+  margin: 4px 14px;
+}
+
+md-select[ng-model] {
+  padding: 0 14px;
+  margin-bottom: 0;
+  margin-top: 16px;
 }

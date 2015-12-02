@@ -3,8 +3,8 @@ export function rules(urlRouterProvider) {
   urlRouterProvider
 
     .rule(($injector, $location) => {
-      let path = $location.path();
-      let normalized = $location.path().toLowerCase();
+      const path = $location.path();
+      const normalized = $location.path().toLowerCase();
       if ($location.path() !== normalized) return normalized;
     })
 
@@ -26,47 +26,44 @@ export function routes(stateProvider) {
       controllerAs: 'layout'
     })
 
+    .state('initCompany', {
+      url: '/init-company',
+      parent: 'layout',
+      resolve: {
+        resolve: ['layout', 'Company', (l, C) => l.loadState({
+          stateName: 'initCompany',
+          models: [
+            {name: 'company', model: C}
+          ]
+        })]
+      },
+      views: {
+			  content: {
+          controller: ['$state', function($st) {
+            this.a = 'SASAS';
+            this.formSuccess = () => $st.reload();
+          }],
+          controllerAs: 'vm',
+			    template: require('./templates/init-company.jade')()
+				}
+			}
+		})
+
     .state('e404', {
       url: '/{failState:[a-zA-Z0-9-]+}',
       parent: 'layout',
       resolve: {
-        //boot: ['layoutFactory', (lF) => lF.stateLoad('e404')]
+        resolve: ['layout', (l) => l.loadState({
+          stateName: 'e404'
+        })]
       },
       params: {
         failState: ''
       },
       views: {
         content: {
-          template: require('./views/e404.jade')(),
-          controllerAs: 'e404',
-          controller: ['$state', function E404Controller($s) {
-            this.failState = $s.params.failState;
-
-            //let appbarTitle = `404${
-            //  $sP.failState !== '404' ? ': ' + $sP.failState : ''}`;
-            //lF.appbarTitle = appbarTitle;
-          }]
-        },
+          template: require('./views/e404.jade')()
+        }
       }
     });
-  /*
-    .state('help', {
-      url: '/help',
-      parent: 'layout',
-      resolve: {
-        boot: ['layoutFactory', (lF) => lF.stateLoad('help')]
-      },
-      views: {
-        'content@base': {
-          template: require('./views/help.jade')(),
-          controller: ['layoutFactory', HelpController]
-        },
-      }
-    });
-  */
-}
-
-//help
-function HelpController(lF) {
-  lF.appbarTitle = 'help';
 }

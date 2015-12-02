@@ -24,7 +24,7 @@ module.exports = function(config) {
       'vendor.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'app-test.js',
-      '**/*_testo.js'
+      '**/*_test.js'
     ],
 
     // list of files to exclude

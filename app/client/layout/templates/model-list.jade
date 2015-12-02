@@ -1,42 +1,42 @@
-md-card
+md-card(ng-if='module.model')
 
   md-toolbar: div(class='md-toolbar-tools')
-    span {{'MODEL.TRUCK_PLURAL' | translate | capitalize}}
+    span {{'MODEL.ROUTE_PLURAL' | translate | capitalize}}
     span(flex)
-    md-button(ng-if='trucks.model.crud.c.status' ng-click='trucks.addItem($event)' class='md-icon-button' aria-label='new truck')
+    md-button(ng-if='module.model.crud.c.status' ng-click='module.addItem($event)' class='md-icon-button' aria-label='new truck')
       md-icon(md-font-icon='mdi mdi-plus')
 
-  div(layout layout-align='center center' ng-if='!trucks.initialize' )
+  div(layout layout-align='center center' ng-if='!module.initialize' )
     md-progress-circular(class="md-primary" md-mode="indeterminate" md-diameter="40")
 
-  md-subheader(ng-if='trucks.initialize && !trucks.model.crud.r.status' class='md-warn') don't have permit to read trucks
-  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!!trucks.items' class='md-warn') there's no trucks(data incomplete)
-  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!trucks.items && trucks.items.length === 0' class='md-warn') there's no trucks
+  md-subheader(ng-if='module.initialize && !module.model.crud.r.status' class='md-warn') don't have permit to read routes
+  md-subheader(ng-if='module.initialize && module.model.crud.r.status && !!!module.items' class='md-warn') there's no routes(data incomplete)
+  md-subheader(ng-if='module.initialize && module.model.crud.r.status && !!module.items && module.items.length === 0' class='md-warn') there's no trucks
 
-  md-list(ng-if='trucks.initialize && trucks.model.crud.r.status && !!trucks.items && trucks.items.length > 0' class='md-2-line')
-    md-list-item(ng-repeat='truck in trucks.items' ng-click='trucks.showItem($event, truck)')
+  md-list(ng-if='module.initialize && module.model.crud.r.status && !!module.items && module.items.length > 0' class='md-2-line')
+    md-list-item(ng-repeat='truck in module.items' ng-click='module.showItem($event, truck)')
       img(ng-src="api/pictures/trucks/download/{{truck.photo}}" class="md-avatar" alt='{{item.model}}')
       //-div(class="md-list-item-text")
       //-  h3 {{truck.model}}
       //-  h4 {{truck.licensePlate}}
       p {{truck.licensePlate}}
-      //-md-icon(md-font-icon='mdi mdi-map-marker' ng-click='trucks.showUbication($event)' aria-label="Options" class="md-secondary")
+      //-md-icon(md-font-icon='mdi mdi-map-marker' ng-click='module.showUbication($event)' aria-label="Options" class="md-secondary")
       md-menu(md-position-mode="target-right target" class="md-secondary")
         md-button(aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)")
           md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
         md-menu-content(width="3")
           md-menu-item
-            md-button(ng-click="trucks.ubicationItem($event, truck)")
+            md-button(ng-click="module.ubicationItem($event, truck)")
               div(layout="row"  layout-align="space-between center")
                 p(flex) {{'ACTIONS.SHOW_UBICATION' | translate | capitalize}}
                 md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
-          md-menu-item(ng-if='trucks.model.crud.u.status')
-            md-button(ng-click="trucks.editItem($event, truck)")
+          md-menu-item(ng-if='module.model.crud.u.status')
+            md-button(ng-click="module.editItem($event, truck)")
               div(layout="row"  layout-align="space-between center")
                 p(flex) {{'ACTIONS.EDIT' | translate | capitalize}}
                 md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
-          md-menu-item(ng-if='trucks.model.crud.d.status')
-            md-button(ng-click="trucks.removeItem($event, truck)")
+          md-menu-item(ng-if='module.model.crud.d.status')
+            md-button(ng-click="module.removeItem($event, truck)")
               div(layout="row"  layout-align="space-between center")
                 p(flex) {{'ACTIONS.DELETE' | translate | capitalize}}
                 md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")

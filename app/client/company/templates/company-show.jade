@@ -1,0 +1,19 @@
+section
+  ye-cover(picture='api/pictures/companies/download/{{vm.item.photo}}')
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.SOCIALNAME' | translate | capitalize}}
+    h3 {{vm.item.socialName}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.COMERCIALNAME' | translate | capitalize}}
+    h3 {{vm.item.comercialName}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.RUC' | translate | capitalize}}
+    h3 {{vm.item.ruc}}
+
+  md-list-item(class='md-2-line'): div(class='md-list-item-text')
+    h4 {{'FIELDS.PHONE' | translate | capitalize}}
+    h3 {{vm.item.phone}}
+

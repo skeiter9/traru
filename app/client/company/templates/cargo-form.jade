@@ -1,0 +1,17 @@
+form(name='form' novalidate)
+
+  ye-input(label='fields.name' field='name' required)
+  ye-input(label='fields.description' field='description' textarea)
+
+  md-select(
+    ng-if='mForm.showSelect'
+    ng-model='mForm.form.departmentId'
+    md-on-open='mForm.loadDepartments()'
+    placeholder='{{"SENTENCES.SELECT_DEPARTMENT" | translate | capitalize}}'
+  )
+    md-option(
+      ng-repeat='d in mFom.departments'
+      ng-value='d.id'
+    ) {{d.name | capitalize}}
+
+  form-actions

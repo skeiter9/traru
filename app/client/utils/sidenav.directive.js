@@ -1,77 +1,55 @@
-'use strict';
+export default angular.module('componentsSidenavContent', ['ngMaterial'])
 
-module.exports = angular
-  .module('componentsSidenavContent', [])
-  /*
-  .directive('fixOverlay', ['layoutFactory', '$mdSidenav', '$document',
-    '$timeout', [(lF, $mdS, $d, $ti) => {
-      return {
-        link(s, elem, attrs) {
+  .directive('mdSelectBackdrop', ['$mdSidenav', '$document', ($mdS, $d) => ({
+    restrict: 'C',
+    link(s, elem) {
+      $d[0].body.style.removeProperty('overflow');
+    }
+  })])
 
-          let t1;
+  .directive('mdSidenavBackdrop', ['$mdSidenav', '$document', ($mdS, $d) => ({
+    restrict: 'C',
+    link(s, elem, attrs) {
 
-          //s.$watch(() => $mdS('left').isOpen(), () => appearSidenav(tog, 'left'));
-          s.$watch(() => $mdS('right').isOpen(),
-            (toggle) => appearSidenav(toggle, 'right'));
+      const w1 = s.$watchGroup([
+        () => $mdS('left').isOpen(),
+        () => $mdS('right').isOpen()
+      ],
+      (nVs, oVs) => !nVs[0] && !nVs[1] ?
+        $d[0].body.style.removeProperty('overflow') :
+        $d[0].body.style.overflow = 'hidden'
+      );
 
-          function appearSidenav(toggle, idS) {
+      s.$on('$destroy', () => w1());
 
-            if (toggle) t1 = $ti(() => {
-              let overlay = $d[0].body.querySelector('.md-sidenav-backdrop');
-              angular.element(overlay).on('click', (e) => {
-                lF.sidenavAction('right', false);
+    }
+  })])
 
-                //e.stopPropagation();
-              });
-            }, 0);
-
-          }
-
-          s.$on('$destroy', () => {
-            if (t1) $ti.cancel(t1);
-          });
-
-        }
-      };
-    }]])
-  */
   .directive('mdxSidenavContent', ['$compile', '$timeout', '$animate',
-    ($c, $t, $a) => {
+    ($c, $t, $a) => ({
+      scope: {
+        content: '='
+      },
+      restrict: 'A',
+      link: (s, elem, attrs) => {
 
-      return {
-        scope: {
-          content: '='
-        },
-        restrict: 'A',
-        link: (s, elem, attrs) => {
+        const uppateContent = s.$watch('content', () => {
 
-          const reload = () => {
+          if (!angular.isObject(s.content)) s.content = {};
 
-            if (!angular.isObject(s.content)) s.content = {};
+          const content = $c(angular.element(s.content.html || '<br/>'))
+            (s.content.scope || s);
 
-            const content = $c(angular.element(s.content.html || '<br/>'))
-              (s.content.scope || s);
+          const t1 = $t(() => {
+            let prevContent = elem.children();
+            prevContent.remove();
+            elem.append(content);
+            $t.cancel(t1);
+          }, 0);
 
-            //content.addClass('fx-fade-down fx-speed-300');
-            //let toolbar = elem.parent().find('md-toolbar').eq(0);
-            $t(() => {
-              let prevContent = elem.children();
-              prevContent.remove();
-              elem.append(content);
+        });
 
-              //prevContent.removeClass('fx-fade-down');
-              //prevContent.addClass('fx-fade-right');
-              //$a.leave(prevContent)
-              //  .then(() => $a.enter(content, elem));
-            }, 0);
+        s.$on('$destroy', () => uppateContent());
 
-          };
-
-          const uppateContent = s.$watch('content', reload);
-
-          s.$on('$destroy', () => uppateContent());
-
-        }
-      };
-
-    }]);
+      }
+    })]);

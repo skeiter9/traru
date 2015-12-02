@@ -1,0 +1,60 @@
+- var moduleName = 'client';
+
+section(md-theme='#{moduleName}')
+
+  md-tabs(md-center-tabs md-stretch-tabs='always'
+    md-border-bottom class='md-primary'
+    md-dynamic-height
+    md-selected="mForm.form.clientType"
+  )
+    md-tab(ng-disabled='mForm.update')
+      md-tab-label: md-icon(md-font-icon='mdi mdi-account')
+      md-tab-body
+
+        md-select(
+          ng-model="mForm.personaId"
+          ng-if='mForm.personaId != 0 && !mForm.update'
+          placeholder='{{"SENTENCES.SELECT_PERSON" | translate | capitalize}}'
+          md-on-open="mForm.loadPersons()" aria-label='select truck'
+          ng-disabled='!mForm.initialize || mForm.update'
+        )
+          md-option(
+            ng-repeat="person in mForm.persons"
+            ng-value="person.id"
+          ) {{person.firstName}}
+          md-option(
+            value='0'
+          ) {{'SENTENCES.REGISTER_PERSON' | translate | capitalize}}
+
+        person-form(
+          item='mForm.item.person'
+          ng-if='mForm.personaId == 0 || mForm.update'
+          form-data='mForm.form.person'
+          in-client='mForm.saveCC(mForm.form.person)'
+        )
+  
+    md-tab(ng-disabled='mForm.update')
+      md-tab-label: md-icon(md-font-icon='mdi mdi-factory')
+      md-tab-body
+
+        md-select(
+          ng-model="mForm.companyId"
+          ng-if='mForm.companyId != 0 && !mForm.update'
+          placeholder='{{"SENTENCES.SELECT_COMPANY" | translate | capitalize}}'
+          md-on-open="mForm.loadCompanies()" aria-label='select company'
+          ng-disabled='!mForm.initialize || mForm.update'
+        )
+          md-option(
+            ng-repeat="compani in mForm.companies"
+            ng-value="compani.id"
+          ) {{compani.socialName}}
+          md-option(
+            value='0'
+          ) {{'SENTENCES.REGISTER_COMPANY' | translate | capitalize}}
+
+        company-form(
+          item='mForm.item.company'
+          ng-if='mForm.companyId == 0 || mForm.update'
+          form-data='mForm.form.company'
+          in-client='mForm.saveCC()'
+        )

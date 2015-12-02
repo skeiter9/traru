@@ -10,6 +10,7 @@ export default angular.module('routes', [
     dashboardAM.name,
     loginAM.name
   ])
+
   .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   ($sP, $uRP, $lP) => {
 

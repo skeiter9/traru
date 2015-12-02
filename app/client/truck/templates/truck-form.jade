@@ -1,6 +1,8 @@
-form(name = "form" novalidate = '' md-theme='default')
+- var moduleName = 'truck';
 
-  file-uploader(font-icon='mdi mdi-camera' font-icon-bg='mdi mdi-truck' ng-model='mForm.form.photo')
+form(name="form" novalidate='' md-theme='#{moduleName}')
+
+  file-uploader(font-icon='mdi mdi-camera' font-icon-bg='mdi mdi-truck' ng-model='mForm.form.photo' theme='#{moduleName}')
 
   ye-input(label='fields.licensePlate' field='licensePlate' required)
   ye-input(label='fields.licensePlateLateral' field='licensePlateLateral' required)
@@ -8,7 +10,14 @@ form(name = "form" novalidate = '' md-theme='default')
   ye-input(label='fields.brand' field='brand' required)
   ye-input(label='fields.aka' field='aka')
   ye-input(label='fields.tare' field='tare' type='number')
-  ye-input(label='fields.description' field='description' textarea maxlength)
-  ye-input(label='fields.ubication' field='ubication' title='{{::mForm.form.licensePlate}}' geoposition theme='truck' required)
+
+  md-radio-group(ng-model="mForm.form.status")
+    md-radio-button(
+      ng-repeat='option in mForm.formAux.status'
+      ng-value="option.value") {{option.label | translate | capitalize}}
+
+  ye-input(label='fields.ubication' field='ubication' title='{{::mForm.form.licensePlate}}' geoposition required)
+  ye-input(label='fields.description' field='description' textarea maxlength )
+  
 
   form-actions

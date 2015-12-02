@@ -1,7 +1,6 @@
 import asyncAm from './async.factory.js';
 
-export default angular
-  .module('components.validForm', [asyncAm.name])
+export default angular.module('components.validForm', [asyncAm.name])
 
   .factory('yeValidFormMessage', [() => {
 
@@ -33,14 +32,18 @@ export default angular
 
   .factory('validFormUtils', ['$translate', '$mdToast', ($tr, $mdT) => {
     return {
-      catchError({err, modelName, operation}) {
-        const errCode = !!err.errorOne ?
-          err.errorOne.messageCode :
-          !!err.data && !!err.data.error && !!err.data.error.code ?
-          `API.${err.data.error.code}` : 'FORM.WRONG';
+      catchError({err, modelName = 'model', operation = 'save'}) {
 
-        const fieldOne = (!!err.errorOne ? err.errorOne.field : '')
-          .toUpperCase();
+        const errCode = !!err.errorOne ?
+            !!err.errorOne.field && err.errorOne.field.includes('anonymousField') ?
+             'FORM.FIELD_ERROR.ANONYMOUS' :
+              err.errorOne.messageCode :
+          !!err.data && !!err.data.error && !!err.data.error.code ?
+            `API.${err.data.error.code}` :
+            'FORM.WRONG';
+
+        const fieldOne = (!!err.errorOne ? err.errorOne.field : 'anonymous'
+          ).toUpperCase();
 
         return $mdT.showSimple($tr.instant(errCode, {
           field: $tr.instant('FIELDS.' + fieldOne),
@@ -51,57 +54,70 @@ export default angular
     };
   }])
 
-  .factory('yeValidForm', ['yeValidFormMessage', '$q', 'async', validForm]);
+  .factory('yeValidForm', ['yeValidFormMessage', '$q', 'async', '$log',
+  (yeValidFormMessage, $q, async, $l) => {
 
-function validForm(yeValidFormMessage, $q, async) {
+    return (form) => {
 
-  return (form) => {
+      let errors = {};
+      let errorOne = [];
 
-    let errors = {};
-    let errorOne = [];
+      const exeAction = (inputF, prop) => angular.isFunction(inputF[prop]) ?
+        inputF[prop]() : '';
 
-    return form.$invalid ?
-      $q((r, reject) => {
-        async.forEachOf(form.$error,
-          (value, typeError, cb) => {
-            async.each(value,
-              (inputFail, cbInner) => {
+      return form.$invalid ?
+        $q((r, reject) => {
+          async.forEachOf(form.$error,
+            (value, typeError, cb) => {
+              async.each(value,
+                (inputFail, cbInner) => {
 
-                const condition = 'condition'; //replace
-                const errData = {
-                  field: inputFail.$name,
-                  value: inputFail.$viewValue,
-                  error: typeError,
-                  messageCode: yeValidFormMessage(typeError, inputFail.$name,
-                    inputFail.$viewValue, condition)
-                };
+                  const condition = 'condition'; //replace
+                  const inputFailName = inputFail.$name ||
+                    (() => {
+                      $l.debug('anonymous field for ' + inputFail.$viewValue);
+                      return 'anonymousField' + Date.now().toString();
+                    })();
 
-                if (!!!errors[inputFail.$name]) errors[inputFail.$name] = [];
-                if (errorOne.length === 0) errorOne.push(errData);
+                  const errData = {
+                    field: inputFailName,
+                    value: inputFail.$viewValue,
+                    error: typeError,
+                    messageCode: yeValidFormMessage(typeError, inputFailName,
+                      inputFail.$viewValue, condition)
+                  };
 
-                errors[inputFail.$name].push(errData);
+                  if (!!!errors[errData.field]) errors[errData.field] = [];
+                  if (errorOne.length === 0) errorOne.push(errData);
 
-                cbInner(null);
-              },
+                  errors[errData.field].push(errData);
 
-              (errInner) => {
-                if (errInner) cb(errInner);
-                else cb(null);
+                  exeAction(inputFail, '$setDirty');
+                  exeAction(inputFail, '$serTouched');
+                  exeAction(inputFail, '$setSubmitted');
+
+                  cbInner(null);
+                },
+
+                (errInner) => {
+                  cb(null);
+                });
+
+            },
+
+            (err) => {
+
+              reject({
+                status: false,
+                errors: errors,
+                errorOne: errorOne[0],
+                form: form
               });
 
-          },
-
-          (err) => {
-
-            reject(err ? err : {
-              status: false,
-              errors: errors,
-              errorOne: errorOne[0]
             });
 
-          });
+        }) : $q.when({status: true});
 
-      }) : $q.when({status: true});
+    };
+  }]);
 
-  };
-}

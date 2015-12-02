@@ -1,0 +1,21 @@
+section(ng-if='vm.item')
+
+  md-list-item(class='md-2-line'): div(class="md-list-item-text")
+    h4 {{::vm.item.description || '...' | capitalize}}
+
+  section(ng-if='!!vm.item.cargos')
+
+    md-subheader(ng-if='vm.item.cargos.length == 0' class='md-no-sticky'
+    ) {{ 'MODULE.NO_CARGOS' | translate | capitalize}}
+
+    div(ng-if='vm.item.cargos.length > 0')
+
+      md-subheader(class='md-no-sticky md-primary'
+      ) {{'MODEL.CARGO_PLURAL' | translate | capitalize}}
+
+      div(ng-repeat='c in vm.item.cargos')
+
+        md-list-item(class='md-2-line'): div(class="md-list-item-text")
+          h3 {{::c.name | capitalize}}
+          h4 {{::c.description | capitalize}}
+
