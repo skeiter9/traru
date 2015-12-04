@@ -89,74 +89,74 @@ export default angular.module('truck', [
 
   .directive(`${moduleName}List`, ['layout', 'gmap', modelName, '$translate',
   '$log',
-  (l, gm, T, $tr, $l) => {
-    return {
-      restrict: 'E',
-      scope: {
-        model: '='
-      },
-      bindToController: true,
-      controller: angular.noop,
-      controllerAs: 'trucks',
-      template: require(`./templates/${moduleName}-list.jade`)(),
-      link(s, elem, attrs, trucks) {
+  (l, gm, T, $tr, $l) => ({
+    restrict: 'E',
+    scope: {
+      module: '='
+    },
+    bindToController: true,
+    controller: angular.noop,
+    controllerAs: 'vm',
+    template: require(`./templates/${moduleName}-list.jade`)(),
+    link(s, elem, attrs, vm) {
 
-        trucks.initialize = false;
+      const init = () => l.validModule(vm.module)
 
-        if (trucks.model.crud.r.status) {
-          trucks.model.model.find().$promise
-          .then((items) => {
-            trucks.items = items;
-            trucks.initialize = true;
-          })
-          .catch((err) => {
-            console.warn(err);
-            trucks.initialize = true;
-          });
-        }
+        .then(() => vm.module.model.find().$promise)
 
-        trucks.ubicationItem = (e, item) => gm.launchMap({
-          event: e,
-          geoposition: item.ubication,
-          title: item.licensePlate,
-          showMarker: true,
-          inDialog: true
+        .then(items => {
+          vm.items = items;
+          vm.initialize = true;
+        })
+
+        .catch(err => {
+          vm.initialize = true;
         });
 
-        trucks.showItem = (e, item) => l.sidenavRightAction({
-          scope: s,
-          title: item.licensePlate,
-          tag: 'truck',
-          item: item,
-          theme: 'truck'
-        });
+      init();
 
-        trucks.addItem = (e) => l.sidenavRightAction({
-          scope: s,
-          title: `SENTENCES.NEW`,
-          titleVars: {moduleName: $tr.instant('MODEL.TRUCK')},
-          tag: 'truck-form',
-          theme: 'truck'
-        });
+      vm.ubicationItem = (e, item) => gm.launchMap({
+        event: e,
+        geoposition: item.ubication,
+        title: item.licensePlate,
+        showMarker: true,
+        inDialog: true
+      });
 
-        trucks.editItem = (e, item) => l.sidenavRightAction({
-          scope: s,
-          title: `SENTENCES.EDIT`,
-          titleVars: {item: item.licensePlate},
-          tag: 'truck-form',
-          item: item,
-          theme: 'truck'
-        });
+      vm.showItem = (e, item) => l.sidenavRightAction({
+        scope: s,
+        title: item.licensePlate,
+        tag: 'truck',
+        item: item,
+        theme: 'truck'
+      });
 
-        trucks.removeItem = (e, item) => l.removeItem({
-          evt: e,
-          model: T,
-          item: item,
-          title: item.licensePlate,
-          modelName: 'truck'
-        });
+      vm.addItem = (e) => l.sidenavRightAction({
+        scope: s,
+        title: `SENTENCES.NEW`,
+        titleVars: {moduleName: $tr.instant('MODEL.TRUCK')},
+        tag: 'truck-form',
+        theme: 'truck'
+      });
 
-      }
+      vm.editItem = (e, item) => l.sidenavRightAction({
+        scope: s,
+        title: `SENTENCES.EDIT`,
+        titleVars: {item: item.licensePlate},
+        tag: 'truck-form',
+        item: item,
+        theme: 'truck'
+      });
 
-    };
-  }]);
+      vm.removeItem = (e, item) => l.removeItem({
+        evt: e,
+        model: T,
+        item: item,
+        title: item.licensePlate,
+        modelName: 'truck'
+      });
+
+    }
+
+  })]);
+

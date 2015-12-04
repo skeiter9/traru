@@ -1,7 +1,7 @@
 div(
   layout 
   layout-align='center center'
-  ng-if='!vm.initialize'
+  ng-show='!vm.initialize'
 )
   md-progress-circular(
     class="md-primary"
@@ -10,26 +10,33 @@ div(
   )
 
 md-subheader(
-  ng-if='vm.initialize && !vm.module.crud.r.status'
-  class='md-warn md-no-sticky'
+  ng-if='vm.initialize && !!!vm.module'
+  class='md-warn md-no-sticky fx-fade-down fx-dur-300 fx-ease-sine'
+) {{'MODULE.ERR_101' | translate | capitalize}}
+
+md-subheader(
+  ng-if='vm.initialize && !!vm.module && !vm.module.crud.r.status'
+  class='md-warn md-no-sticky fx-fade-down fx-dur-300 fx-ease-sine'
 ) {{'MODULE.NO_READ_PERMIT' | translate:{modulePlural: vm.pluralName} |
   | capitalize}}
 
 md-subheader(
   ng-if='vm.initialize && vm.module.crud.r.status && !!!vm.items'
-  class='md-warn md-no-sticky'
+  class='md-warn md-no-sticky fx-fade-down fx-dur-300 fx-ease-sine'
 ) {{'MODULE.NO_FETCH_ITEMS' | translate:{modulePlural: vm.pluralName} |
   | capitalize}}
 
 md-subheader(
   ng-if='vm.initialize && vm.module.crud.r.status && !!vm.items &&\
     vm.items.length === 0'
-  class='md-warn md-no-sticky'
+  class='md-warn md-no-sticky fx-fade-down fx-dur-300 fx-ease-sine'
 ) {{'MODULE.NO_ITEMS' | translate:{modulePlural: vm.pluralName} |
   | capitalize}}
 
 div(
   ng-if='vm.initialize && vm.module.crud.r.status && \
-    !!vm.items && vm.items.length > 0' 
+    !!vm.items && vm.items.length > 0'
   ng-transclude
+  class='fx-fade-down fx-dur-300 fx-ease-sine'
 )
+

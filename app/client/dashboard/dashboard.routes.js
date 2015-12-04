@@ -1,8 +1,8 @@
-export function rules(urlRouterProvider) {
-  urlRouterProvider.when('/panel-de-control', '/');
-  urlRouterProvider.when('/panel', '/');
-  urlRouterProvider.when('/home', '/');
-  urlRouterProvider.when('/inicio', '/');
+export function rules(uRP) {
+  uRP.when('/panel-de-control', '/');
+  uRP.when('/panel', '/');
+  uRP.when('/home', '/');
+  uRP.when('/inicio', '/');
 }
 
 export function routes(stateProvider) {

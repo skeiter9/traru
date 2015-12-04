@@ -19,7 +19,7 @@ const config = {
   output: {
     path: path.join(srcPath, 'build'),
     filename: '[name].bundle.js',
-    publicPath: 'build/',
+    publicPath: '/build/',
     pathinfo: true,
   },
   module: {
@@ -29,14 +29,26 @@ const config = {
       //{test:/\.js$/, loaders: ['jscs'], include: [srcPath]},
     ],
     loaders: [
-      {test: /\.js$/, loaders: ['babel'], include: [srcPath], exclude: [path.resolve(srcPath, 'api/api-lb.js')]},
+      {
+        test: /\.js$/,
+        loaders: ['babel'],
+        include: [srcPath],
+        exclude: [path.resolve(srcPath, 'api/api-lb.js')]
+      },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?localIdentName=[path][name]---[local]---[hash:base64:5]', 'postcss'],
+        loaders: [
+          'style',
+          'css?localIdentName=[path][name]---[local]---[hash:base64:5]',
+          'postcss'
+        ],
         include: [srcPath]
       },
       {test: /\.jade$/, loaders: ['jade'], include: [srcPath]},
-      {test: /\.(eot|ttf|svg|woff|woff2)$/, loaders: ['url?limit=40000&name=[name].[ext]']}
+      {
+        test: /\.(eot|ttf|svg|woff|woff2)$/,
+        loaders: ['url?limit=40000&name=[name].[ext]']
+      }
     ],
   },
   resolve: {

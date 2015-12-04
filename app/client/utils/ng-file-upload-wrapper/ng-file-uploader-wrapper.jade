@@ -1,7 +1,6 @@
 form(name='formNgF')
 
   div(
-
     ng-model="ngF.picFile"
     ngf-drop='ngF.upload(ngF.picFile)'
     name="file"
@@ -10,17 +9,22 @@ form(name='formNgF')
     ngf-max-size="4MB"
     ngf-min-height="404"
     ngf-resize="{width: 720, height: 404}"
-
     class="drop-box h-cover"
     ng-style='ngF.preBg'
   )
-    md-icon(md-font-icon='' ng-hide='ngF.picFile.progress || !!ngF.preBg.backgroundImage || ngF.preBg.backgroundImage == "none" ')
+    md-icon(
+      md-font-icon=''
+      ng-hide='ngF.picFile.progress || \
+        !!ngF.preBg.backgroundImage || \
+        ngF.preBg.backgroundImage == "none" '
+    )
     div(
       ngf-thumbnail="ngF.picFile"
       ngf-size="{width: 290, height: 163.125, ratio: '16x9'}"
       ngf-as-background='true'
       ng-style='ngF.hCover'
-      class='h-cover')
+      class='h-cover'
+    )
 
   md-button(
     ng-model="ngF.picFile"
@@ -32,7 +36,12 @@ form(name='formNgF')
     ngf-min-height="404"
     ngf-resize="{width: 720, height: 404}"
     aria-label='upload image'
-    class='md-fab md-accent')
+    class='md-fab md-accent'
+  )
     md-icon(md-font-icon='')
 
-  md-progress-linear(md-mode="determinate" value="{{ngF.picFile.progress}}")
+  md-progress-linear(
+    md-mode="determinate"
+    value="{{ngF.picFile.progress}}"
+    class='md-hue-1'
+  )

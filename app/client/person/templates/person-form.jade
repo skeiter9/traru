@@ -1,51 +1,61 @@
-- var moduleName = 'person';
+form(name="form" novalidate='')
 
-section(md-theme='#{moduleName}')
+  file-uploader(
+    font-icon-bg='mdi mdi-account'
+    ng-model='mForm.form.photo'
+    container='persons'
+  )
 
-  form(name="form" novalidate='')
+  md-radio-group(
+    ng-model="mForm.formAux.nacionality"
+    ng-change='mForm.changeNacionality(mForm.formAux.nacionality)'
+  )
+    md-radio-button(value='1')
+      | {{'SENTENCES.PERUVIAN' | translate | capitalize}}
+    md-radio-button(value='2')
+      | {{'SENTENCES.FOREIGN' | translate | capitalize}}
 
-    file-uploader(
-      font-icon-bg='mdi mdi-account'
-      ng-model='mForm.form.photo'
-      container='persons'
-      theme='#{moduleName}'
-    )
+  ye-input(
+    ng-if='mForm.formAux.nacionality == 1'
+    label='FIELDS.DNI'
+    field='nacionalityId.number'
+    type='number'
+    required
+  )
 
-    md-radio-group(ng-model="mForm.formAux.nacionality"
-      ng-change='mForm.changeNacionality(mForm.formAux.nacionality)')
-      md-radio-button(value='1')
-        | {{'SENTENCES.PERUVIAN' | translate | capitalize}}
-      md-radio-button(value='2')
-        | {{'SENTENCES.FOREIGN' | translate | capitalize}}
+  ye-input(
+    ng-if='mForm.formAux.nacionality == 2'
+    label='FIELDS.FOREIGN_CARD'
+    field='nacionalityId.number'
+    type='number'
+    required
+  )
 
-    ye-input(
-      ng-if='mForm.formAux.nacionality == 1'
-      label='FIELDS.DNI'
-      field='nacionalityId.number'
-      type='number'
-      required
-    )
+  ye-input(label='FIELDS.firstName' field='firstName' required)
 
-    ye-input(
-      ng-if='mForm.formAux.nacionality == 2'
-      label='FIELDS.FOREIGN_CARD'
-      field='nacionalityId.number'
-      type='number'
-      required
-    )
+  ye-input(label='FIELDS.MIDDLE_NAME' field='middleName' required)
 
-    ye-input(label='FIELDS.firstName' field='firstName' required)
-    ye-input(label='FIELDS.MIDDLE_NAME' field='middleName' required)
-    ye-input(label='FIELDS.LAST_NAME' field='lastName' required)
-    ye-input(ng-if='mForm.formAux.nacionality == 1'
-      label='FIELDS.SECOND_LAST_NAME' field='secondLastName'
-      ng-required='mForm.formAux.nacionality == 1')
-    ye-input(label='FIELDS.EMAIL' field='email' required type='email')
-    ye-input(label='FIELDS.PHONE' field='phone' required type='tel')
-    //-
-    ye-input(label='FIELDS.birthdayDate' field='birthdayDate' required
-      type='date' theme='trabajador' min='{{mForm.formAux.birthdayDateMin}}'
-      max='{{mForm.formAux.birthdayDateMax}}')
+  ye-input(label='FIELDS.LAST_NAME' field='lastName' required)
 
-    form-actions(ng-hide='mForm.hideSave')
+  ye-input(
+    ng-if='mForm.formAux.nacionality == 1'
+    label='FIELDS.SECOND_LAST_NAME'
+    field='secondLastName'
+    ng-required='mForm.formAux.nacionality == 1'
+  )
+
+  ye-input(label='FIELDS.EMAIL' field='email' required type='email')
+
+  ye-input(label='FIELDS.PHONE' field='phone' required type='tel')
+
+  ye-input(
+    label='FIELDS.birthdayDate'
+    field='birthdayDate'
+    required
+    type='date'
+    min='{{mForm.formAux.birthdayDateMin}}'
+    max='{{mForm.formAux.birthdayDateMax}}'
+  )
+
+  form-actions(ng-hide='mForm.hideSave')
 

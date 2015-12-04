@@ -7,10 +7,7 @@ export default angular.module(`traru${moduleName.toUpperCase()}`, [])
   (l, $l, vForm, M, $mdT, $tr, vFormU, $q, $t) => ({
     restrict: 'E',
     scope: {
-      item: '=',
-      formData: '=',
-      inClient: '&',
-      inWorker: '&'
+      item: '='
     },
     bindToController: true,
     controller: angular.noop,
@@ -20,18 +17,18 @@ export default angular.module(`traru${moduleName.toUpperCase()}`, [])
 
       const init = () => {
 
-        mForm.update = !!mForm.item;
-        mForm.theme = moduleName;
-        const inWorker = angular.isDefined(attrs.inWorker);
+        mForm.update = l.isFormUpdate(mForm);
+
+        mForm.theme = attrs.theme || moduleName;
+
+        const isEmbed = angular.isDefined(attrs.isEmbed);
 
         const initObj = {nacionalityId: {type: 'dni'}};
 
-        mForm.form = inWorker ? mForm.formData :
-          mForm.update ?
-            angular.extend(initObj, mForm.item) :
-            initObj;
+        mForm.form = isEmbed ? mForm.item :
+          mForm.update ? angular.extend(initObj, mForm.item) : initObj;
 
-        if (inWorker && !angular.isObject(mForm.form.nacionalityId)
+        if (isEmbed && !angular.isObject(mForm.form.nacionalityId)
         ) mForm.form.nacionalityId = {type: 'dni'};
 
         mForm.formAux = {
@@ -44,30 +41,18 @@ export default angular.module(`traru${moduleName.toUpperCase()}`, [])
         if (mForm.update
         ) mForm.form.birthdayDate = new Date(mForm.form.birthdayDate);
 
-        mForm.hideSave = inWorker;
+        mForm.hideSave = isEmbed;
 
       };
 
       init();
 
-      const save = (form, onlyCheck = false) => l .saveItem({
-        Model: M,
+      mForm.save = (form) => l.saveItem({
+        model: M,
         form: form,
         mForm: mForm,
-        modelName: moduleName,
-        onlyCheck: onlyCheck
+        modelName: moduleName
       });
-
-      mForm.save = (form) => angular.isDefined(attrs.inClient) ?
-        save(form, true)
-          .then((formData) => {
-            mForm.formData = formData;
-            const t1 = $t(() => {
-              mForm.inClient();
-              $t.cancel(t1);
-            }, 0);
-          }) :
-        save(form);
 
       mForm.changeNacionality = (nac) => {
 

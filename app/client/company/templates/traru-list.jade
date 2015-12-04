@@ -1,15 +1,18 @@
 md-card(md-theme='traru')
 
   md-toolbar: div(class='md-toolbar-tools')
-    span {{vm.title | capitalize}}
+    span {{vm.title || '' | capitalize}}
     span(flex)
-    md-button(ng-if='vm.module.crud.c.status'
-      ng-click='vm.addItem($event)' class='md-icon-button'
-      aria-label='new client'
-    )
-      md-icon(md-font-icon='mdi mdi-plus')
+    md-button(
+      ng-if='vm.module.crud.c.status'
+      ng-click='vm.addItem($event)'
+      class='md-icon-button'
+      aria-label='traru card '
+    ): md-icon(md-font-icon='mdi mdi-plus')
 
-  module-list-wrapper(module='vm.module' items='vm.items'
+  module-list-wrapper(
+    module='vm.module'
+    items='vm.items'
     initialize='{{vm.initialize}}'
   )
 

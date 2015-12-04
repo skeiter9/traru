@@ -57,66 +57,64 @@ export default angular.module('components.validForm', [asyncAm.name])
   .factory('yeValidForm', ['yeValidFormMessage', '$q', 'async', '$log',
   (yeValidFormMessage, $q, async, $l) => {
 
-    return (form) => {
+    const exeAction = (inputF, prop) => angular.isFunction(inputF[prop]) ?
+      inputF[prop]() : '';
 
+    const validForm = (form, errors, errorOne) => $q((r, reject) => async
+      .forEachOf(form.$error,
+      (value, typeError, cb) => async.each(value,
+        (inputFail, cbInner) => {
+
+          const condition = 'condition'; //replace
+          const inputFailName = inputFail.$name || (() => {
+              $l.debug('anonymous field for ' + inputFail.$viewValue);
+              return 'anonymousField' + Date.now().toString();
+            })();
+
+          const isFormEmbed = angular.isDefined(inputFail.$submitted);
+
+          const errData = {
+            field: inputFailName,
+            value: inputFail.$viewValue,
+            error: typeError,
+            messageCode: yeValidFormMessage(typeError, inputFailName,
+              inputFail.$viewValue, condition)
+          };
+
+          if (!!!errors[errData.field]) errors[errData.field] = [];
+
+          if ( errorOne.length === 0 && !isFormEmbed) errorOne.push(errData);
+
+          errors[errData.field].push(errData);
+
+          exeAction(inputFail, '$setDirty');
+          exeAction(inputFail, '$setTouched');
+          exeAction(inputFail, '$setSubmitted');
+
+          (isFormEmbed ? validForm(inputFail, errors, errorOne) : $q.when())
+            .then(() => cbInner(null))
+            .catch(() => cbInner(null));
+
+        },
+
+        (errInner) => cb(null)
+      ),
+
+      (err) => reject({
+        status: false,
+        errors: errors,
+        errorOne: errorOne[0],
+        form: form
+      }))
+
+    );
+
+    return (form) => {
       let errors = {};
       let errorOne = [];
 
-      const exeAction = (inputF, prop) => angular.isFunction(inputF[prop]) ?
-        inputF[prop]() : '';
-
       return form.$invalid ?
-        $q((r, reject) => {
-          async.forEachOf(form.$error,
-            (value, typeError, cb) => {
-              async.each(value,
-                (inputFail, cbInner) => {
-
-                  const condition = 'condition'; //replace
-                  const inputFailName = inputFail.$name ||
-                    (() => {
-                      $l.debug('anonymous field for ' + inputFail.$viewValue);
-                      return 'anonymousField' + Date.now().toString();
-                    })();
-
-                  const errData = {
-                    field: inputFailName,
-                    value: inputFail.$viewValue,
-                    error: typeError,
-                    messageCode: yeValidFormMessage(typeError, inputFailName,
-                      inputFail.$viewValue, condition)
-                  };
-
-                  if (!!!errors[errData.field]) errors[errData.field] = [];
-                  if (errorOne.length === 0) errorOne.push(errData);
-
-                  errors[errData.field].push(errData);
-
-                  exeAction(inputFail, '$setDirty');
-                  exeAction(inputFail, '$serTouched');
-                  exeAction(inputFail, '$setSubmitted');
-
-                  cbInner(null);
-                },
-
-                (errInner) => {
-                  cb(null);
-                });
-
-            },
-
-            (err) => {
-
-              reject({
-                status: false,
-                errors: errors,
-                errorOne: errorOne[0],
-                form: form
-              });
-
-            });
-
-        }) : $q.when({status: true});
+        validForm(form, errors, errorOne) : $q.when({status: true});
 
     };
   }]);

@@ -1,4 +1,11 @@
 {
+  "HTTP": {
+    "FAIL_REQUEST": "couldn't retrieve {{moduleName}} items, reload app",
+    "404": {
+      "PAGE": "content for {{page}} doesn't exists",
+      "RETURN_HOME": "return to home"
+    }
+  },
   "SECTIONS": {
     "HELP": "help"
   },
@@ -7,7 +14,8 @@
     "NO_FETCH_ITEMS": "there's no {{modulePlural}}(data incomplete)",
     "NO_ITEMS": "there's no {{modulePlural}}",
     "EDIT" : "edit",
-    "DELETE": "delete"
+    "DELETE": "delete",
+    "ERR_101" : "there was a problem with this model [err: 101]"
   },
   "DIALOG": {
     "DELETE_TITLE": "delete {{moduleItem}}?",

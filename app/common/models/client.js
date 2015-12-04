@@ -8,18 +8,20 @@ module.exports = function(Client) {
     getApp(Client)
 
     .then((app) => data.clientType === 0 ?
-      app.models.person.create(data.person) :
+      app.models.person.upsert(data.person) :
       data.clientType === 1 ?
-        app.models.company.create(data.company) :
+        app.models.company.upsert(data.company) :
         new Promise((resolve, r) => r(new Error('select person or company'))))
 
     .then(personOrCompany => {
       data.personOrCompany = personOrCompany;
-      return Client.create({
-        creationDate: Date.now(),
-        type: data.clientType === 0 ? 'person' : 'company',
-        typeId: personOrCompany.id
-      });
+      return data.update ?
+        Promise.resolve(personOrCompany) :
+        Client.create({
+          creationDate: Date.now(),
+          type: data.clientType === 0 ? 'person' : 'company',
+          typeId: personOrCompany.id
+        });
     })
 
     .then(res => cb(null))

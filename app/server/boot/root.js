@@ -22,10 +22,14 @@ module.exports = function(server) {
 
   const router = server.loopback.Router();
 
-  router.get(['/', '/init-company'], (req, res) => {
+  const routeRegExp = server.get('env') === 'production' ?
+    /^\/(?!(api)(\/|\W)).*/ :
+    /^\/(?!(api|explorer|static)(\/|\W)).*/;
+
+  router.get(routeRegExp, (req, res) => {
     res.render('index');
   });
 
-  server.use(router);
+  server.middleware('routes', router);
 
 };

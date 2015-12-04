@@ -37,15 +37,14 @@ export default angular.module('utilsDirectives', [])
     template: require('./utils-module-list.jade')(),
     link(s, elem, attrs, vm) {
 
-      let t1 = null;
       attrs.$observe('initialize', (nv) => {
-        t1 = $t(() => {
-          vm.pluralName = $tr.instant(`MODEL.${vm.module.name.toUpperCase()}_PLURAL`);
-          vm.initialize = !!nv;
-        }, 0);
+        const pluralName = angular.isObject(vm.module) &&
+          angular.isString(vm.module.name) ?
+            vm.module.name.toUpperCase() + '_PLURAL' :
+            'ANONYMOUS_PLURAL';
+        vm.pluralName = $tr.instant(`MODEL.${pluralName}`);
+        vm.initialize = !!nv;
       });
-
-      s.$on('$destroy', () => $t.cancel(t1));
 
     }
   })]);

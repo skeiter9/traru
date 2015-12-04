@@ -6,10 +6,14 @@ export default angular
   .directive('yeInput', [() => {
     return {
       restrict: 'E',
-      transclude: true,
       compile(tE, tA) {
 
         const isDefined = angular.isDefined;
+
+        const theme = isDefined(tA.theme) && tA.theme !== '' &&
+          tA.theme !== 'theme' ?
+            tA.theme :
+            `{{!!mForm.theme ? mForm.theme  : "default"}}`;
 
         tA.mForm = isDefined(tA.mForm) ? tA.mForm : 'mForm';
         tA.label = isDefined(tA.label) ? tA.label : '';
@@ -52,7 +56,7 @@ export default angular
             </label>
           `);
 
-        const iconTag = `${tA.icon ? 
+        const iconTag = `${tA.icon ?
           '<md-icon md-font-icon = "' + tA.icon + '"/>' :
           ''
         }`;

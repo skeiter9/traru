@@ -1,8 +1,3 @@
-/**
- * layout module
- *
- */
-
 import angularAria from 'angular-aria/angular-aria.min.js';
 import angularSanitize from 'angular-sanitize/angular-sanitize.min.js';
 import angularAnimate from 'angular-animate/angular-animate.min.js';
@@ -72,8 +67,8 @@ export default angular.module('layout', [
 
   }])
 
-	.run(['$translate', 'tmhDynamicLocale', '$window',
-  ($tr, tmhD, $w) => {
+	.run(['$translate', 'tmhDynamicLocale', '$window', '$rootScope', '$state',
+  ($tr, tmhD, $w, $rS, $st) => {
 
     const throttle = (type, name, obj = window) => {
       let running = false;
@@ -90,6 +85,14 @@ export default angular.module('layout', [
     };
     /* init - you can init any event */
     throttle('resize', 'optimizedResize');
+
+    $rS.$on('$stateNotFound', (e, unfoundState, fromState, fromParams) => {
+      console.log(unfoundState.to); // "lazy.state"
+      console.log(unfoundState.toParams); // {a:1, b:2}
+      console.log(unfoundState.options); // {inherit:false} + default options
+      e.preventDefault();
+      $st.go('e404', {failState: unfoundState.to});
+    });
 
   }])
 
@@ -321,14 +324,13 @@ export default angular.module('layout', [
           ]);
         })
 
-				.then((res) => {
-          $tr.use(this.preferredLanguage);
-          return $q.all([
+				.then((res) => $q.all([
             $q.when(res[1]),
             $tr.refresh(),
+            $tr.use(this.preferredLanguage),
             fn()
-          ]).then(resI => resI[0]);
-        })
+          ]).then(resI => resI[0])
+        )
 
         .catch((err) => {
           $l.error(err);
@@ -346,20 +348,23 @@ export default angular.module('layout', [
       className = '',
       theme = 'default'
     }) => {
+      this.openSidenav('right');
+      return $st.go(tag + 's', {}, {reload: false});
       const s = scope.$new();
       s.item = item;
+
       this.sidenavRightToolbarTitle = title;
       this.sidenavRightToolbarTitleVars = titleVars;
       this.sidenavRightToolbarIconLeft = 'close';
-      this.sidenavRightToolbarIconLeftAction = (e) => this
-        .closeSidenav('right');
+      this.sidenavRightToolbarIconLeftAction = e => this .closeSidenav('right');
+
+      this.sidenavRightContentClass = className;
+      this.sidenavRighTheme = theme;
 
       this.sidenavRightContent = {
         html: `<${tag} ${attrs} item='item' in-sidenav/>`,
         scope: s
       };
-      this.sidenavRightContentClass = className;
-      this.sidenavRighTheme = theme;
 
       return this.openSidenav('right');
     };
@@ -388,6 +393,9 @@ export default angular.module('layout', [
       angular.isObject(module) && angular.isObject(module.crud) &&
       angular.isObject(module.crud.r) &&
       module.crud.r.status ? resolve(module) : reject());
+
+    this.isFormUpdate = (mForm) => angular.isObject(mForm.item) &&
+      angular.isString(mForm.item.id);
 
     this.saveItem = ({
       Model,
@@ -423,7 +431,7 @@ export default angular.module('layout', [
         angular.isFunction(formSuccess) ? formSuccess() : ''
       ]))
 
-      .then(res => onlyCheck ? mForm.form : res[0])
+      .then(res => onlyCheck ? !!mForm ? mForm.form : true : res[0])
 
       .catch((err) => {
         $l.debug(err);

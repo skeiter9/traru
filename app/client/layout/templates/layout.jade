@@ -9,12 +9,16 @@ md-sidenav(
 
 md-content(
 	ui-view='content'
-	class='fx-speed-750 fx-zoom-down'
-	ng-class='layout.ui.content.classContainer')
+	class='fx-dur-750 fx-fade-right'
+  ng-class='layout.ui.content.classContainer'
+)
 
 md-sidenav(
 	md-component-id='right'
 	class = 'md-sidenav-right md-whiteframe-z2'
 	ng-class='layout.ui.sidenavRightContentClass'
+  md-theme='{{layout.ui.sidenavRighTheme}}'
+  md-theme-watch
+  ui-view='sidenavRight'
 )
-	include ./sidenav-right.jade
+//-	include ./sidenav-right.jade

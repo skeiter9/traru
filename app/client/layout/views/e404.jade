@@ -1,17 +1,23 @@
-h1 404 error
-//
-  -var cover404 = require('../assets/images/404.jpg')
+//-var cover404 = require('../assets/images/404.jpg')
 
-  section(layout-gt-sm="row" layout-align="center center")
+section(layout-gt-sm="row" layout-align="center center")
 
-  	md-card(flex-gt-sm="75" flex-gt-md="50")
+  md-card(flex-gt-sm="75" flex-gt-md="50")
 
-  		ye-cover(picture='#{cover404}' class='br-1100')
+    ye-cover(picture='static/images/404.jpg')
 
-  		md-subheader(class='md-warn md-no-sticky' ng-show='e404.failState != ""')
-  			| {{ 'HTTP.404.PAGE' | uppercase | translate:{page: e404.failState} | capitalize }}
+    md-subheader(class='md-warn md-no-sticky' ng-show='vm.failState != ""')
+      | {{ 'HTTP.404.PAGE' | uppercase | translate:{page: vm.failState} | capitalize }}
 
-  		section(class="md-actions" layout="row" layout-align='end center'
-  			ng-class='{"pt-0": e404.failState != ""}')
-  			md-button(class='mr-10 mb-10' ng-click='layout.go("dashboard")')
-  				| {{'HTTP.404.RETURN_HOME' | translate | capitalize }}
+    section(
+      class="md-actions"
+      layout="row"
+      layout-align='end center'
+      ng-class='{"pt-0": vm.failState != ""}'
+    )
+      md-button(
+        class='mr-10 mb-10'
+        ui-sref='dashboard'
+      )
+        | {{'HTTP.404.RETURN_HOME' | translate | capitalize }}
+

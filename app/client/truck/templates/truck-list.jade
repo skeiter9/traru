@@ -4,38 +4,34 @@ md-card(md-theme='truck')
     span {{'MODEL.TRUCK_PLURAL' | translate | capitalize}}
     span(flex)
     md-button(
-      ng-if='trucks.model.crud.c.status'
-      ng-click='trucks.addItem($event)'
+      ng-if='vm.module.crud.c.status'
+      ng-click='vm.addItem($event)'
       class='md-icon-button' aria-label='new truck'
     )
       md-icon(md-font-icon='mdi mdi-plus')
 
-  div(layout layout-align='center center' ng-if='!trucks.initialize')
-    md-progress-circular(class="md-primary" md-mode="indeterminate" md-diameter="40")
-
-  md-subheader(ng-if='trucks.initialize && !trucks.model.crud.r.status' class='md-warn') don't have permit to read trucks
-  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!!trucks.items' class='md-warn') there's no trucks(data incomplete)
-  md-subheader(ng-if='trucks.initialize && trucks.model.crud.r.status && !!trucks.items && trucks.items.length === 0' class='md-warn') there's no trucks
-
-  module-list-wrapper(module='trucks.model' items='trucks.items'
-    initialize='{{trucks.initialize}}')
+  module-list-wrapper(
+    module='vm.module'
+    items='vm.items'
+    initialize='{{vm.initialize}}'
+  )
 
     md-list
       md-list-item(
-        ng-repeat='truck in trucks.items'
-        ng-click='trucks.showItem($event, truck)'
+        ng-repeat='item in vm.items'
+        ng-click='vm.showItem($event, item)'
         class='md-3-line'
       )
         img(
-          ng-src="api/pictures/trucks/download/{{truck.photo}}"
+          ng-src="api/pictures/trucks/download/{{item.photo}}"
           class="md-avatar"
-          alt='{{truck.model}}'
+          alt='{{item.model}}'
         )
 
         div(class="md-list-item-text")
-          h3 {{truck.licensePlate}}
-          h4 {{truck.model}}
-          p(geo-text='truck.ubication')
+          h3 {{item.licensePlate}}
+          h4 {{item.model}}
+          p(geo-text='item.ubication')
 
         md-menu(
           md-position-mode="target-right target"
@@ -49,17 +45,17 @@ md-card(md-theme='truck')
             md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
           md-menu-content(width="3")
             md-menu-item
-              md-button(ng-click="trucks.ubicationItem($event, truck)")
+              md-button(ng-click="vm.ubicationItem($event, item)")
                 div(layout="row"  layout-align="space-between center")
                   p(flex) {{'ACTIONS.SHOW_UBICATION' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
-            md-menu-item(ng-if='trucks.model.crud.u.status')
-              md-button(ng-click="trucks.editItem($event, truck)")
+            md-menu-item(ng-if='vm.module.crud.u.status')
+              md-button(ng-click="vm.editItem($event, item)")
                 div(layout="row"  layout-align="space-between center")
                   p(flex) {{'ACTIONS.EDIT' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
-            md-menu-item(ng-if='trucks.model.crud.d.status')
-              md-button(ng-click="trucks.removeItem($event, truck)")
+            md-menu-item(ng-if='vm.module.crud.d.status')
+              md-button(ng-click="vm.removeItem($event, item)")
                 div(layout="row"  layout-align="space-between center")
                   p(flex) {{'ACTIONS.DELETE' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")

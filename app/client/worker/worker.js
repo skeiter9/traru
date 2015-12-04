@@ -22,18 +22,20 @@ export default angular.module(`traru${modelName}`, [
     template: require(`./templates/${moduleName}-list.jade`)(),
     link(s, elem, attrs, vm) {
 
-      l.validModule(vm.module)
+      const init = () =>l.validModule(vm.module)
         .then(() => vm.module.model.find({
           filter: {include: 'person'}
         }).$promise)
         .then(items => {
           vm.items = items;
-          vm .initialize = true;
+          vm.initialize = true;
         })
         .catch(err => {
           $l.debug(err);
           vm.initialize = true;
         });
+
+      init();
 
       vm.showItem = (e, item) => l.sidenavRightAction({
         scope: s,
@@ -114,13 +116,18 @@ export default angular.module(`traru${modelName}`, [
       const init = () => loadCargos()
         .catch(() => mForm.noCargos = true)
         .then(() => {
-          mForm.update = angular.isObject(mForm.item);
+
+          mForm.update = angular.isObject(mForm.item) &&
+            angular.isString(mForm.item.id);
+
           mForm.form = mForm.update ?
             angular.extend({}, mForm.item) :
             {cargos: [], person: {}};
+
           mForm.formAux = {
             cargos: {}
           };
+
         });
 
       const parsePerson = (person, initialize = true) => {
@@ -148,11 +155,9 @@ export default angular.module(`traru${modelName}`, [
 
       init();
 
-      mForm.save = (form) => (mForm.personaId == 0 ?
-        l.saveItem({
-          form: form.form,
-          onlyCheck: true,
-          mForm: mForm//-- Hey fix this late
+      mForm.save = (form) => (mForm.formAux.personId == 0 ?  l.saveItem({
+          form: form,
+          onlyCheck: true
         }) :
         $q.when()
       )

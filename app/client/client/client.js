@@ -17,31 +17,33 @@ export default angular.module(`traru${modelName}`, [
   (l, M, $tr, $l, $t) => ({
     restrict: 'E',
     scope: {
-      model: '='
+      module: '='
     },
     bindToController: true,
     controller: angular.noop,
-    controllerAs: 'module',
+    controllerAs: 'vm',
     template: require(`./templates/${moduleName}-list.jade`)(),
-    link(s, elem, attrs, module) {
-      const vm = module; //-- tmp
-      if (angular.isDefined(module.model) &&
-        angular.isObject(module.model) && module.model.crud.r.status
-      ) {
-        module.model.model.find({
+    link(s, elem, attrs, vm) {
+
+      const init = () => l.validModule(vm.module)
+        .then(() => vm.module.model.find({
           filter: {include: ['person', 'company']}
-        }).$promise
+        }).$promise)
+
         .then((items) => {
-          module.items = items;
-          module.initialize = true;
+          vm.initialize = true;
+          vm.items = items;
         })
         .catch((err) => {
-          $l.debug(err);
-          module.initialize = true;
+          $l.debug('module for client fails', err);
+          vm.initialize = true;
         });
-      }else module.initialize = true;
 
-      module.showItem = (e, item) => l.sidenavRightAction({
+      init();
+
+      vm.refresh = init;
+
+      vm.showItem = (e, item) => l.sidenavRightAction({
         scope: s,
         title: !!item.person ? item.person.firstName : item.company.socialName,
         tag: !!item.person ? 'person-show' : 'company-show',
@@ -93,29 +95,28 @@ export default angular.module(`traru${modelName}`, [
     template: require(`./templates/${moduleName}-form.jade`)(),
     link(s, elem, attrs, mForm) {
 
-      mForm.initialize = false;
-      mForm.theme = moduleName;
+      const init = () => {
+        mForm.initialize = false;
+        mForm.theme = moduleName;
 
-      mForm.form = angular.isObject(mForm.item) ?
-        angular.extend({}, mForm.item) :
-        {
-          person: {},
-          company: {}
-        };
+        mForm.update = l.isFormUpdate(mForm);
 
-      mForm.update = !!mForm.form.id ? true : false;
+        mForm.form = mForm.update ?
+          angular.extend({}, mForm.item) :
+          {person: {}, company: {}};
 
-      const init = () => M.find().$promise
-        .then(cs => {
-          mForm.initialize = true;
-          mForm.clients = cs;
-          if (!!mForm.item) {
-            mForm.form.clientType = !!mForm.item.person ? 0 : 1;
-            if (!!mForm.item.person) {
-              mForm.personaId = mForm.item.person.id;
-            }else if (!!mForm.item.company) mForm.companyId = mForm.item.company.id;
-          }
-        });
+        return M.find().$promise
+          .then(cs => {
+            mForm.initialize = true;
+            mForm.clients = cs;
+            if (mForm.update) {
+              mForm.form.update = true;
+              mForm.form.clientType = !!mForm.item.person ? 0 : 1;
+              if (!!mForm.item.person) mForm.personaId = mForm.item.person.id;
+              else if (!!mForm.item.company) mForm.companyId = mForm.item.company.id;
+            }
+          });
+      };
 
       init();
 
@@ -131,23 +132,24 @@ export default angular.module(`traru${modelName}`, [
 
       mForm.save = (form) => l.saveItem({
         Model: M,
+        form: form,
         mForm: mForm,
-        modelName: 'client',
-        onlySend: true,
-        dataToSend: {
-          type: mForm.form.clientType === 0 ? 'person' : 'company',
-          typeId: mForm.form.clientType === 0 ?
-            mForm.personaId : mForm.companyId
-        },
-        formSuccess: () => l.closeSidenav('right')
-      });
+        modelName: moduleName,
+        upsertItem: (mForm.form.clientType === 0 && mForm.personaId === '0') ||
+          (mForm.form.clientType === 1 && mForm.companyId === '0') ||
+          mForm.update,
 
-      mForm.saveCC = () => l.saveItem({
-        Model: M,
-        mForm: mForm,
-        modelName: 'client',
-        onlySend: true,
-        upsertItem: true,
+        dataToSend: mForm.form.clientType === 0 && mForm.personaId !== '0'
+          && !mForm.update ? {
+            type: 'person',
+            typeId: mForm.personaId
+          } :
+          mForm.form.clientType === 1 && mForm.companyId !== '0'  &&
+          !mForm.update ? {
+            type: 'company',
+            typeId: mForm.companyId
+          } :
+          false,
         formSuccess: () => l.closeSidenav('right')
       });
 

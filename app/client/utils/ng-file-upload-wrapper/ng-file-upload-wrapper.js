@@ -15,18 +15,16 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
       controllerAs: 'ngF',
       template: require('./ng-file-uploader-wrapper.jade')(),
       compile(tE, tA) {
+
         tE.addClass(styles.ngF);
 
         tE[0].querySelectorAll('md-icon')[0]
           .setAttribute('md-font-icon', tA.fontIconBg || 'mdi mdi-panorama');
+
         tE[0].querySelectorAll('md-icon')[1]
           .setAttribute('md-font-icon', tA.fontIcon || 'mdi mdi-camera');
 
-        //tE.find('md-progress-linear').attr('md-theme', tA.theme || 'default');
-
         return (s, elem, attrs, ngF) => {
-
-          ngF.theme = 'truck';
 
           const resize = () => {
             const h = (elem[0].offsetWidth * (9 / 16)) - 4;
@@ -38,36 +36,42 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
           const t1 = $t(() => {
             t2 = $t(() => {
 
-              attrs.url = attrs.url ||
-                'https://angular-file-upload-cors-srv.appspot.com/upload';
+              ngF.theme = attrs.theme || 'default';
+              ngF.url = attrs.url || `${appC.apiUrl}/pictures/tmp/upload`; 
 
               resize();
 
-              if (!!ngF.fileResult) ngF.preBg
-                .backgroundImage = `url("${appC.apiUrl}/pictures/${attrs.container}/download/${ngF.fileResult}")`;
+              if (!!ngF.fileResult) ngF.preBg.backgroundImage = 'url("' +
+                appC.apiUrl + '/pictures/' + attrs.container + '/download/' +
+                ngF.fileResult + '")';
+
             }, 0);
           }, 0);
 
           ngF.upload = (file) => {
+
             if (!!!file) return;
 
-            if (ngF.preBg.backgroundImage !== 'none') ngF
-              .preBg.backgroundImage = 'none';
+            if (ngF.preBg.backgroundImage !== 'none'
+            ) ngF.preBg.backgroundImage = 'none';
+
             u.upload({
-              url: 'api/pictures/tmp/upload',
+              url: ngF.url,
               data: {file: file},
             })
-            .then(function(response) {
+
+            .then(response => {
               //console.log(response);
               ngF.fileResult = response.data.result.files.file[0].name;
-            }, (responseFail) => {
+            }, responseFail => {
 
-              console.log(responseFail);
+              $l.debug(responseFail);
               if (responseFail.status > 0
               ) console.warn(responseFail.status + ': ' + responseFail.data);
             }, (evt) => {
               // Math.min is to fix IE which reports 200% sometimes
-              if (!!file) file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+              if (!!file) file.progress = Math
+                .min(100, parseInt(100.0 * evt.loaded / evt.total));
             });
 
           };

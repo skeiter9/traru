@@ -1,3 +1,7 @@
+const moduleName = 'route';
+const modelName = moduleName.slice(0, 1).toUpperCase() +
+  moduleName.slice(1).toLowerCase();
+
 import mdxIconAM from '../utils/icon.directive';
 import sidenavAM from '../utils/sidenav.directive';
 import coverAM from '../utils/cover.directive';
@@ -116,82 +120,52 @@ export default angular.module('traruRoute', [
   })])
 
   .directive('routeList', ['layout', 'gmap', 'Truck', '$translate', '$log',
-  (l, gm, T, $tr, $l) => {
-    return {
-      restrict: 'E',
-      scope: {
-        model: '='
-      },
-      bindToController: true,
-      controller: angular.noop,
-      controllerAs: 'module',
-      template: require('./templates/routes.jade')(),
-      link(s, elem, attrs, module) {
+  (l, gm, T, $tr, $l) => ({
+    restrict: 'E',
+    scope: {
+      module: '='
+    },
+    bindToController: true,
+    controller: angular.noop,
+    controllerAs: 'vm',
+    template: require('./templates/routes.jade')(),
+    link(s, elem, attrs, vm) {
 
-        if (angular.isUndefined(module.model)) {
-          $l.debug('don\'t set model for routes:directive');
-          return;
-        }
+      const init = () => {
+        if (vm.module.crud.r.status) vm.module.model.find().$promise
 
-        module.initialize = false;
-
-        if (module.model.crud.r.status) {
-          module.model.model.find().$promise
-          .then((items) => {
-            module.items = items;
-            module.initialize = true;
+          .then(items => {
+            vm.items = items;
+            vm.initialize = true;
           })
-          .catch((err) => {
-            console.warn(err);
-            module.initialize = true;
+
+          .catch(err => {
+            $l.debug(err);
+            vm.initialize = true;
           });
-        } else module.initialize = true;
+        else vm.initialize = true;
 
-        module.ubicationItem = (e, item) => gm.launchMap({
-          event: e,
-          geoposition: item.ubication,
-          title: item.licensePlate,
-          showMarker: true,
-          inDialog: true
-        });
+      };
 
-        module.showItem = (e, item) => l.sidenavRightAction({
-          scope: s,
-          title: item.licensePlate,
-          tag: 'route',
-          item: item,
-          className: 'x2',
-          theme: 'route'
-        });
+      init();
 
-        module.addItem = (e) => l.sidenavRightAction({
-          scope: s,
-          title: `SENTENCES.NEW`,
-          titleVars: {moduleName: $tr.instant('MODEL.ROUTE')},
-          tag: 'route-form',
-          className: 'x2',
-          theme: 'route'
-        });
+      vm.formItem = (e, item) => l.sidenavRightAction({
+        scope: s,
+        title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
+        titleVars: {
+          moduleName: $tr.instant('MODEL.' + moduleName.toUpperCase()),
+          item: !!item ? item : false
+        },
+        tag: `${moduleName}-form`,
+        item: item,
+        attrs: `
+          form-success='vm.afterForm()'
+        `,
+        theme: moduleName
+      });
 
-        module.editItem = (e, item) => l.sidenavRightAction({
-          scope: s,
-          title: `SENTENCES.EDIT`,
-          titleVars: {item: item.licensePlate},
-          tag: 'route-form',
-          item: item,
-          className: 'x2',
-          theme: 'route'
-        });
+      vm.afterForm = () => l.closeSidenav('right');
 
-        module.removeItem = (e, item) => l.removeItem({
-          evt: e,
-          model: T,
-          item: item,
-          title: item.licensePlate,
-          modelName: 'route'
-        });
+    }
 
-      }
-
-    };
-  }]);
+  })]);

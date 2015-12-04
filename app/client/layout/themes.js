@@ -39,7 +39,7 @@ export function themes(mdTP) {
 
   mdTP
     .theme('client')
-      .primaryPalette('green')
+      .primaryPalette('light-green')
       .accentPalette('indigo');
 
   mdTP
@@ -64,7 +64,7 @@ export function themes(mdTP) {
 
   mdTP
     .theme('department')
-      .primaryPalette('orange')
+      .primaryPalette('lime')
       .accentPalette('indigo');
 
   mdTP

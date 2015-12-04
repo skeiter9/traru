@@ -1,19 +1,15 @@
-- var moduleName = 'company';
+form(name="form" novalidate='')
 
-section(md-theme='#{moduleName}')
+  file-uploader(
+    font-icon-bg='mdi mdi-factory'
+    ng-model='mForm.form.photo'
+    container='companies'
+    theme='{{::mForm.theme}}'
+  )
 
-  form(name="form" novalidate='')
+  ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
+  ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)
+  ye-input(label='FIELDS.RUC' field='ruc' type='number' required)
+  ye-input(label='FIELDS.PHONE' field='phone' type='tel' required)
 
-    file-uploader(
-      font-icon-bg='mdi mdi-factory'
-      ng-model='mForm.form.photo'
-      container='companies'
-      theme='#{moduleName}'
-    )
-
-    ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
-    ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)
-    ye-input(label='FIELDS.RUC' field='ruc' type='number' required)
-    ye-input(label='FIELDS.PHONE' field='phone' type='tel' required)
-
-    form-actions
+  form-actions(ng-if='!mForm.hideSave')

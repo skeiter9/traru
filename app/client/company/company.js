@@ -19,33 +19,38 @@ export default angular.module(`traru${modelName}`, [])
     template: require('./templates/traru-list.jade')(),
     link(s, elem, attrs, vm) {
 
-      l.validModule(vm.module)
-        .catch(() => vm.initialize = true)
-        .then(() => M.find({
+      const init = () => l.validModule(vm.module)
+
+        .then(() => vm.module.model.find({
           filter: {where: {main: true}, include: {departments: 'cargos'}}
-        }))
+        }).$promise)
+
         .then((items) => {
           vm.title = traru.name;
           vm.items = items;
           vm.initialize = true;
-        });
+        })
 
-      vm.formItem = (e, department, item, modelName) => l.sidenavRightAction({
+        .catch(() => vm.initialize = true);
+
+      init();
+
+      vm.formItem = (e, parentModel, item, mN) => l.sidenavRightAction({
         scope: s,
         title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
         titleVars: {
-          moduleName: $tr.instant('MODEL.' + modelName.toUpperCase()),
+          moduleName: $tr.instant('MODEL.' + mN.toUpperCase()),
           item: !!item ? item.name : ''
         },
-        tag: `${modelName}-form`,
+        tag: `${mN}-form`,
         item: item,
         attrs: `
           in-company
-         ${modelName === 'cargo' ? 'department-id=\'' + department.id + '\'' : ''}
-         ${modelName === 'department' ? 'company-id=\'' + department.id + '\'' : ''}
+          ${mN === 'cargo' ? 'department-id=\'' + parentModel.id + '\'' : ''}
+          ${mN === 'department' ? 'company-id=\'' + parentModel.id + '\'' : ''}
           form-success='vm.formSuccess()'
         `,
-        theme: 'cargo'
+        theme: mN
       });
 
       vm.deleteItem = (e, item, modelN) => l.removeItem({
@@ -77,10 +82,7 @@ export default angular.module(`traru${modelName}`, [])
   (l, $l, vForm, M, $mdT, $tr, vFormU, $q, $t, $st) => ({
     restrict: 'E',
     scope: {
-      item: '=',
-      inClient: '&',
-      formData: '=',
-      formSuccess: '&'
+      item: '='
     },
     bindToController: true,
     controller: angular.noop,
@@ -88,32 +90,30 @@ export default angular.module(`traru${modelName}`, [])
     template: require(`./templates/${moduleName}-form.jade`)(),
     link(s, elem, attrs, mForm) {
 
-      mForm.theme = moduleName;
+      const init = () => {
 
-      mForm.form = angular.isObject(mForm.item) ?
-        angular.extend({}, mForm.item) :
-				{main: angular.isDefined(attrs.main)};
+        mForm.theme = attrs.theme || moduleName;
 
-      mForm.update = !!mForm.form.id ? true : false;
+        mForm.update = l.isFormUpdate(mForm);
 
-      const save = (form, onlyCheck = false) => l.saveItem({
-        Model: M,
+        const isEmbed = angular.isDefined(attrs.isEmbed);
+        const initObj = {};
+
+        mForm.form = isEmbed ? mForm.item :
+          mForm.update ? angular.extend(initObj, mForm.item) : initObj;
+
+        mForm.hideSave = isEmbed;
+
+      };
+
+      init();
+
+      mForm.save = (form) => l.saveItem({
+        model: M,
         form: form,
         mForm: mForm,
-        modelName: moduleName,
-        onlyCheck: onlyCheck
+        modelName: moduleName
       });
-
-      mForm.save = (form) => angular.isDefined(attrs.inClient) ?
-        save(form, true)
-          .then((formData) => {
-            mForm.formData = formData;
-            const t1 = $t(() => {
-              mForm.inClient();
-              $t.cancel(t1);
-            }, 0);
-          }) :
-        save(form);
 
     }
   })])
@@ -123,8 +123,7 @@ export default angular.module(`traru${modelName}`, [])
     restrict: 'E',
     scope: {
       item: '=',
-      formSuccess: '&',
-
+      formSuccess: '&'
     },
     bindToController: true,
     controller: angular.noop,
@@ -139,8 +138,6 @@ export default angular.module(`traru${modelName}`, [])
         $l.debug('pass a company id to register a department');
         return;
       } else mForm.showSelect = true;
-
-      mForm.theme = 'department';
 
       mForm.form = angular.isObject(mForm.item) ?
         angular.extend({}, mForm.item) :
@@ -185,8 +182,6 @@ export default angular.module(`traru${modelName}`, [])
         $l.debug('pass a departmentId to register a Cargo');
         return;
       }
-
-      mForm.theme = 'cargo';
 
       mForm.form = angular.isObject(mForm.item) ?
         angular.extend({}, mForm.item) :

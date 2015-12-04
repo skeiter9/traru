@@ -113,6 +113,11 @@ md-sidenav {
   position: fixed;
 }
 
+module-list-wrapper,
+md-list {
+  overflow: hidden;
+}
+
 md-list-item {
 
   position: relative;
@@ -160,3 +165,6 @@ md-list-item {
 
 }
 
+.md-subheader {
+  line-height: 1.5;
+}
