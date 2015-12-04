@@ -19,8 +19,6 @@ export function routes(stateProvider) {
 
   stateProvider
 
-  .state('extra1', {url: '/', views: {extra1: {template: '<p>extra 1</p>'}}})
-
   .state('layout', {
     abstract: true,
     template: require('./templates/layout.jade')(),
@@ -47,6 +45,36 @@ export function routes(stateProvider) {
 
         controllerAs: 'vm',
         template: require('./templates/init-company.jade')()
+      }
+    }
+  })
+
+  .state('settings', {
+    url: '/settings',
+    parent: 'layout',
+    resolve: {
+      resolve: ['layout', (l) => l.loadState({
+        stateName: 'settings'
+      })]
+    },
+    views: {
+      content: {
+        template: '<p> settings section</p>'
+      }
+    }
+  })
+
+  .state('help', {
+    url: '/help',
+    parent: 'layout',
+    resolve: {
+      resolve: ['layout', (l) => l.loadState({
+        stateName: 'help'
+      })]
+    },
+    views: {
+      content: {
+        template: '<p> help section</p>'
       }
     }
   })

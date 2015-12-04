@@ -15,8 +15,11 @@ module.exports = function(Model, ops) {
   }
 
   fs.stat(pathPhotoDir, (err, stats) => {
-    if (err) fs.mkdir(pathPhotoDir, (err) => {
-      console.log(err);
+    if (err) fs.mkdir(pathPhotoDir, (errInner) => {
+      if (errInner) console.log(err);
+      else fs.createReadStream(path.resolve(__dirname,
+        '../../server/public/images/default-cover.jpg'))
+        .pipe(fs.createWriteStream(path.join(pathPhotoDir, 'default.jpg')));
     });
   });
 

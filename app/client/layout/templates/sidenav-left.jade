@@ -3,11 +3,13 @@ ye-cover(picture='static/images/cover.jpg')
 md-list
 
   md-list-item(
-    ng-hide = 'layout.data.initialize'
-    ng-click='layout.go(layout.ui.loggued ? "dashboard" : "login")'
+    ui-sref="help"
   )
-    md-icon(md-font-icon='mdi mdi-{{layout.ui.loggued ? "view-dashboard" : "key"}}')
-    p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD' : "SECTIONS.LOGIN" | uppercase | translate | capitalize}}
+    md-icon(
+      md-font-icon='mdi mdi-{{layout.ui.loggued ? "view-dashboard" : "key"}}'
+    )
+    p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD' : "SECTIONS.LOGIN" |
+      | uppercase | translate | capitalize}}
     
   md-list-item(
     ng-repeat='item in layout.menu'
@@ -19,14 +21,14 @@ md-list
 
   md-divider
 
-  md-list-item(ng-click='layout.go("help", true)')
+  div(ui-sref='help'): md-list-item
     md-icon(md-font-icon='mdi mdi-help-circle')
     p {{'SECTIONS.HELP' | uppercase | translate | capitalize}}
 
-  md-list-item(ng-click = 'layout.ui.settings()' ng-if ='layout.ui.loggued')
-    md-icon(md-font-icon = 'mdi mdi-settings')
+  md-list-item(ng-click='layout.ui.settings()' ng-if='layout.ui.loggued')
+    md-icon(md-font-icon='mdi mdi-settings')
     p {{'ACTIONS.SETTINGS' | uppercase | translate | capitalize}}
 
-  md-list-item(ng-click = 'layout.ui.logout()' ng-if = 'layout.ui.loggued')
-    md-icon(md-font-icon = 'mdi mdi-logout')
+  md-list-item(ng-click='layout.ui.logout()' ng-if='layout.ui.loggued')
+    md-icon(md-font-icon='mdi mdi-logout')
     p {{'ACTIONS.LOGOUT' | uppercase | translate | capitalize}}

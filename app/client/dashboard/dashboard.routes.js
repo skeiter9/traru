@@ -40,5 +40,25 @@ export function routes(stateProvider) {
           ]
         }
       }
+    })
+
+    .state('dashboard.trucks', {
+      url: 'trucks',
+      resolve: {
+        boot: ['layout', (l) => {
+        }]
+      },
+      views: {
+        'sidenavRight@layout': {
+          template: '<truck-form />',
+          controller: ['layout', (l) => {
+            console.log('trucks');
+            setTimeout(() => {
+              l.openSidenav('right');
+            }, 0);
+          }]
+        }
+      }
     });
+
 }

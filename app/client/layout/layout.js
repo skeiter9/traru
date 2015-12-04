@@ -145,7 +145,8 @@ export default angular.module('layout', [
         html: `<span> settings </span>`
       };
 
-      return this.closeSidenav('left').then(() => this.openSidenav('right'));
+      return this.closeSidenav('left')
+        .then(() => $st.go('settings'));
     };
 
     this.loadTranslatePart = section => {
@@ -348,8 +349,8 @@ export default angular.module('layout', [
       className = '',
       theme = 'default'
     }) => {
-      this.openSidenav('right');
-      return $st.go(tag + 's', {}, {reload: false});
+
+      //return $st.go('.trucks', {}, {reload: false});
       const s = scope.$new();
       s.item = item;
 

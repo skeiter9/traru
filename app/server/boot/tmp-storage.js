@@ -6,8 +6,8 @@ module.exports = (app) => {
   const pathTmpDir = path.join(storage, 'tmp');
 
   fs.stat(pathTmpDir, (err, stats) => {
-    if (err) fs.mkdir(pathTmpDir, (err) => {
-      console.log(err);
+    if (err) fs.mkdir(pathTmpDir, (errInner) => {
+      if (errInner) console.log(errInner)
     });
   });
 

@@ -10,10 +10,25 @@
     "cargoId": {
       "type": "string",
       "required": true
+    },
+    "workerId": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "cargo": {
+      "type": "belongsTo",
+      "model": "cargo",
+      "foreignKey": "cargoId"
+    },
+    "worker": {
+      "type": "belongsTo",
+      "model": "worker",
+      "foreignKey": "workerId"
+    }
+  },
   "acls": [],
   "methods": {}
 }

@@ -14,6 +14,7 @@ module.exports = function(server) {
     'acl',
     'roleMapping',
     'accessToken',
+
     'User',
     'AccessToken',
     'ACL',
