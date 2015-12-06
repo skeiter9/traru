@@ -1,9 +1,8 @@
-section
+section(md-theme='company' layout layout-align='center center')
 
-  md-card
-    p {{vm.a}}
-    p Hi root user, the app doesn't have a company registered, please setup to continue
-
-  md-card
-    company-form(main form-success='vm.formSuccess()')
+  div(flex-sm='100' flex-gt-sm="55" flex-gt-md="33")
+    md-card
+      md-card-content: p {{'SECTIONS.INIT_COMPANY.MESSAGE' | translate | capitalize}}
+    md-card
+      company-form(main form-success='vm.formSuccess()')
 

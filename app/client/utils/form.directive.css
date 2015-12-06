@@ -1,6 +1,15 @@
+@import '../layout/styles/_alias.css';
+@import '../layout/styles/_variables.css';
+@import '../layout/styles/_placeholders.css';
+
 form[name] ye-input md-input-container {
   background-image: none;
   margin: 4px 14px;
+  @nest &.md-icon-float {
+    @nest & [ng-messages] {
+      padding-left: 36px;
+    }
+  }
 }
 
 md-select[ng-model] {

@@ -3,6 +3,7 @@
   --screen-sm: 600px;
   --screen-md: 960px;
   --screen-lg: 1200px;
+  --bg-color: #ccc;
 }
 
 @custom-media --screen-sm screen and (min-width: 600px);

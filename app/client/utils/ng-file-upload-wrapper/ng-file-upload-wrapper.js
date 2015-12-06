@@ -16,12 +16,14 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
       template: require('./ng-file-uploader-wrapper.jade')(),
       compile(tE, tA) {
 
+        const iconsPre = tE[0].querySelectorAll('md-icon');
+
         tE.addClass(styles.ngF);
 
-        tE[0].querySelectorAll('md-icon')[0]
+        iconsPre[0]
           .setAttribute('md-font-icon', tA.fontIconBg || 'mdi mdi-panorama');
 
-        tE[0].querySelectorAll('md-icon')[1]
+        iconsPre[1]
           .setAttribute('md-font-icon', tA.fontIcon || 'mdi mdi-camera');
 
         return (s, elem, attrs, ngF) => {
@@ -32,30 +34,33 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
             ngF.preBg = {height: h + 'px'};
           };
 
+          const init = () => {
+            ngF.url = attrs.url || `${appC.apiUrl}/pictures/tmp/upload`;
+            ngF.initialize = true;
+          };
+
           let t2 = null;
           const t1 = $t(() => {
             t2 = $t(() => {
 
-              ngF.theme = attrs.theme || 'default';
-              ngF.url = attrs.url || `${appC.apiUrl}/pictures/tmp/upload`; 
-
               resize();
+              init();
 
-              if (!!ngF.fileResult) ngF.preBg.backgroundImage = 'url("' +
-                appC.apiUrl + '/pictures/' + attrs.container + '/download/' +
-                ngF.fileResult + '")';
-
+              ngF.preBg.backgroundImage = !!!ngF.fileResult ? 'none' :
+                `url('${appC.apiUrl}/pictures/${attrs.container}/download/${ngF.fileResult}')`;
             }, 0);
           }, 0);
 
           ngF.upload = (file) => {
-
-            if (!!!file) return;
+            if (!!!file) {
+              ngF.errPic = true;
+              return;
+            }else ngF.errPic = false;
 
             if (ngF.preBg.backgroundImage !== 'none'
             ) ngF.preBg.backgroundImage = 'none';
 
-            u.upload({
+            return u.upload({
               url: ngF.url,
               data: {file: file},
             })

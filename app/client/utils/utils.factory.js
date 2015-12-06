@@ -1,7 +1,21 @@
 export default angular
   .module('traruUtils', [])
 
-  .factory('utils', ['$document', ($d) => ({
+  .factory('utils', ['$document', '$window', ($d, $w) => ({
+
+    getLanguage(languages, prefLang = 'en') {
+      const lang = $w.navigator.language || $w.navigator.languages[0];
+      let index = languages.indexOf(lang.toLowerCase());
+      if (index !== -1) return lang;
+      const indexAux = lang.indexOf('-');
+      const auxLanguage = (indexAux !== -1) ?
+        lang.substring(0, indexAux) :
+        lang.substring(0, lang.length);
+
+      index = languages.indexOf(auxLanguage);
+      if (index !== -1) return auxLanguage;
+      return prefLang;
+    },
 
     isIntoFullScreen() {
       return !(

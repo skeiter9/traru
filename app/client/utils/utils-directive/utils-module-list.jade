@@ -1,7 +1,8 @@
 div(
   layout 
   layout-align='center center'
-  ng-show='!vm.initialize'
+  class='fx-dur-450 fx-fade-up spinner--content'
+  ng-hide='vm.initialize'
 )
   md-progress-circular(
     class="md-primary"

@@ -7,11 +7,11 @@ html(lang='en')
     meta(name="viewport" content="user-scalable=no, width=device-width, initial-scale=1")
     meta(name='description' content='traru app')
 
-  body
+  body(ng-controller='rootController as vmRoot')
 
-    div(ui-view='extra1')
-    div(ui-view='extra2')
-    div(ui-view='extra3')
+    include ./_spinner-main.jade
+
+    main(ui-view)
 
     script(src='build/vendor.bundle.js')
     script(src='build/app.bundle.js')

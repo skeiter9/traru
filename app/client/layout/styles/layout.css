@@ -1,6 +1,6 @@
-@import 'angular-material/angular-material.css';
-@import 'mdi/css/materialdesignicons.css';
 @import '_alias.css';
 @import '_variables.css';
 @import '_placeholders.css';
+@import 'angular-material/angular-material.css';
+@import 'mdi/css/materialdesignicons.css';
 @import 'base.css';

@@ -11,11 +11,13 @@ export default angular.module('componentsSidenavContent', ['ngMaterial'])
     restrict: 'C',
     link(s, elem, attrs) {
 
+      const bodyTag = $d[0].body;
+
       const w1 = s.$watchGroup([
         () => $mdS('left').isOpen(),
         () => $mdS('right').isOpen()
       ],
-      (nVs, oVs) => !nVs[0] && !nVs[1] ?
+      (nVs, oVs) => !nVs[0] && !nVs[1] && !bodyTag.classList.contains('spinner-main-activate') ?
         $d[0].body.style.removeProperty('overflow') :
         $d[0].body.style.overflow = 'hidden'
       );

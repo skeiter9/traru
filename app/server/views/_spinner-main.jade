@@ -1,0 +1,19 @@
+md-toolbar(
+  ng-hide="initialize"
+  aria-hidden="false"
+  class='spinner--main ng-scope layout-align-center-center layout-row \
+    fx-dur-450 fx-fade-normal'
+)
+  md-progress-circular.md-accent.ng-scope(
+    md-mode="indeterminate"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    role="progressbar"
+    style="transform: scale(0.5);"
+  )
+    .md-spinner-wrapper.md-mode-indeterminate: .md-inner
+      .md-gap
+      .md-left: .md-half-circle
+      .md-right: .md-half-circle
+
+

@@ -1,4 +1,4 @@
-form(name='formNgF')
+form(name='formNgF' ng-if='ngF.initialize')
 
   div(
     ng-model="ngF.picFile"
@@ -8,22 +8,25 @@ form(name='formNgF')
     accept="image/*"
     ngf-max-size="4MB"
     ngf-min-height="404"
-    ngf-resize="{width: 720, height: 404}"
+    ngf-size="{width: 720, ratio: '16x9'}"
     class="drop-box h-cover"
     ng-style='ngF.preBg'
   )
-    md-icon(
-      md-font-icon=''
-      ng-hide='ngF.picFile.progress || \
-        !!ngF.preBg.backgroundImage || \
-        ngF.preBg.backgroundImage == "none" '
-    )
+
+    aside(
+      layout
+      layout-align='center center'
+      class='fx-dur-300 fx-fade-normal'
+      ng-hide='ngF.preBg.backgroundImage !== "none" || !!ngF.picFile'
+    ): md-icon(md-font-icon='')
+
     div(
+      ng-show='!!ngF.picFile'
       ngf-thumbnail="ngF.picFile"
-      ngf-size="{width: 290, height: 163.125, ratio: '16x9'}"
       ngf-as-background='true'
+      ngf-size="{width: 720, ratio: '16x9'}"
       ng-style='ngF.hCover'
-      class='h-cover'
+      class='h-cover fx-dur-300 fx-fade-normal'
     )
 
   md-button(
@@ -33,15 +36,15 @@ form(name='formNgF')
     ngf-pattern="'image/*'"
     accept="image/*"
     ngf-max-size="4MB"
-    ngf-min-height="404"
+    ngf-min-width="720"
     ngf-resize="{width: 720, height: 404}"
     aria-label='upload image'
     class='md-fab md-accent'
-  )
-    md-icon(md-font-icon='')
+  ): md-icon(md-font-icon='')
 
   md-progress-linear(
     md-mode="determinate"
     value="{{ngF.picFile.progress}}"
+    ng-class='{"md-warn": ngF.errPic}'
     class='md-hue-1'
   )

@@ -1,0 +1,7 @@
+{
+  "SECTIONS" : {
+    "E404": {
+      "MESSAGE" : "404 error"
+    }
+  }
+}

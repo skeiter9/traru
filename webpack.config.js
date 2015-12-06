@@ -84,6 +84,7 @@ const config = {
         require('postcss-url')(),
         require('postcss-custom-properties')(),
         require('postcss-custom-media')(),
+        require('postcss-inline-comment')(),
         require('autoprefixer')()
       ],
     };

@@ -5,15 +5,20 @@ module.exports = function(Settings) {
   const fs = require('fs');
 
   const pathI18n = path.resolve(__dirname, '../i18n');
+  const pathI18nSection = path.join(pathI18n, 'sections');
+
+  const readFile = (dir, part, lang) => new Promise((resolve, reject) => fs
+    .readFile(path.join(dir, part, `${part}-${lang}.json`),
+      (err, data) => err ? reject(err) : resolve(data))
+  );
 
   Settings.translate = (part, lang, cb) => {
-    fs.readFile(
-      path.join(pathI18n, part, `${part}-${lang}.json`),
-      (err, data) => {
-        if (err) cb(null, {msg: `${part}-${lang} is not registered`});
-        else cb(null, JSON.parse(data));
-      }
-    );
+
+    readFile(pathI18n, part, lang)
+      .catch(err => readFile(pathI18nSection, part, lang))
+      .then(data => cb(null, JSON.parse(data)))
+      .catch(err => cb(null, {msg: `${part}-${lang} is not registered`}));
+
   };
 
   Settings.remoteMethod('translate', {

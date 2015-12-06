@@ -16,13 +16,14 @@ module.exports = angular
     clientAM.name,
     workerAM.name
   ])
-  .controller('DashboardController', ['$state', 'resolve',
-  function($s, r) {
 
-    this.moduleTruck = r.truck;
-    this.moduleCompany = r.company;
-    this.moduleRoute = r.route;
-    this.moduleClient = r.client;
-    this.moduleWorker = r.worker;
+  .controller('DashboardController', ['layout', function(l) {
+
+    this.moduleTruck = l.dataUser.modules.truck;
+    this.moduleCompany = l.dataUser.modules.company;
+    this.moduleRoute = l.dataUser.modules.route;
+    this.moduleClient = l.dataUser.modules.client;
+    this.moduleWorker = l.dataUser.modules.worker;
 
   }]);
+

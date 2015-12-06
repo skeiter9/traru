@@ -1,0 +1,12 @@
+{
+  "MODEL": {
+    "TRUCK": "truck",
+    "TRUCK_PLURAL": "trucks",
+    "WORKER": "worker",
+    "WORKER_PLURAL": "wokers",
+    "CLIENT": "client",
+    "CLIENT_PLURAL": "clients",
+    "ROUTE": "route",
+    "ROUTE_PLURAL": "routes"
+  }
+}

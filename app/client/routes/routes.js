@@ -19,10 +19,10 @@ export default angular.module('routes', [
       enabled: true,
       requiBase: true
     });
-    /*
+
     trucksRoutes.rules($uRP);
     trucksRoutes.routes($sP);
-    */
+
     dashboardRoutes.rules($uRP);
     dashboardRoutes.routes($sP);
 

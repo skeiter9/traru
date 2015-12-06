@@ -1,7 +1,10 @@
 md-card(md-theme='route')
 
   md-toolbar: div(class='md-toolbar-tools')
-    span {{'MODEL.ROUTE_PLURAL' | translate | capitalize}}
+    span(
+      ng-if='vm.initialize'
+      class='fx-dur-450 fx-fade-normal'
+    ) {{'MODEL.ROUTE_PLURAL' | translate | capitalize}}
     span(flex)
     md-button(
       ng-if='vm.module.crud.c.status'

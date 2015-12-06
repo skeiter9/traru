@@ -21,6 +21,7 @@ export function routes(stateProvider) {
 
   .state('layout', {
     abstract: true,
+
     template: require('./templates/layout.jade')(),
     controller: 'LayoutController',
     controllerAs: 'layout'
@@ -29,22 +30,17 @@ export function routes(stateProvider) {
   .state('initCompany', {
     url: '/init-company',
     parent: 'layout',
-    resolve: {
-      resolve: ['layout', 'Company', (l, C) => l.loadState({
-        stateName: 'initCompany',
-        models: [
-          {name: 'company', model: C}
-        ]
-      })]
-    },
+    auth: true,
     views: {
       content: {
-        controller: ['$state', function($st) {
-          this.formSuccess = () => $st.reload();
-        }],
-
+        template: require('./templates/init-company.jade')(),
         controllerAs: 'vm',
-        template: require('./templates/init-company.jade')()
+        controller: ['$state', function($st) {
+          this.formSuccess = () => {
+            $st.reload();
+            return;
+          };
+        }]
       }
     }
   })
@@ -52,11 +48,6 @@ export function routes(stateProvider) {
   .state('settings', {
     url: '/settings',
     parent: 'layout',
-    resolve: {
-      resolve: ['layout', (l) => l.loadState({
-        stateName: 'settings'
-      })]
-    },
     views: {
       content: {
         template: '<p> settings section</p>'
@@ -64,17 +55,22 @@ export function routes(stateProvider) {
     }
   })
 
+  .state('noLoggued', {
+    url: '/no-loggued',
+    parent: 'layout',
+    views: {
+      content: {
+        template: '<p> login please </p>'
+      }
+    }
+  })
+
   .state('help', {
     url: '/help',
     parent: 'layout',
-    resolve: {
-      resolve: ['layout', (l) => l.loadState({
-        stateName: 'help'
-      })]
-    },
     views: {
       content: {
-        template: '<p> help section</p>'
+        template: require('./views/help.jade')()
       }
     }
   })
@@ -82,11 +78,6 @@ export function routes(stateProvider) {
   .state('e404', {
     url: '/{failState:[a-zA-Z0-9-]+}',
     parent: 'layout',
-    resolve: {
-      resolve: ['layout', (l) => l.loadState({
-        stateName: 'e404'
-      })]
-    },
     params: {
       failState: ''
     },

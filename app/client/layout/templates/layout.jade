@@ -1,23 +1,32 @@
-md-toolbar
-	include ./appbar.jade
+div(layout='column')
+  md-toolbar
+    include ./appbar.jade
 
-md-sidenav(
-	md-component-id='left'
-	class='md-sidenav-left md-whiteframe-z2'
-)
-	include ./sidenav-left.jade
+  md-sidenav(
+    md-component-id='left'
+    class='md-sidenav-left md-whiteframe-z2'
+  )
+    include ./sidenav-left.jade
 
-md-content(
-	ui-view='content'
-	class='fx-dur-750 fx-fade-right'
-  ng-class='layout.ui.content.classContainer'
-)
+  md-content
 
-md-sidenav(
-	md-component-id='right'
-	class = 'md-sidenav-right md-whiteframe-z2'
-	ng-class='layout.ui.sidenavRightContentClass'
-  md-theme='{{layout.ui.sidenavRighTheme}}'
-  md-theme-watch
-)
-	include ./sidenav-right.jade
+    aside(
+      ng-show='layout.ui.loadStateInProgress'
+      layout layout-align='center start'
+      class='spinner--content fx-dur-300 fx-fade-up'
+    ): md-progress-circular(md-mode='indeterminate')
+
+    div(
+      ui-view='content'
+      ng-hide='layout.ui.loadStateInProgress'
+      class='fx-dur-450 fx-fade-up'
+    )
+
+  md-sidenav(
+    md-component-id='right'
+    class = 'md-sidenav-right md-whiteframe-z2'
+    ng-class='layout.ui.sidenavRightContentClass'
+    md-theme='{{layout.ui.sidenavRighTheme}}'
+    md-theme-watch
+  )
+    include ./sidenav-right.jade

@@ -82,7 +82,8 @@ export default angular.module(`traru${modelName}`, [])
   (l, $l, vForm, M, $mdT, $tr, vFormU, $q, $t, $st) => ({
     restrict: 'E',
     scope: {
-      item: '='
+      item: '=',
+      formSuccess: '&'
     },
     bindToController: true,
     controller: angular.noop,
@@ -92,12 +93,10 @@ export default angular.module(`traru${modelName}`, [])
 
       const init = () => {
 
-        mForm.theme = attrs.theme || moduleName;
-
         mForm.update = l.isFormUpdate(mForm);
 
         const isEmbed = angular.isDefined(attrs.isEmbed);
-        const initObj = {};
+        const initObj = {main: angular.isDefined(attrs.main)};
 
         mForm.form = isEmbed ? mForm.item :
           mForm.update ? angular.extend(initObj, mForm.item) : initObj;
@@ -109,10 +108,12 @@ export default angular.module(`traru${modelName}`, [])
       init();
 
       mForm.save = (form) => l.saveItem({
-        model: M,
+        Model: M,
         form: form,
         mForm: mForm,
-        modelName: moduleName
+        modelName: moduleName,
+        formSuccess: mForm.formSuccess,
+        propTitle: 'socialName'
       });
 
     }

@@ -1,0 +1,12 @@
+section(layout layout-wrap layout-align='center start')
+
+  section(flex-sm='100' flex-gt-sm="60" flex-gt-md="75")
+    md-card: md-card-content: p home...
+    md-card: md-card-content: p home...
+    md-card: md-card-content: p home...
+
+  section(flex-sm='100' flex-gt-sm="40" flex-gt-md="25")
+    md-card(ng-if='!layout.ui.loggued'): md-card-content
+      login-form
+    md-card(ng-if='layout.ui.loggued'): md-card-content
+      | hi user

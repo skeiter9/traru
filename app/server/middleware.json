@@ -38,7 +38,7 @@
         "params": "$!./public"
       },
       {
-        "paths": "/i18n",
+        "paths": "/static",
         "params": "$!../node_modules/angular-i18n"
       }
     ]

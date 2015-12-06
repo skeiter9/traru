@@ -9,16 +9,11 @@ export function routes(stateProvider) {
     .state('login', {
       parent: 'layout',
       url: '/login',
-      resolve: {
-        //boot: ['layoutFactory', (lF) => lF.stateLoad('dashboard')]
-      },
       views: {
         content: {
-          template: 'login'
-
-          //controllerAs: 'dashboard',
-          //templateProvider: ['layoutFactory', (lF) => lF.ui.viewTemplate],
-          //controllerProvider: ['layoutFactory', (lF) => lF.ui.controllerName]
+          controllerAs: 'Login',
+          template: require('./templates/login.jade')(),
+          controller: 'LoginController'
         }
       }
     });

@@ -1,7 +1,10 @@
 md-card(md-theme='client')
 
   md-toolbar: div(class='md-toolbar-tools')
-    span {{'MODEL.CLIENT_PLURAL' | translate | capitalize}}
+    span(
+      ng-if='vm.initialize'
+      class='fx-dur-450 fx-fade-normal'
+    ) {{'MODEL.CLIENT_PLURAL' | translate | capitalize}}
     span(flex)
     md-button(
       ng-click="vm.refresh($event)"

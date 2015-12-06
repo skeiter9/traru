@@ -9,11 +9,11 @@ export function routes(stateProvider) {
     .state('trucks', {
       parent: 'layout',
       url: '/trucks',
+      auth: true,
       resolve: {
         resolve: ['layout', '$q', 'Truck',
         (l, $q, T) => l.loadState({
-          stateName: 'truck',
-          models: []
+          stateName: 'trucks'
         })]
       },
       views: {

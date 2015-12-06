@@ -1,0 +1,9 @@
+{
+  "SECTIONS": {
+    "LOGIN": "login"
+  },
+  "FIELDS": {
+    "USERNAME": "usuario",
+    "PASSWORD": "contraseña"
+  }
+}

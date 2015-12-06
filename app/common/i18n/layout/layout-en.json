@@ -7,7 +7,21 @@
     }
   },
   "SECTIONS": {
-    "HELP": "help"
+    "HOME": {
+      "NAME": "home"
+    },
+    "DASHBOARD": {
+      "NAME": "dashboard"
+    },
+    "HELP": {
+      "NAME": "help"
+    },
+    "LOGIN": {
+      "NAME": "login"
+    },
+    "SETTINGS": {
+      "NAME": "settings"
+    }
   },
   "MODULE": {
     "NO_READ_PERMIT": "don't have permit to read {{modulePlural}}",

@@ -9,54 +9,27 @@ export function routes(stateProvider) {
 
   stateProvider
 
-    .state('dashboard', {
+    .state('home', {
       parent: 'layout',
       url: '/',
-      resolve: {
-        resolve: ['layout', '$q', 'Truck', 'Route', 'Client', 'Worker',
-				'Company',
-        (l, $q, T, R, C, W, Co) => l.loadState({
-          stateName: 'dashboard',
-          models: [
-            {name: 'truck', model: T},
-            {name: 'company', model: Co},
-            {name: 'route', model: R},
-            {name: 'client', model: C},
-            {name: 'worker', model: W}
-          ]
-        })]
-      },
       views: {
         content: {
-          controllerAs: 'dashboard',
-          templateProvider: ['layout', (l) => {
-            return l.loggued ?
-              require('./templates/dashboard.jade')() :
-              require('../login/templates/login.jade')();
-          }],
-
-          controllerProvider: ['layout', (l) => l.loggued ?
-            'DashboardController' : 'LoginController'
-          ]
+          controllerAs: 'Login',
+          template: require('../home/templates/home.jade')(),
+          controller: 'LoginController'
         }
       }
     })
 
-    .state('dashboard.trucks', {
-      url: 'trucks',
-      resolve: {
-        boot: ['layout', (l) => {
-        }]
-      },
+    .state('dashboard', {
+      parent: 'layout',
+      url: '/dashboard',
+      auth: true,
       views: {
-        'sidenavRight@layout': {
-          template: '<truck-form />',
-          controller: ['layout', (l) => {
-            console.log('trucks');
-            setTimeout(() => {
-              l.openSidenav('right');
-            }, 0);
-          }]
+        content: {
+          controllerAs: 'dashboard',
+          template: require('./templates/dashboard.jade')(),
+          controller: 'DashboardController'
         }
       }
     });

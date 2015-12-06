@@ -1,7 +1,8 @@
 md-card(md-theme='traru')
 
   md-toolbar: div(class='md-toolbar-tools')
-    span {{vm.title || '' | capitalize}}
+    span(ng-if='vm.initialize' class='fx-dur-450 fx-fade-normal')
+      | {{vm.title | capitalize}}
     span(flex)
     md-button(
       ng-if='vm.module.crud.c.status'

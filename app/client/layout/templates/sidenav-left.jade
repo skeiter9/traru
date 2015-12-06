@@ -2,15 +2,20 @@ ye-cover(picture='static/images/cover.jpg')
 
 md-list
 
-  md-list-item(
-    ui-sref="help"
-  )
+  md-list-item(ng-click='layout.ui.go("home")')
+    md-icon(md-font-icon='mdi mdi-home')
+    p {{'SECTIONS.HOME.NAME' | uppercase | translate | capitalize}}
+ 
+  md-divider
+
+  md-list-item(ng-click='layout.ui.go(layout.ui.loggued ? "dashboard" : "login")')
     md-icon(
-      md-font-icon='mdi mdi-{{layout.ui.loggued ? "view-dashboard" : "key"}}'
+      mdx-icon='{{layout.ui.loggued ? "view-dashboard" : "key"}}'
+      md-font-icon='mdi'
     )
-    p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD' : "SECTIONS.LOGIN" |
-      | uppercase | translate | capitalize}}
-    
+    p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD.NAME' : "SECTIONS.LOGIN.NAME" |
+      | translate | capitalize}}
+
   md-list-item(
     ng-repeat='item in layout.menu'
     ng-if='layout.ui.loggued && !item.noDisplay'
@@ -21,13 +26,13 @@ md-list
 
   md-divider
 
-  div(ui-sref='help'): md-list-item
+  md-list-item(ng-click='layout.ui.go("help")')
     md-icon(md-font-icon='mdi mdi-help-circle')
-    p {{'SECTIONS.HELP' | uppercase | translate | capitalize}}
+    p {{'SECTIONS.HELP.NAME' | uppercase | translate | capitalize}}
 
   md-list-item(ng-click='layout.ui.settings()' ng-if='layout.ui.loggued')
     md-icon(md-font-icon='mdi mdi-settings')
-    p {{'ACTIONS.SETTINGS' | uppercase | translate | capitalize}}
+    p {{'SECTIONS.SETTINGS.NAME' | uppercase | translate | capitalize}}
 
   md-list-item(ng-click='layout.ui.logout()' ng-if='layout.ui.loggued')
     md-icon(md-font-icon='mdi mdi-logout')

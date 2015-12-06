@@ -1,24 +1,19 @@
 import angularAria from 'angular-aria/angular-aria.min.js';
 import angularSanitize from 'angular-sanitize/angular-sanitize.min.js';
 import angularAnimate from 'angular-animate/angular-animate.min.js';
-
 import angularMessages from 'angular-messages/angular-messages.min';
-
 import angularMaterial from 'angular-material/angular-material.min.js';
-
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularDynamicLocale from 'angular-dynamic-locale';
 import angularTM  from 'angular-translate-interpolation-messageformat';
-
 import ngFx from 'ng-fx';
-
 import capitalizeFilterAM from '../utils/capitalize.filter.js';
 import formAM from '../utils/form.directive.js';
-
 import asyncAM from '../utils/async.factory.js';
-
+import utilsAM from '../utils/utils.factory.js';
 import {themes} from './themes.js';
+import layoutRun from './layout.run.js';
 
 require('./styles/layout.css');
 
@@ -32,15 +27,17 @@ export default angular.module('layout', [
     ngFx,
     capitalizeFilterAM.name,
     formAM.name,
-    asyncAM.name
+    asyncAM.name//,
+    //utilsAM.name
 ])
+
   .config(['$translateProvider', 'tmhDynamicLocaleProvider',
   '$translatePartialLoaderProvider', '$provide', '$mdThemingProvider',
   ($trP, tmhDLP, $tPLP, $p, $mdTP) => {
 
     themes($mdTP);
 
-    tmhDLP.localeLocationPattern('/i18n/angular-locale_{{locale}}.js');
+    tmhDLP.localeLocationPattern('/static/angular-locale_{{locale}}.js');
 
     $trP
       .addInterpolation('$translateMessageFormatInterpolation')
@@ -49,70 +46,44 @@ export default angular.module('layout', [
         urlTemplate: '/api/settings/i18n/{part}/{lang}'
       });
 
-    $p.provider('appConfig', function() {
-
-      let name = 'traru';
-      let apiUrl = 'api';
-
-      this.setName = newName => name = newName;
-      this.setApiUrl = newApiUrl => apiUrl = newApiUrl;
-
-      this.$get = [() => {
-        return {
-          name: name,
-          apiUrl: apiUrl
-        };
-      }];
-    });
-
   }])
 
-	.run(['$translate', 'tmhDynamicLocale', '$window', '$rootScope', '$state',
-  ($tr, tmhD, $w, $rS, $st) => {
+  .provider('appConfig', function() {
 
-    const throttle = (type, name, obj = window) => {
-      let running = false;
-      const func = () => {
-        if (running) return;
-        running = true;
-        requestAnimationFrame(() => {
-          obj.dispatchEvent(new CustomEvent(name));
-          running = false;
-        });
+    let name = 'traru';
+    let apiUrl = 'api';
+
+    this.setName = newName => name = newName;
+    this.setApiUrl = newApiUrl => apiUrl = newApiUrl;
+
+    this.$get = [() => {
+      return {
+        name: name,
+        apiUrl: apiUrl
       };
+    }];
+  })
 
-      obj.addEventListener(type, func);
-    };
-    /* init - you can init any event */
-    throttle('resize', 'optimizedResize');
-
-    $rS.$on('$stateNotFound', (e, unfoundState, fromState, fromParams) => {
-      console.log(unfoundState.to); // "lazy.state"
-      console.log(unfoundState.toParams); // {a:1, b:2}
-      console.log(unfoundState.options); // {inherit:false} + default options
-      e.preventDefault();
-      $st.go('e404', {failState: unfoundState.to});
-    });
-
-  }])
+	.run(layoutRun)
 
   .controller('LayoutController', ['layout', '$state', function(layout, $st) {
     this.ui = layout;
   }])
 
-  .service('layout', ['$state', '$mdSidenav', 'User', '$translate',
+  .service('layout', ['utils', '$timeout', '$state', '$mdSidenav', 'User',
+  '$translate',
   '$translatePartialLoader', 'appConfig', 'Settings', '$q', '$log',
   'tmhDynamicLocale', '$mdDialog', 'capitalizeFilter', '$mdToast', 'async',
   '$document', 'yeValidForm', 'validFormUtils',
-  'Company', 'Truck', 'Route', 'Client', 'Worker',
-  function($st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD, $mdD, capitalizeF,
-  $mdT, async, $d, vForm, vFormU, C, T, R, Cl, W) {
+  'Company', 'Truck', 'Route', 'Client', 'Worker', 'Department', 'Cargo',
+  'Person',
+  function(utils, $t, $st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD, $mdD,
+  capitalizeF, $mdT, async, $d, vForm, vFormU, C, T, R, Cl, W, D, Ca, P) {
 
     this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
     this.sidenavRightToolbarTitleVars = {};
     this.sidenavRightToolbarIconLeft = 'close';
-    this.stateName = '';
     this.loggued = false;
     this.loaded = [];
 
@@ -122,7 +93,15 @@ export default angular.module('layout', [
 
     this.logout = () => U.logout().$promise
       .then(() => this.closeSidenav('left'))
-      .then(() => $st.reload());
+      .then(() => {
+        this.loggued = false;
+        return $st.go('home');
+      });
+
+    this.go = (stateName) => $q.all([
+      this.closeSidenav('left'),
+      this.closeSidenav('right')
+    ]).then(() => $st.go(stateName));
 
     this.openSidenav = idS => $mdS(idS).open();
 
@@ -130,9 +109,11 @@ export default angular.module('layout', [
       .then(() => this.sidenavRightContentClass = '');
 
     this.changeLanguage = lang => {
-      $l.debug('change language to ' + lang);
       $tr.use(lang);
-      return tmhD.set(lang);
+      return $q.all([
+        tmhD.set(lang),
+        $tr.refresh()
+      ]);
     };
 
     this.settings = () => {
@@ -150,88 +131,68 @@ export default angular.module('layout', [
     };
 
     this.loadTranslatePart = section => {
-      if (this.loaded.indexOf('layout') === -1) $tPL.addPart(section);
+      if (this.loaded.indexOf(section) === -1) {
+        $tPL.addPart(section);
+        if (section === 'initCompany') $tPL.addPart('company');
+      }
     };
 
-    const setDataUser = data => !!data && !!!data.roles ? data :
-      !!data ? data : {};
-
-    const setI18n = (s) => {
-      this.preferredLanguage = $tr.preferredLanguage = s.preferredLanguage;
-      this.langFallback = $tr.fallbackLanguage = s.langFallback;
-      this.langsAvailables = s.langsAvailables;
+    const getModel = (modelName) => {
+      let Model = null;
+      if (modelName === 'truck') Model = T;
+      else if (modelName === 'route') Model = R;
+      else if (modelName === 'company') Model = C;
+      else if (modelName === 'client') Model = Cl;
+      else if (modelName === 'worker') Model = W;
+      else if (modelName === 'department') Model = D;
+      else if (modelName === 'cargo') Model = Ca;
+      else if (modelName === 'person') Model = P;
+      else if (modelName === 'settings') Model = S;
+      return Model;
     };
 
-    const getCrud = (models, roles, isLoggued) => $q((resolve, reject) => {
+    const getCrud = (roles = [], isLoggued) => $q((resolve, reject) => {
 
       if (!isLoggued) return resolve({});
 
-      const setAcl = (conf, operation, acl) => {
-        conf.crud[operation].status = true;
-        conf.crud[operation].roles.push(acl.roleId);
-        conf.crud[operation].acls.push(acl.id);
-        return conf;
-      };
+      let modules = {};
 
-      async.concat(models,
-      (model, cbOut) => {
-
-        async.concat(roles,
-        (role, cb) => {
-          async.filter(role.acls,
+      async.each(roles,
+        (role, cb) => async.each(role.acls,
           (acl, cbInner) => {
-            if (acl.model === model.name && acl.property === 'find') cbInner(true);
-            else if (acl.model === model.name && acl.property === 'deleteById') cbInner(true);
-            else if (acl.model === model.name && acl.property === 'create') cbInner(true);
-            else if (acl.model === model.name && acl.property === 'updateAttributes') cbInner(true);
-            else cbInner(false);
+            if (!!!modules[acl.model]) modules[acl.model] = {
+              name: acl.model,
+              model: getModel(acl.model),
+              crud: {
+                c: {status: false, roles: [], acls: []},
+                r: {status: false, roles: [], acls: []},
+                u: {status: false, roles: [], acls: []},
+                d: {status: false, roles: [], acls: []}
+              }
+            };
+
+            const action = acl.property === 'find' ? 'r' :
+              acl.property === 'deleteById' ? 'd' :
+              acl.property === 'create' ? 'c' :
+              acl.property === 'updateAttributes' ? 'u' :
+              'x';
+
+            modules[acl.model].crud[action].status = true;
+            modules[acl.model].crud[action].roles.push(role);
+            modules[acl.model].crud[action].acls.push(acl);
+
+            cbInner();
           },
 
-          (results) => {
-            cb(null, results);
-          });
-        },
-
-        (err, results) => {
-          async.reduce(results, {name: model.name, model: model.model, crud: {
-            c: {status: false, roles: [], acls: []},
-            r: {status: false, roles: [], acls: []},
-            u: {status: false, roles: [], acls: []},
-            d: {status: false, roles: [], acls: []}
-          }},
-
-          (conf, acl, cb) => {
-            if (acl.property === 'create') cb(null, setAcl(conf, 'c', acl));
-            else if (acl.property === 'find') cb(null, setAcl(conf, 'r', acl));
-            else if (acl.property === 'updateAttributes') cb(null, setAcl(conf, 'u', acl));
-            else if (acl.property === 'deleteById') cb(null, setAcl(conf, 'd', acl));
-            else cb(null, conf);
-          },
-
-          (err, resultConf) => {
-            cbOut(null, resultConf);
-          });
-        });
-
-      },
-
-      (err, results) => {
-        let resModels = {};
-        async.each(results,
-        (item, cb) => {
-          resModels[item.name] = item;
-          cb(null);
-        },
-
-        (err) => {
-          resolve(resModels);
-        });
-      });
+          (err) => cb(null)
+        ),
+        (err) => resolve(modules)
+      );
 
     });
 
-    const setI18nModules = models => $q((resolve, reject) => {
-      async.forEachOf(models,
+    const setI18nModules = models => $q((resolve, reject) => async
+    .forEachOf(models,
       (v, k, cb) => {
         this.loadTranslatePart(k);
         if (k === 'client') {
@@ -245,10 +206,10 @@ export default angular.module('layout', [
         cb(null);
       },
 
-      (err) => resolve());
-    });
+      (err) => resolve()
+    ));
 
-    this.userIsRoot = (dataUser) => $q((resolve, reject) => angular
+    const userIsRoot = (dataUser) => $q((resolve, reject) => angular
       .isUndefined(dataUser) ||
       !angular.isObject(dataUser) ||
       !angular.isArray(dataUser.roles) ?
@@ -260,84 +221,97 @@ export default angular.module('layout', [
 					)
         );
 
-    const checkInitCompany = (stateName) => C.find({
-        filter: {where: {main: true}}
-      }).$promise
-      .then(cs => cs.length === 0 && stateName !== 'initCompany' ?
-          $st.go('initCompany') :
-        cs.length > 0 && stateName === 'initCompany' ?
-         $st.go('dashboard') : true
+    this.checkInitCompany = (dataUser, toState) => userIsRoot(dataUser)
+
+      .catch(() => 'noLoggued')
+
+      .then(isRoot => !!isRoot && isRoot !== 'noLoggued' ?
+        C.find({ filter: {where: {main: true}} }).$promise :
+        isRoot === 'noLoggued' ? 'noLoggued'  : 'noRoot'
+      )
+
+      .catch((err) => {
+        console.log(err);
+        return 'noFetchCompanyMain';
+      })
+
+      .then(cs => {
+        if (angular.isString(cs)) {
+          return cs === 'noLoggued' ? toState.auth ? 'login' : toState.name :
+            toState.name !== 'login' ? toState.name : 'dashboard';
+        }else if (angular.isArray(cs)) {
+          return cs.length === 0 && toState.name !== 'initCompany' ?
+            'initCompany' :
+            cs.length > 0 && toState.name === 'initCompany' ? 'dashboard' :
+              toState.name;
+        }else return 'home';
+
+      });
+
+    const setDataUser = dat => !!dat && !!!dat.roles ? dat : !!dat ? dat : {};
+
+    const setI18n = (toStateName) => {
+
+      const s = angular.extend({}, this.isLoggued() ?
+        this.dataUser.settings : this.dataUser
       );
 
-    const modulesToServe = (stateName, role) => {
-      let res = [];
-      if (stateName === 'dashboard') {
-        if (role === 'root') res = [
-          {name: 'truck', model: T},
-          {name: 'company', model: Co},
-          {name: 'route', model: R},
-          {name: 'client', model: C},
-          {name: 'worker', model: W}
-        ];
-        else if (role === 'client') res = [
-          {name: 'route', model: R}
-        ];
-        else res = [];
-      } else res = [];
+      if (!this.isLoggued()) s.preferredLanguage = utils
+        .getLanguage(s.langsAvailables, s.preferredLanguage);
 
-      return res;
+      this.preferredLanguage = s.preferredLanguage;
+      this.langFallback = s.langFallback;
+      this.langsAvailables = s.langsAvailables;
+      $tr.fallbackLanguage(s.langFallback);
+      $tr.preferredLanguage(s.preferredLanguage);
+      $tr.use(s.preferredLanguage);
+
+      return tmhD.set(s.preferredLanguage);
 
     };
 
-    this.prepareUI = (dataUser, stateName) => this.userIsRoot(dataUser)
-      .then(isRoot => isRoot ? checkInitCompany(stateName) : 'pass')
-      .then(pass => modulesToServe(stateName));
-
-    this.loadState = ({stateName, models, fn = () => $q.when()}) => {
-
-      this.loggued = this.isLoggued();
-      this.stateName = this.loggued && stateName !== 'login' ?  stateName :
-        this.loggued && stateName === 'login' ? 'dashboard' : 'login';
-
+    this.refreshLanguages = (toStateName) => {
       this.loadTranslatePart('layout');
-      this.loadTranslatePart(this.stateName);
-
-      return $q.all([
-        this.loggued ?
-          U.findById({id: U.getCurrentId(), filter: {include: [
-            'settings',
-            {roles: 'acls'}
-          ]}}).$promise :
-          S.findOne({filter: {where: {userId: 'public'}}}).$promise
-      ])
-
-        .then((res) => {
-          this.dataUser = setDataUser(res[0]);
-          setI18n(this.loggued ? res[0].settings : res[0]);
-          return getCrud(models, this.dataUser.roles, this.loggued);
-        })
-
-        .then((res) => {
-          if (this.loggued) this.dataUser.models = res;
-          return $q.all([
-            setI18nModules(res),
-            $q.when(res)
-          ]);
-        })
-
-				.then((res) => $q.all([
-            $q.when(res[1]),
-            $tr.refresh(),
-            $tr.use(this.preferredLanguage),
-            fn()
-          ]).then(resI => resI[0])
-        )
-
-        .catch((err) => {
-          $l.error(err);
-        });
-
+      this.loadTranslatePart(toStateName);
+      return $tr.refresh();
     };
+
+    this.finishStateTransition = (toStateName) => {
+      const fn = () => this.refreshLanguages(toStateName)
+        .then(() => this.loadStateInProgress = false);
+      if (this.isLoggued()) fn();
+      else {
+        const t1 = $t(() => {
+          fn();
+          $t.cancel(t1);
+        }, 0);
+      }
+    };
+
+    this.loadStateEnd = (toState) => setI18n(toState.name).then(() => toState);
+
+    this.getDataUser = () => (this.isLoggued() ?
+      U.findById({id: U.getCurrentId(),
+        filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
+      S.findOne({filter: {where: {userId: 'public'}}}).$promise
+    )
+
+      .then(res => this.isLoggued() ?
+        getCrud(res.roles, this.isLoggued())
+          .then(modules => {
+            res.modules = modules;
+            return res;
+          }) :
+        setDataUser(res)
+      )
+
+      .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}))
+
+      .then(dataUser => {
+        this.dataUser = dataUser;
+        this.loggued = this.isLoggued() ? true : false;
+        return dataUser;
+      });
 
     this.sidenavRightAction = ({
       scope,
@@ -350,7 +324,6 @@ export default angular.module('layout', [
       theme = 'default'
     }) => {
 
-      //return $st.go('.trucks', {}, {reload: false});
       const s = scope.$new();
       s.item = item;
 

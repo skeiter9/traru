@@ -34,16 +34,6 @@ import routesAM from './routes/routes.js';
 
   loadScript(gmapUrl);
 
-  const mainTag = document.createElement('main');
-  mainTag.setAttribute('ui-view', '');
-
-  d.body.insertBefore(
-    mainTag,
-    d.getElementsByTagName('script')[
-      d.getElementsByTagName('script').length - 3
-    ]
-  );
-
 })(window, window.document);
 
 export default angular.module('app', [routesAM.name])
@@ -55,5 +45,8 @@ export default angular.module('app', [routesAM.name])
     $lP.debugEnabled(true);
     appCP.setName('consama');
 
+  }])
+  .controller('rootController', ['$rootScope', function($rS) {
+    $rS.initialize = false;
   }]);
 

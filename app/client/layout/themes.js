@@ -50,17 +50,17 @@ export function themes(mdTP) {
   mdTP
     .theme('company')
       .primaryPalette('light-blue')
-      .accentPalette('lime');
+      .accentPalette('purple');
 
   mdTP
     .theme('worker')
-      .primaryPalette('light-green')
+      .primaryPalette('lime')
       .accentPalette('purple');
 
   mdTP
     .theme('traru')
       .primaryPalette('blue')
-      .accentPalette('light-green');
+      .accentPalette('green');
 
   mdTP
     .theme('department')

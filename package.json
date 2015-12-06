@@ -38,6 +38,7 @@
     "karma-tap": "^1.0.3",
     "karma-tape-reporter": "^1.0.3",
     "karma-webpack": "^1.7.0",
+    "postcss-inline-comment": "^2.0.0",
     "postcss-loader": "^0.7.0",
     "protractor": "^2.5.1",
     "style-loader": "^0.13.0",
@@ -50,6 +51,7 @@
   },
   "dependencies": {
     "autoprefixer": "^6.0.3",
+    "jade-loader": "^0.7.1",
     "postcss-alias": "^0.2.2",
     "postcss-custom-media": "^5.0.0",
     "postcss-custom-properties": "^5.0.0",

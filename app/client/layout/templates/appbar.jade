@@ -28,7 +28,7 @@ div(class='md-toolbar-tools md-whiteframe-z1')
       md-menu-item(ng-repeat = 'lang in layout.ui.langsAvailables')
         md-button(ng-click="layout.ui.changeLanguage(lang)"): span {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
 
-  md-menu(ng-if='layout.ui.loggued' md-position-mode="target-right target")
+  md-menu(ng-if='layout.ui.isLoggued()' md-position-mode="target-right target")
     md-button(class='md-icon-button' aria-label="show settings", ng-click="$mdOpenMenu()")
       md-icon(md-menu-origin="", md-font-icon="mdi mdi-dots-vertical")
     md-menu-content

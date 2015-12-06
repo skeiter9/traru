@@ -10,7 +10,7 @@ module.exports = angular
     'ngMaterial'
   ])
 
-  .controller('LoginController', ['$state', 'resolve', function($st, r) {
+  .controller('LoginController', ['layout', function(l) {
   }])
 
   .directive('loginForm', ['$log', 'yeValidForm', 'User', '$mdToast', '$q',
@@ -27,9 +27,10 @@ module.exports = angular
         return vForm(form)
         .then((result) => U.login(mForm.form).$promise)
         .then((user) => {
-          //localStorage.removeItem('traruSettings');
-          $l.debug('user is loggued: ', user);
-          $st.reload();
+
+          //$l.debug('user is loggued: ', user);
+          $st.go(attrs.toState || 'dashboard', {loginSuccess: true});
+          return;
         })
         .catch((err) => {
           $l.debug(err);
