@@ -18,18 +18,17 @@ export default angular.module('truck', [
 
   .directive(`${moduleName}Form`, ['layout', '$log', 'yeValidForm', modelName,
   '$mdToast', '$translate', 'validFormUtils', '$q',
-  (l, $l, vForm, T, $mdT, $tr, vFormU, $q) => ({
+  (l, $l, vForm, M, $mdT, $tr, vFormU, $q) => ({
     restrict: 'E',
     scope: {
-      item: '='
+      item: '=',
+      formSuccess: '&'
     },
     bindToController: true,
     controller: angular.noop,
     controllerAs: 'mForm',
     template: require(`./templates/${moduleName}-form.jade`)(),
     link(e, elem, attrs, mForm) {
-
-      mForm.theme = 'truck';
 
       mForm.form = angular.isObject(mForm.item) ?
         angular.extend({}, mForm.item) : {};
@@ -43,31 +42,21 @@ export default angular.module('truck', [
         ]
       };
 
-      mForm.update = !!mForm.form.id ? true : false;
+      mForm.update = l.isFormUpdate(mForm);
 
-      mForm.save = (form) => vForm(form)
-        .then(() => $q.all([!!mForm.item ?
-          T.prototype$updateAttributes({where: {id: mForm.item.id}},
-            mForm.form).$promise :
-          T.create(mForm.form).$promise
-        ]))
-        .then((truck) => {
-          $l.debug('truck is registered: ', truck[0]);
-          l.closeSidenav('right');
-        })
-        .catch((err) => {
-          $l.debug(err);
-          vFormU.catchError({
-            err: err,
-            modelName: 'truck',
-            operation: mForm.update ? 'edit' : 'new'
-          });
-        });
+      mForm.save = (form) => l.saveItem({
+        form: form,
+        Model: M,
+        mForm: mForm,
+        modelName: 'truck',
+        propTitle: 'licensePlate',
+        formSuccess: mForm.formSuccess
+      });
 
     }
   })])
 
-  .directive('truck', ['layout', '$log', (l, $l) => ({
+  .directive('trucks', ['layout', '$log', (l, $l) => ({
     restrict: 'E',
     scope: {
       item: '='
@@ -115,45 +104,14 @@ export default angular.module('truck', [
 
       init();
 
-      vm.ubicationItem = (e, item) => gm.launchMap({
-        event: e,
-        geoposition: item.ubication,
-        title: item.licensePlate,
-        showMarker: true,
-        inDialog: true
+      l.crudRoutes({
+        moduleName: 'truck',
+        vm: vm
       });
 
-      vm.showItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: item.licensePlate,
-        tag: 'truck',
-        item: item,
-        theme: 'truck'
-      });
-
-      vm.addItem = (e) => l.sidenavRightAction({
-        scope: s,
-        title: `SENTENCES.NEW`,
-        titleVars: {moduleName: $tr.instant('MODEL.TRUCK')},
-        tag: 'truck-form',
-        theme: 'truck'
-      });
-
-      vm.editItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: `SENTENCES.EDIT`,
-        titleVars: {item: item.licensePlate},
-        tag: 'truck-form',
-        item: item,
-        theme: 'truck'
-      });
-
-      vm.removeItem = (e, item) => l.removeItem({
-        evt: e,
-        model: T,
-        item: item,
-        title: item.licensePlate,
-        modelName: 'truck'
+      vm.ubicationItem = (e, item) => l.sidenavRightAction({
+        toStateName: '.truckUbication',
+        toStateParams: {id: item.id}
       });
 
     }

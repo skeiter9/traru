@@ -39,16 +39,17 @@ export default angular
           },
 
           launchMap({
-            event: e,
-            geoposition: geoposition,
-            title: title = 'ACTIONS.PICK_UBICATION',
-            theme: theme = 'default',
-            standalone: standalone = false,
-            fromInput: fromInput = false,
-            showMarker: showMarker = true,
-            icon: icon = false,
-            inDialog: inDialog = true,
-            geolocable: geolocable = false
+            e,
+            geoposition,
+            title = 'ACTIONS.PICK_UBICATION',
+            theme = 'default',
+            standalone = false,
+            fromInput = false,
+            showMarker = true,
+            icon = false,
+            inDialog = true,
+            geolocable = false,
+            closeFn = angular.noop
           }) {
             return $mdD.show({
               targetEvent: e,

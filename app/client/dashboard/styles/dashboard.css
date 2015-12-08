@@ -1,0 +1,9 @@
+@import '../../layout/styles/_alias.css';
+@import '../../layout/styles/_variables.css';
+@import '../../layout/styles/_placeholders.css';
+
+.view--dashboard {
+  @media (--screen-sm) {
+    padding: 8px;
+  }
+}

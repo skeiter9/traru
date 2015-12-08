@@ -7,7 +7,8 @@ md-card(md-theme='worker')
     ) {{'MODEL.WORKER_PLURAL' | translate | capitalize}}
     span(flex)
     md-button(ng-if='vm.module.crud.c.status'
-      ng-click='vm.addItem($event)' class='md-icon-button'
+      ng-click='vm.formItem($event)'
+      class='md-icon-button'
       aria-label='new client'
     )
       md-icon(md-font-icon='mdi mdi-plus')

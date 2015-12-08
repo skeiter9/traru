@@ -6,7 +6,7 @@ md-card(md-theme='truck')
     span(flex)
     md-button(
       ng-if='vm.module.crud.c.status'
-      ng-click='vm.addItem($event)'
+      ng-click='vm.formItem($event)'
       class='md-icon-button' aria-label='new truck'
     )
       md-icon(md-font-icon='mdi mdi-plus')
@@ -51,12 +51,12 @@ md-card(md-theme='truck')
                   p(flex) {{'ACTIONS.SHOW_UBICATION' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-map-marker")
             md-menu-item(ng-if='vm.module.crud.u.status')
-              md-button(ng-click="vm.editItem($event, item)")
+              md-button(ng-click="vm.formItem($event, item)")
                 div(layout="row"  layout-align="space-between center")
                   p(flex) {{'ACTIONS.EDIT' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
             md-menu-item(ng-if='vm.module.crud.d.status')
-              md-button(ng-click="vm.removeItem($event, item)")
+              md-button(ng-click="vm.deleteItem($event, item)")
                 div(layout="row"  layout-align="space-between center")
                   p(flex) {{'ACTIONS.DELETE' | translate | capitalize}}
                   md-icon(md-menu-align-target md-font-icon="mdi mdi-delete")

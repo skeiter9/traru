@@ -34,8 +34,8 @@ export function themes(mdTP) {
 
   mdTP
     .theme('route')
-      .primaryPalette('deep-purple')
-      .accentPalette('brown');
+      .primaryPalette('brown')
+      .accentPalette('deep-purple');
 
   mdTP
     .theme('client')

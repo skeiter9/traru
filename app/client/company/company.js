@@ -19,6 +19,9 @@ export default angular.module(`traru${modelName}`, [])
     template: require('./templates/traru-list.jade')(),
     link(s, elem, attrs, vm) {
 
+      vm.vmDepartment = {};
+      vm.vmCargo = {};
+
       const init = () => l.validModule(vm.module)
 
         .then(() => vm.module.model.find({
@@ -34,6 +37,11 @@ export default angular.module(`traru${modelName}`, [])
         .catch(() => vm.initialize = true);
 
       init();
+
+      l.crudRoutes({
+        moduleName: 'department',
+        vm: vm.vmDepartment
+      });
 
       vm.formItem = (e, parentModel, item, mN) => l.sidenavRightAction({
         scope: s,

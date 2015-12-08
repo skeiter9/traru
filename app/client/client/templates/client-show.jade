@@ -1,0 +1,13 @@
+section
+
+  md-subheader(ng-if ='!!!vm.item' class='md-no-sticky md-warn'
+  ) {{ 'MODULE.NO_CLIENT_SELECTED' | translate | capitalize}}
+
+  div(ng-if='!!vm.item')
+    person-show(ng-if='vm.item.person')
+    company-show(ng-if='vm.item.company')
+
+    md-list-item(class='md-2-line'): div(class='md-list-item-text')
+      h4 {{'FIELDS.DATE_CREATION' | translate | capitalize}}
+      h3 {{vm.item.creationDate | date}}
+

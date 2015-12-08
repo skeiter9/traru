@@ -37,39 +37,9 @@ export default angular.module(`traru${modelName}`, [
 
       init();
 
-      vm.showItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: item.firstName,
-        tag: moduleName,
-        item: item,
-        theme: moduleName
-      });
-
-      vm.addItem = (e) => l.sidenavRightAction({
-        scope: s,
-        title: `SENTENCES.NEW`,
-        titleVars: {
-          moduleName: $tr.instant(`MODEL.${moduleName.toUpperCase()}`)
-        },
-        tag: moduleName + '-form',
-        theme: moduleName
-      });
-
-      vm.editItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: `SENTENCES.EDIT`,
-        titleVars: {item: item.firstName},
-        tag: moduleName + '-form',
-        item: item,
-        theme: moduleName
-      });
-
-      vm.removeItem = (e, item) => l.removeItem({
-        evt: e,
-        model: M,
-        item: item,
-        title: item.firstName,
-        modelName: moduleName
+      l.crudRoutes({
+        moduleName: 'worker',
+        vm: vm
       });
 
     }

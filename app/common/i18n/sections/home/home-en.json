@@ -1,6 +1,7 @@
 {
-  "FIELDS": {
-    "USERNAME": "username",
-    "PASSWORD": "password"
+  "SECTION" : {
+    "HOME": {
+      "WELCOME": "Truck your trucks will be easy."
+    }
   }
 }

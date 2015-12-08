@@ -8,6 +8,11 @@
     "ROUTE": "route",
     "ROUTE_PLURAL": "routes"
   },
+  "MODULE": {
+    "NO_ROUTE_ITEMS": "there's no routes registered",
+    "NEW_ROUTE": "new route",
+    "EDIT_ROUTE": "edit: {{name}}"
+  },
   "FIELDS": {
     "WEIGHT": "weight",
     "GEOPOINT_INITIAL": "initial position",

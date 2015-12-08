@@ -58,11 +58,14 @@ export default angular
 
         const resize = (fromResize = false) => {
 
+          element.css({height: wSidenav() + 'px'});
+          /*
           const t1 = $t(() => {
-            element.css({height: wSidenav() + 'px'});
-            $t.cancel(t1);
+            const t2 = $t(() => {
+              $t.cancel(t2);
+            }, 0);
           }, 0);
-
+          */
           if (scope.initialized) return;
 
           if (
@@ -121,11 +124,9 @@ export default angular
           }
         };
 
-        const watchPicture = attrs
-          .$observe('picture', (pic) => resize(false));
+        const watchPicture = attrs.$observe('picture', (pic) => resize(false));
 
-        $w.addEventListener('optimizedResize',
-          resize.bind(null, true));
+        $w.addEventListener('optimizedResize', resize.bind(null, true));
 
         scope.$on('$destroy', (evt) => {
           watchPicture();

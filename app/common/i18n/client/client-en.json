@@ -8,5 +8,10 @@
   "MODEL": {
     "CLIENT": "client",
     "CLIENT_PLURAL": "clients"
+  },
+  "MODULE": {
+    "NO_CLIENT_ITEMS": "there's no clients registered",
+    "NEW_CLIENT": "new client",
+    "EDIT_CLIENT": "edit: {{name}}"
   }
 }

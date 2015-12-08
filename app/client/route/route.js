@@ -149,22 +149,10 @@ export default angular.module('traruRoute', [
 
       init();
 
-      vm.formItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
-        titleVars: {
-          moduleName: $tr.instant('MODEL.' + moduleName.toUpperCase()),
-          item: !!item ? item : false
-        },
-        tag: `${moduleName}-form`,
-        item: item,
-        attrs: `
-          form-success='vm.afterForm()'
-        `,
-        theme: moduleName
+      l.crudRoutes({
+        moduleName: 'route',
+        vm: vm
       });
-
-      vm.afterForm = () => l.closeSidenav('right');
 
     }
 

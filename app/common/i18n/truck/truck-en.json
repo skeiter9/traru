@@ -9,6 +9,11 @@
     "TRUCK": "truck",
     "TRUCK_PLURAL": "trucks"
   },
+  "MODULE": {
+    "NO_TRUCK_ITEMS": "there's no trucks registered",
+    "NEW_TRUCK": "new truck",
+    "EDIT_TRUCK": "edit: {{name}}"
+  },
   "FIELDS": {
     "LICENSEPLATE": "license plate",
     "LICENSEPLATELATERAL": "license plate lateral",

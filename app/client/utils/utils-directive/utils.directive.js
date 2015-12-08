@@ -57,18 +57,15 @@ export default angular.module('utilsDirectives', [])
         const pluralName = angular.isObject(vm.module) &&
           angular.isString(vm.module.name) ?
             vm.module.name.toUpperCase() + '_PLURAL' : 'ANONYMOUS_PLURAL';
-        if (!!nv) {
-          t1 = $t(() => {
-            vm.pluralName = $tr.instant(`MODEL.${pluralName}`);
-            vm.initialize = true;
-          }, 0);
-        }
+
+        //vm.pluralName = $tr.instant(`MODEL.${pluralName}`);
+        if (!!nv) vm.initialize = true;
 
       });
 
       s.$on('$destroy', () => {
         w();
-        !!t1 ? $t.cancel(t1) : ''
+        !!t1 ? $t.cancel(t1) : '';
       });
 
     }

@@ -17,13 +17,15 @@ module.exports = angular
     workerAM.name
   ])
 
-  .controller('DashboardController', ['layout', function(l) {
+  .controller('DashboardController', ['layout', '$state', function(l, $st) {
 
     this.moduleTruck = l.dataUser.modules.truck;
     this.moduleCompany = l.dataUser.modules.company;
     this.moduleRoute = l.dataUser.modules.route;
     this.moduleClient = l.dataUser.modules.client;
     this.moduleWorker = l.dataUser.modules.worker;
+
+    if ($st.current.name.indexOf('.') === -1) l.loadStateEnd();
 
   }]);
 

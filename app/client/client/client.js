@@ -43,42 +43,24 @@ export default angular.module(`traru${modelName}`, [
 
       vm.refresh = init;
 
-      vm.showItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: !!item.person ? item.person.firstName : item.company.socialName,
-        tag: !!item.person ? 'person-show' : 'company-show',
-        item: !!item.person ? item.person : item.company,
-        theme: moduleName
-      });
-
-      vm.formItem = (e, item) => l.sidenavRightAction({
-        scope: s,
-        title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
-        titleVars: {
-          moduleName: $tr.instant('MODEL.' + modelName.toUpperCase()),
-          item: !!item ?
-            !!item.person ? item.person.firstName : item.company.socialName :
-            ''
-        },
-        tag: `${moduleName}-form`,
-        item: item,
-        attrs: `
-          in-company
-          form-success='vm.formSuccess()'
-        `,
-        theme: moduleName
-      });
-
-      vm.deleteItem = (e, item) => l.removeItem({
-        evt: e,
-        model: M,
-        item: item,
-        title: !!item.person ? item.person.firstName : item.company.socialName,
-        modelName: modelName
+      l.crudRoutes({
+        moduleName: 'client',
+        vm: vm
       });
 
     }
 
+  })])
+
+  .directive('clients', ['layout', (l) => ({
+    restrict: 'E',
+    scope: {
+      item: '='
+    },
+    bindToController: true,
+    controller: angular.noop,
+    controllerAs: 'vm',
+    template: require(`./templates/client-show.jade`)()
   })])
 
   .directive(`${moduleName}Form`, ['layout', '$log', 'yeValidForm', 'Client',

@@ -3,12 +3,12 @@ md-toolbar(
   md-theme-watch
 )
 
-  div(class = 'md-toolbar-tools')
+  div(class='md-toolbar-tools')
 
     md-button(
-      ng-click = 'layout.ui.sidenavRightToolbarIconLeftAction($event)'
-      aria-label = 'close sidenav right'
-      class = 'md-icon-button')
+      ng-click='layout.ui.sidenavRightToolbarIconLeftAction($event)'
+      aria-label='close sidenav right'
+      class='md-icon-button')
       md-icon(mdx-icon='{{layout.ui.sidenavRightToolbarIconLeft}}'
         md-font-icon='mdi')
     
@@ -23,6 +23,10 @@ md-toolbar(
       class = 'md-icon-button')
       md-icon(md-font-icon='mdi mdi-{{icon.icon}}')
 
+//mdx-sidenav-content = ''
+//content = 'layout.ui.sidenavRightContent'
 md-content(
-  mdx-sidenav-content = ''
-  content = 'layout.ui.sidenavRightContent')
+  ui-view='sidenavRight'
+  md-theme='{{layout.ui.sidenavRighTheme}}'
+  md-theme-watch
+)

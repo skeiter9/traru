@@ -43,7 +43,7 @@ export default angular.module('app', [routesAM.name])
 
     gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
     $lP.debugEnabled(true);
-    appCP.setName('consama');
+    appCP.setName('clarita');
 
   }])
   .controller('rootController', ['$rootScope', function($rS) {

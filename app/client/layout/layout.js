@@ -1,10 +1,13 @@
 import angularAria from 'angular-aria/angular-aria.min.js';
 import angularSanitize from 'angular-sanitize/angular-sanitize.min.js';
 import angularAnimate from 'angular-animate/angular-animate.min.js';
-import angularMessages from 'angular-messages/angular-messages.min';
+import angularMessages from 'angular-messages/angular-messages.min.js';
+import angularCookies from 'angular-cookies/angular-cookies.min';
 import angularMaterial from 'angular-material/angular-material.min.js';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
+import angularTranslateStorageLocal from 'angular-translate-storage-local';
+import angularTranslateStorageCookie from 'angular-translate-storage-cookie';
 import angularDynamicLocale from 'angular-dynamic-locale';
 import angularTM  from 'angular-translate-interpolation-messageformat';
 import ngFx from 'ng-fx';
@@ -23,6 +26,7 @@ export default angular.module('layout', [
     'ngSanitize',
     'pascalprecht.translate',
     'tmh.dynamicLocale',
+    'ngCookies',
     angularTM,
     ngFx,
     capitalizeFilterAM.name,
@@ -40,6 +44,7 @@ export default angular.module('layout', [
     tmhDLP.localeLocationPattern('/static/angular-locale_{{locale}}.js');
 
     $trP
+      .useLocalStorage()
       .addInterpolation('$translateMessageFormatInterpolation')
       .useSanitizeValueStrategy('escape')
       .useLoader('$translatePartialLoader', {
@@ -71,19 +76,21 @@ export default angular.module('layout', [
   }])
 
   .service('layout', ['utils', '$timeout', '$state', '$mdSidenav', 'User',
-  '$translate',
+  '$translate', '$rootScope',
   '$translatePartialLoader', 'appConfig', 'Settings', '$q', '$log',
   'tmhDynamicLocale', '$mdDialog', 'capitalizeFilter', '$mdToast', 'async',
   '$document', 'yeValidForm', 'validFormUtils',
   'Company', 'Truck', 'Route', 'Client', 'Worker', 'Department', 'Cargo',
   'Person',
-  function(utils, $t, $st, $mdS, U, $tr, $tPL, appC, S, $q, $l, tmhD, $mdD,
+  function(utils, $t, $st, $mdS, U, $tr, $rS, $tPL, appC, S, $q, $l, tmhD, $mdD,
   capitalizeF, $mdT, async, $d, vForm, vFormU, C, T, R, Cl, W, D, Ca, P) {
 
     this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
     this.sidenavRightToolbarTitleVars = {};
     this.sidenavRightToolbarIconLeft = 'close';
+    this.sidenavRightToolbarIconLeftAction = e => this .closeSidenav('right')
+      .then(() => $st.current.name.indexOf('.') !== -1 ?  $st.go('^') : '');
     this.loggued = false;
     this.loaded = [];
 
@@ -108,13 +115,11 @@ export default angular.module('layout', [
     this.closeSidenav = idS => $mdS(idS).close()
       .then(() => this.sidenavRightContentClass = '');
 
-    this.changeLanguage = lang => {
-      $tr.use(lang);
-      return $q.all([
+    this.changeLanguage = lang => $tr.refresh()
+      .then(() => $q.all([
         tmhD.set(lang),
-        $tr.refresh()
-      ]);
-    };
+        $tr.use(lang)
+      ]));
 
     this.settings = () => {
 
@@ -122,20 +127,23 @@ export default angular.module('layout', [
       this.sidenavRightToolbarIconLeft = 'close';
       this.sidenavRightToolbarIconLeftAction = () => this.closeSidenav('right');
 
-      this.sidenavRightContent = {
-        html: `<span> settings </span>`
-      };
-
-      return this.closeSidenav('left')
-        .then(() => $st.go('settings'));
+      return this.closeSidenav('left').then(() => $st.go('settings'));
     };
 
-    this.loadTranslatePart = section => {
-      if (this.loaded.indexOf(section) === -1) {
-        $tPL.addPart(section);
-        if (section === 'initCompany') $tPL.addPart('company');
+    this.loadTranslatePart = part => $q((resolve, reject) => {
+      if (this.loaded.indexOf(part) !== -1) resolve(true);
+      else if (part === 'dashboard' && this.isLoggued()) async
+        .each(this.dataUser.modules,
+          (item, cb) => cb(null, this.loaded.indexOf(part) === -1 ?
+            $tPL.addPart(item.name) : ''),
+          (err) => resolve(true)
+        );
+      else {
+        $tPL.addPart(part);
+        if (part === 'initCompany') $tPL.addPart('company');
+        resolve();
       }
-    };
+    });
 
     const getModel = (modelName) => {
       let Model = null;
@@ -191,24 +199,6 @@ export default angular.module('layout', [
 
     });
 
-    const setI18nModules = models => $q((resolve, reject) => async
-    .forEachOf(models,
-      (v, k, cb) => {
-        this.loadTranslatePart(k);
-        if (k === 'client') {
-          this.loadTranslatePart('person');
-          this.loadTranslatePart('company');
-        }else if (k === 'worker') {
-          this.loadTranslatePart('department');
-          this.loadTranslatePart('cargo');
-        }
-
-        cb(null);
-      },
-
-      (err) => resolve()
-    ));
-
     const userIsRoot = (dataUser) => $q((resolve, reject) => angular
       .isUndefined(dataUser) ||
       !angular.isObject(dataUser) ||
@@ -250,11 +240,9 @@ export default angular.module('layout', [
 
     const setDataUser = dat => !!dat && !!!dat.roles ? dat : !!dat ? dat : {};
 
-    const setI18n = (toStateName) => {
+    const setI18n = (dataUser) => {
 
-      const s = angular.extend({}, this.isLoggued() ?
-        this.dataUser.settings : this.dataUser
-      );
+      const s = this.isLoggued() ? dataUser.settings : dataUser;
 
       if (!this.isLoggued()) s.preferredLanguage = utils
         .getLanguage(s.langsAvailables, s.preferredLanguage);
@@ -262,35 +250,30 @@ export default angular.module('layout', [
       this.preferredLanguage = s.preferredLanguage;
       this.langFallback = s.langFallback;
       this.langsAvailables = s.langsAvailables;
-      $tr.fallbackLanguage(s.langFallback);
-      $tr.preferredLanguage(s.preferredLanguage);
-      $tr.use(s.preferredLanguage);
 
-      return tmhD.set(s.preferredLanguage);
+      $tr.preferredLanguage(s.preferredLanguage);
+      $tr.fallbackLanguage(s.langFallback);
+
+      this.loadTranslatePart('layout');
+
+      return $q.all([
+        $tr.use(s.preferredLanguage),
+        tmhD.set(s.preferredLanguage)
+      ])
+        .then(() => dataUser);
 
     };
 
-    this.refreshLanguages = (toStateName) => {
-      this.loadTranslatePart('layout');
-      this.loadTranslatePart(toStateName);
+    this.loadStateEnd = () => {
+      if (!!!$rS.initialize) {
+        $rS.initialize = true;
+        this.loadStateInProgress = false;
+      }
+
       return $tr.refresh();
     };
 
-    this.finishStateTransition = (toStateName) => {
-      const fn = () => this.refreshLanguages(toStateName)
-        .then(() => this.loadStateInProgress = false);
-      if (this.isLoggued()) fn();
-      else {
-        const t1 = $t(() => {
-          fn();
-          $t.cancel(t1);
-        }, 0);
-      }
-    };
-
-    this.loadStateEnd = (toState) => setI18n(toState.name).then(() => toState);
-
-    this.getDataUser = () => (this.isLoggued() ?
+    this.getDataUser = ({fromForm = false} = {}) => (this.isLoggued() ?
       U.findById({id: U.getCurrentId(),
         filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
       S.findOne({filter: {where: {userId: 'public'}}}).$promise
@@ -307,6 +290,11 @@ export default angular.module('layout', [
 
       .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}))
 
+      .then((dataUser) => $rS.initialize && !fromForm ?
+        $q.when(dataUser) :
+        setI18n(dataUser)
+      )
+
       .then(dataUser => {
         this.dataUser = dataUser;
         this.loggued = this.isLoggued() ? true : false;
@@ -314,33 +302,35 @@ export default angular.module('layout', [
       });
 
     this.sidenavRightAction = ({
-      scope,
-      title,
-      tag = 'br',
-      attrs = '',
       item,
-      titleVars = {},
-      className = '',
-      theme = 'default'
+      toStateName,
+      toStateParams = {}
     }) => {
 
-      const s = scope.$new();
-      s.item = item;
+      //this.sidenavRightContentClass = className;
 
-      this.sidenavRightToolbarTitle = title;
-      this.sidenavRightToolbarTitleVars = titleVars;
-      this.sidenavRightToolbarIconLeft = 'close';
-      this.sidenavRightToolbarIconLeftAction = e => this .closeSidenav('right');
+      return !!toStateName ?
+        $st.go(toStateName, toStateParams) :
+        this.openSidenav('right');
+    };
 
-      this.sidenavRightContentClass = className;
-      this.sidenavRighTheme = theme;
+    this.crudRoutes = ({moduleName, vm}) => {
+    
+      vm.showItem = (e, item) => this.sidenavRightAction({
+        toStateName: `.${moduleName}Show`,
+        toStateParams: {id: item.id}
+      });
 
-      this.sidenavRightContent = {
-        html: `<${tag} ${attrs} item='item' in-sidenav/>`,
-        scope: s
-      };
+      vm.formItem = (e, item) => this.sidenavRightAction({
+        toStateName: `.${moduleName}${!!item ? 'Update' : 'Create'}`,
+        toStateParams: !!item ? {id: item.id} : {}
+      });
 
-      return this.openSidenav('right');
+      vm.deleteItem = (e, item) => this.sidenavRightAction({
+        toStateName: `.${moduleName}Delete`,
+        toStateParams: {id: item.id}
+      });
+
     };
 
     this.checkAvailables = (itemsToValid, items, propKey
@@ -419,7 +409,9 @@ export default angular.module('layout', [
         });
       });
 
-    this.removeItem = ({evt, item, title, model, modelName}) => {
+    this.removeItem = ({evt, item, title, model, modelName,
+      formSuccess = () => {}, formError = () => {}
+    }) => {
       if (!!!model) return $l.debug('pass a valid model resource');
       if (!angular.isObject(item)) return $l.debug('pass an item to delete');
       return $tr([
@@ -442,11 +434,11 @@ export default angular.module('layout', [
 
           return $mdD.show(confirm).then(() => t);
         })
-        .then((t) => model.deleteById({id: item.id}).$promise)
-        .then((v) => $q.all([
-          this.closeSidenav('right'),
-          $mdT.showSimple($tr.instant('API.ITEM_DELETED',
-            {moduleItem: title}))
+        .catch(() => $q((r, r2) => $q.when(formError()).then(a => r2())))
+        .then(t => model.deleteById({id: item.id}).$promise)
+        .then(v => $q.all([
+          $mdT.showSimple($tr.instant('API.ITEM_DELETED', {moduleItem: title})),
+          formSuccess()
         ]))
         .catch((err) => {
           if (!!err) $l.debug(err);

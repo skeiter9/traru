@@ -13,9 +13,9 @@ module.exports = angular
   .controller('LoginController', ['layout', function(l) {
   }])
 
-  .directive('loginForm', ['$log', 'yeValidForm', 'User', '$mdToast', '$q',
-  '$state', '$translate', 'validFormUtils',
-  ($l, vForm, U, $mdT, $q, $st, $tr, vFormU) => ({
+  .directive('loginForm', ['layout', '$log', 'yeValidForm', 'User', '$mdToast',
+  '$q', '$state', '$translate', 'validFormUtils',
+  (l, $l, vForm, U, $mdT, $q, $st, $tr, vFormU) => ({
     scope: {},
     bindToController: true,
     controllerAs: 'mForm',
@@ -25,11 +25,10 @@ module.exports = angular
       mForm.form = {};
       mForm.save = (form) => {
         return vForm(form)
-        .then((result) => U.login(mForm.form).$promise)
-        .then((user) => {
-
-          //$l.debug('user is loggued: ', user);
-          $st.go(attrs.toState || 'dashboard', {loginSuccess: true});
+        .then(result => U.login(mForm.form).$promise)
+        .then(user => l.getDataUser({fromForm: true}))
+        .then(() => {
+          $st.go(attrs.toState || 'dashboard');
           return;
         })
         .catch((err) => {

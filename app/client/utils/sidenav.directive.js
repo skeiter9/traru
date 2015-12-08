@@ -7,51 +7,32 @@ export default angular.module('componentsSidenavContent', ['ngMaterial'])
     }
   })])
 
-  .directive('mdSidenavBackdrop', ['$mdSidenav', '$document', ($mdS, $d) => ({
+  .directive('mdSidenavBackdrop', ['$mdSidenav', '$document', '$state',
+  ($mdS, $d, $st) => ({
     restrict: 'C',
+    priority: 2000,
     link(s, elem, attrs) {
 
-      const bodyTag = $d[0].body;
+      elem[0].addEventListener('click', (e) => {
+        //e.preventDefault();
+        //e.stopPropagation();
+        if ($st.current.name.indexOf('.') !== -1)  $st.go('^');
+      });
 
+      const bodyTag = $d[0].body;
       const w1 = s.$watchGroup([
         () => $mdS('left').isOpen(),
         () => $mdS('right').isOpen()
       ],
-      (nVs, oVs) => !nVs[0] && !nVs[1] && !bodyTag.classList.contains('spinner-main-activate') ?
-        $d[0].body.style.removeProperty('overflow') :
-        $d[0].body.style.overflow = 'hidden'
-      );
+      (nVs, oVs) => {
+        if (!nVs[0] && !nVs[1] &&
+          !bodyTag.classList.contains('spinner-main-activate')
+        ) bodyTag.style.removeProperty('overflow');
+        else bodyTag.style.overflow = 'hidden';
+      });
 
       s.$on('$destroy', () => w1());
 
     }
-  })])
+  })]);
 
-  .directive('mdxSidenavContent', ['$compile', '$timeout', '$animate',
-    ($c, $t, $a) => ({
-      scope: {
-        content: '='
-      },
-      restrict: 'A',
-      link: (s, elem, attrs) => {
-
-        const uppateContent = s.$watch('content', () => {
-
-          if (!angular.isObject(s.content)) s.content = {};
-
-          const content = $c(angular.element(s.content.html || '<br/>'))
-            (s.content.scope || s);
-
-          const t1 = $t(() => {
-            let prevContent = elem.children();
-            prevContent.remove();
-            elem.append(content);
-            $t.cancel(t1);
-          }, 0);
-
-        });
-
-        s.$on('$destroy', () => uppateContent());
-
-      }
-    })]);

@@ -42,12 +42,11 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
           let t2 = null;
           const t1 = $t(() => {
             t2 = $t(() => {
-
               resize();
               init();
-
               ngF.preBg.backgroundImage = !!!ngF.fileResult ? 'none' :
-                `url('${appC.apiUrl}/pictures/${attrs.container}/download/${ngF.fileResult}')`;
+                `url('${appC.apiUrl}/pictures/${attrs.container}/download/${
+                ngF.fileResult}')`;
             }, 0);
           }, 0);
 
@@ -83,7 +82,8 @@ export default angular.module('ngFileUploadWrapper', ['ngFileUpload'])
 
           s.$on('$destroy', () => {
             $t.cancel(t1);
-            $t.cancel(t2);
+
+            //$t.cancel(t2);
           });
 
           $w.addEventListener('optimizedResize', resize.bind());
