@@ -23,13 +23,16 @@ export default angular.module(`traru${modelName}`, [
     link(s, elem, attrs, vm) {
 
       const init = () =>l.validModule(vm.module)
+
         .then(() => vm.module.model.find({
           filter: {include: 'person'}
         }).$promise)
+
         .then(items => {
           vm.items = items;
           vm.initialize = true;
         })
+
         .catch(err => {
           $l.debug(err);
           vm.initialize = true;
@@ -100,60 +103,43 @@ export default angular.module(`traru${modelName}`, [
 
         });
 
-      const parsePerson = (person, initialize = true) => {
-        //if (initialize && mForm.update && angular.isObject(person)
-        //) mForm.formAux.personId = person.id;
-
+      const parsePerson = (person, initialize = true) => $q((resolve, rej) => {
         if (!initialize && mForm.formAux.personId !== '0'
         ) mForm.form.person.id = mForm.formAux.personId;
-
-      };
+        resolve();
+      });
 
       const parseCargos = (auxCargos) => $q((resolve, reject) => {
-
         let cargos = [];
-
         async.forEachOf(auxCargos,
-          (item, key, cb) => {
-            cargos.push(key);
-            cb(null);
-          },
-
+          (item, key, cb) => cb(null, cargos.push(key)),
           (err) => cargos.length === 0 ? reject('no_cargos') : resolve(cargos)
         );
       });
 
       init();
 
-      mForm.save = (form) => (mForm.formAux.personId == 0 ?  l.saveItem({
+      mForm.save = form => parsePerson(mForm.person, false)
+        .then(() => parseCargos(mForm.formAux.cargos))
+        .then(cargos => mForm.form.cargos = cargos)
+        .then(() =>l.saveItem({
+          Model: M,
           form: form,
-          onlyCheck: true
-        }) :
-        $q.when()
-      )
+          mForm: mForm,
+          modelName: 'worker',
+          upsertItem: true,
+          dataTosend: {
+            person: mForm.form.person,
+            cargos: mForm.form.cargos,
+            user: mForm.form.user
+          },
+          formSuccess: () => l.closeSidenav('right')
+        }))
 
-      .then(() => parsePerson(mForm.person, false))
-
-      .then(() => parseCargos(mForm.formAux.cargos))
-
-      .then((cargos) => l.saveItem({
-        Model: M,
-        form: form,
-        mForm: mForm,
-        modelName: 'client',
-        upsertItem: true,
-        dataToSend: {
-          person: mForm.form.person,
-          cargos: cargos,
-          user: mForm.form.user
-        },
-        formSuccess: () => l.closeSidenav('right')
-      }))
-
-      .catch(err => err === 'no_cargos' ?
-        $mdT.showSimple($tr.instant('WORKER.ADD_CARGO')) :
-        err
-      );
+        .catch(err => err === 'no_cargos' ?
+          $mdT.showSimple($tr.instant('WORKER.ADD_CARGO')) :
+          err
+        );
 
     }
   })]);

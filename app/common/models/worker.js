@@ -6,6 +6,7 @@ const getApp = require('../utils/utils.js').getApp;
 module.exports = function(Worker) {
 
   //Worker.validatesPresenceOf('title');
+
   Worker.upsertItem = (data, cb) => {
     let res = {};
 
@@ -16,6 +17,8 @@ module.exports = function(Worker) {
       if (!!!data.cargos || data.cargos.length === 0
       ) cb({errCode: 'ERR_WORKER_NO_CARGO'});
 
+      console.log(data);
+
       return (!!!data.person.id ?
         app.models.person.create(data.person) :
         Promise.resolve(data.person)
@@ -23,7 +26,9 @@ module.exports = function(Worker) {
 
       .then((result) => {
         res.person = result;
-        return app.models.worker.upsert(data.worker);
+        return app.models.worker.upsert({
+          personId: res.person.id
+        });
       })
 
       .then(results => {

@@ -9,6 +9,7 @@ export function routes(stateProvider) {
     .state('login', {
       parent: 'layout',
       url: '/login',
+      resolve: {r: ['layout', (l) => l.resolveState('login')]},
       views: {
         content: {
           controllerAs: 'Login',

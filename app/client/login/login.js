@@ -11,6 +11,8 @@ module.exports = angular
   ])
 
   .controller('LoginController', ['layout', function(l) {
+    l.loadTranslatePart(['login'])
+      .then(() => l.loadStateEnd());
   }])
 
   .directive('loginForm', ['layout', '$log', 'yeValidForm', 'User', '$mdToast',

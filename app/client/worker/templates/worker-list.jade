@@ -19,5 +19,17 @@ md-card(md-theme='worker')
     initialize='{{vm.initialize}}'
   )
     md-list
-      md-list-item(ng-repeat='moduleItem in vm.items')
-        p hi
+      md-list-item(
+        ng-repeat='p in vm.items'
+        class='md-2-list fx-fade-up fx-dur-300 fx-ease-none fx-stagger-120'
+      )
+        img(
+          ng-src="api/pictures/persons/download/{{p.person.photo}}"
+          class="md-avatar"
+          alt='client photo'
+        )
+        div(class='md-list-item-text')
+          h3 {{p.person.firstName}} {{p.person.lastName}}
+          h4 {{p.person.lastName}}
+
+

@@ -126,12 +126,7 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/dashboard',
       auth: true,
-      resolve: {
-        resolve: ['layout', (l) => {
-          return l.loadTranslatePart('dashboard');
-        }],
-      },
-
+      resolve: {r: ['layout', (l) => l.resolveState('dashboard')]},
       views: {
         content: {
           controllerAs: 'dashboard',

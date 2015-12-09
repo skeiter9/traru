@@ -18,8 +18,7 @@
     "waypoints": {
       "type": [
         "geopoint"
-      ],
-      "required": true
+      ]
     }
   },
   "validations": [],
@@ -28,6 +27,16 @@
       "type": "belongsTo",
       "model": "truck",
       "foreignKey": "truckId"
+    },
+    "client": {
+      "type": "belongsTo",
+      "model": "client",
+      "foreignKey": "clientId"
+    },
+    "worker": {
+      "type": "belongsTo",
+      "model": "worker",
+      "foreignKey": "workerId"
     }
   },
   "acls": [],

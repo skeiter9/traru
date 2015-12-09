@@ -54,19 +54,16 @@ export default angular.module('layout', [
   }])
 
   .provider('appConfig', function() {
-
     let name = 'traru';
     let apiUrl = 'api';
 
     this.setName = newName => name = newName;
     this.setApiUrl = newApiUrl => apiUrl = newApiUrl;
 
-    this.$get = [() => {
-      return {
-        name: name,
-        apiUrl: apiUrl
-      };
-    }];
+    this.$get = [() => ({
+      name: name,
+      apiUrl: apiUrl
+    })];
   })
 
 	.run(layoutRun)
@@ -130,20 +127,27 @@ export default angular.module('layout', [
       return this.closeSidenav('left').then(() => $st.go('settings'));
     };
 
-    this.loadTranslatePart = part => $q((resolve, reject) => {
-      if (this.loaded.indexOf(part) !== -1) resolve(true);
-      else if (part === 'dashboard' && this.isLoggued()) async
-        .each(this.dataUser.modules,
-          (item, cb) => cb(null, this.loaded.indexOf(part) === -1 ?
-            $tPL.addPart(item.name) : ''),
-          (err) => resolve(true)
-        );
-      else {
-        $tPL.addPart(part);
-        if (part === 'initCompany') $tPL.addPart('company');
-        resolve();
+    const loadTranslatePart = part => {
+      if (!angular.isString(part)) return;
+      else if (this.loaded.indexOf(part) !== -1) return part;
+      $tPL.addPart(part);
+      if (part === 'dashboard') for (let i = 0;
+        i < this.dataUser.modules; i++) {
+        if (angular.isString(this.dataUser.modules[i])) $tPL
+          .addPart(this.dataUser.modules[i]);
       }
-    });
+
+      return part;
+    };
+
+    this.loadTranslatePart = (part) => angular.isString(part) ?
+      $q.when(loadTranslatePart(part)) :
+      angular.isArray(part) ? $q((r, r2) => async
+        .each(part, (p, cb) => cb(null, loadTranslatePart(p)), e => r(part))) :
+      $q((r, r2) => {
+        $l.debug('only strings or array for i18n parts(err_201)');
+        r('only strings or array for i18n parts');
+      });
 
     const getModel = (modelName) => {
       let Model = null;
@@ -160,11 +164,8 @@ export default angular.module('layout', [
     };
 
     const getCrud = (roles = [], isLoggued) => $q((resolve, reject) => {
-
       if (!isLoggued) return resolve({});
-
       let modules = {};
-
       async.each(roles,
         (role, cb) => async.each(role.acls,
           (acl, cbInner) => {
@@ -196,7 +197,6 @@ export default angular.module('layout', [
         ),
         (err) => resolve(modules)
       );
-
     });
 
     const userIsRoot = (dataUser) => $q((resolve, reject) => angular
@@ -211,31 +211,21 @@ export default angular.module('layout', [
 					)
         );
 
-    this.checkInitCompany = (dataUser, toState) => userIsRoot(dataUser)
-
+    this.checkInitCompany = (dataUser) => userIsRoot(dataUser)
       .catch(() => 'noLoggued')
-
       .then(isRoot => !!isRoot && isRoot !== 'noLoggued' ?
         C.find({ filter: {where: {main: true}} }).$promise :
         isRoot === 'noLoggued' ? 'noLoggued'  : 'noRoot'
       )
-
       .catch((err) => {
         console.log(err);
         return 'noFetchCompanyMain';
       })
-
-      .then(cs => {
-        if (angular.isString(cs)) {
-          return cs === 'noLoggued' ? toState.auth ? 'login' : toState.name :
-            toState.name !== 'login' ? toState.name : 'dashboard';
-        }else if (angular.isArray(cs)) {
-          return cs.length === 0 && toState.name !== 'initCompany' ?
-            'initCompany' :
-            cs.length > 0 && toState.name === 'initCompany' ? 'dashboard' :
-              toState.name;
-        }else return 'home';
-
+      .then(res => {
+        if (angular.isString(res)) return {status: false, detail: res};
+        else if (angular.isArray(res) && res.length === 0) return {status: true};
+        else if (angular.isArray(res) && res.length > 0) return {status: false};
+        else return {status: false};
       });
 
     const setDataUser = dat => !!dat && !!!dat.roles ? dat : !!dat ? dat : {};
@@ -256,27 +246,21 @@ export default angular.module('layout', [
 
       this.loadTranslatePart('layout');
 
-      return $q.all([
-        $tr.use(s.preferredLanguage),
-        tmhD.set(s.preferredLanguage)
-      ])
+      return $tr.refresh()
+        .then(() => $q.all([
+          $tr.use(s.preferredLanguage),
+          tmhD.set(s.preferredLanguage)
+        ]))
         .then(() => dataUser);
 
     };
 
-    this.loadStateEnd = () => {
-      if (!!!$rS.initialize) {
-        $rS.initialize = true;
-        this.loadStateInProgress = false;
-      }
-
-      return $tr.refresh();
-    };
-
-    this.getDataUser = ({fromForm = false} = {}) => (this.isLoggued() ?
-      U.findById({id: U.getCurrentId(),
-        filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
-      S.findOne({filter: {where: {userId: 'public'}}}).$promise
+    const getDataUser = () => (
+      $rS.ininitialize ? $q.when(this.dataUser) :
+      this.isLoggued() ?
+        U.findById({id: U.getCurrentId(),
+          filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
+        S.findOne({filter: {where: {userId: 'public'}}}).$promise
     )
 
       .then(res => this.isLoggued() ?
@@ -288,34 +272,59 @@ export default angular.module('layout', [
         setDataUser(res)
       )
 
-      .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}))
+      .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}));
 
-      .then((dataUser) => $rS.initialize && !fromForm ?
-        $q.when(dataUser) :
-        setI18n(dataUser)
-      )
+    this.setI18nInitial = (dataU, reset = false) => $rS.initialize && !reset ?
+        $q.when(dataU) : setI18n(dataU);
 
+    const loadStateStart = () => {
+      this.loadStateInProgress = false;
+      return $q.when();
+    };
+
+    this.resolveState = (toStateName, i18Parts = []) => loadStateStart()
+      .then(() =>getDataUser())
+      .then(dataUser => this.setI18nInitial(dataUser))
       .then(dataUser => {
         this.dataUser = dataUser;
         this.loggued = this.isLoggued() ? true : false;
         return dataUser;
+      })
+      .then(dataUser => this.checkInitCompany(dataUser))
+      .then(initC => {
+        const toState = $st.get(toStateName);
+        if (initC.status) {
+          throw new Error('initCompany');
+        } else if (this.loggued && toState.name === 'login') {
+          throw new Error('dashboard');
+        } else if (!this.loggued && !!toState.auth) {
+          $l.debug('no Loggued');
+          throw 'login';
+        } else if (!!!toState.auth) return;
+        else if (!!toState.auth  && this.isLoggued()) return;
+        else return;
+      })
+      .then(() => $q.all([
+        this.loadTranslatePart(toStateName),
+        this.loadTranslatePart(i18Parts)
+      ]))
+      .then(() => $tr.refresh())
+      .catch(err => {
+        $st.go(err);
       });
 
-    this.sidenavRightAction = ({
-      item,
-      toStateName,
-      toStateParams = {}
-    }) => {
-
-      //this.sidenavRightContentClass = className;
-
-      return !!toStateName ?
-        $st.go(toStateName, toStateParams) :
-        this.openSidenav('right');
+    this.loadStateEnd = () => {
+      this.loadStateInProgress = false;
+      if (!!!$rS.initialize) $rS.initialize = true;
+      return $q.when();
     };
 
+    this.sidenavRightAction = ({ item, toStateName, toStateParams = {}}
+    ) => !!toStateName ?
+      $st.go(toStateName, toStateParams) :
+      this.openSidenav('right');
+
     this.crudRoutes = ({moduleName, vm}) => {
-    
       vm.showItem = (e, item) => this.sidenavRightAction({
         toStateName: `.${moduleName}Show`,
         toStateParams: {id: item.id}

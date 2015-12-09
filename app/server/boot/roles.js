@@ -7,7 +7,7 @@ module.exports = function(server) {
   const privateModels = [
     'user',
 
-    //'settings',
+    'settings',
     'role',
 
     'picture',
@@ -22,25 +22,19 @@ module.exports = function(server) {
     'Role'
   ];
 
-  const getModules = () => new Promise((resolve, reject) => {
-    async.filter(server.models(),
-    (model, cb) => {
-      cb(privateModels.indexOf(model.modelName) === -1 ? true : false);
-    },
+  const getModules = () => new Promise((resolve, reject) => async
+    .filter(
+      server.models(),
+      (model, cb) => cb(privateModels.indexOf(model.modelName) === -1 ? true : false),
+      (results) => async.map(
+        results,
+        (model, cb) => cb(null, model.modelName),
+        (err, models) => resolve(models)
+      )
+    )
+  );
 
-    (results) => {
-      async.map(results,
-      (model, cb) => {
-        cb(null, model.modelName);
-      },
-
-      (err, models) => {
-        resolve(models);
-      });
-    });
-  });
-
-  const getOperationName = (operation) => operation === 'u' ? 'updateAttributes' :
+  const getOperationName = operation => operation === 'u' ? 'updateAttributes' :
     operation === 'r' ? 'find' :
     operation === 'd' ? 'deleteById' : 'create';
 
@@ -48,8 +42,6 @@ module.exports = function(server) {
     model: moduleName,
     permission: 'ALLOW',
     principalType: 'ROLE',
-
-    //principalId: typeof roleId === 'object' ? roleId.toString() : roleId,
     principalId: roleName,
     roleId: roleId,
     accessType: operation === 'r' ? 'READ' : 'WRITE',
@@ -64,9 +56,8 @@ module.exports = function(server) {
         cbInner(null, formateAclToSend(module_, role.name, role.id, operation));
       },
 
-      (errInner, results) => {
-        cb(null, results);
-      });
+      (errInner, results) => cb(null, results)
+      );
     },
 
     (err, results) => {
@@ -102,21 +93,23 @@ module.exports = function(server) {
   });
 
   Promise.all([
-    server.models.role.find({where: {name: 'root'}}),
-    server.models.user.find({where: {username: 'root'}})
+    server.models.role.find({where: {name: 'client'}}),
+    server.models.user.find({where: {username: 'walter1'}})
   ])
+
     .then((res) => Promise.all([
       res[0].length === 0 ?
         server.models.role.create({name: 'root', description: 'root user'}) :
         Promise.resolve(res[0][0]),
       res[1].length === 0 ?
         server.models.user.create({
-          email: 'skeiter97@gmail.com',
-          username: 'root',
+          email: 'walter56ghgh7@gmail.com',
+          username: 'walter1',
           password: '123456'
         }) :
         Promise.resolve(res[1][0])
     ]))
+
     .then((res) => Promise.all([
       Promise.resolve(res[0]),
       Promise.resolve(res[1]),
@@ -131,6 +124,7 @@ module.exports = function(server) {
       getModules(),
       server.models.settings.find({where: {userId: res[1].id}})
     ]))
+
     .then((res) => Promise.all([
       Promise.resolve(res[0]),
       Promise.resolve(res[1]),
@@ -141,13 +135,13 @@ module.exports = function(server) {
           principalId: res[1].id
         }) :
         Promise.resolve(res[2][0]),
-      parseAclsToSend(res[0], res[4], res[3], ['c', 'r', 'u', 'd']),
+      parseAclsToSend(res[0], res[4], res[3], ['r']),
       res[5].length === 0 ?
         server.models.settings.create({
           userId: res[1].id,
           preferredLanguage: 'en',
           langsAvailables: ['en', 'es'],
-          langFallback: 'es'
+          langFallback: 'en'
         }) :
         Promise.resolve(res[5][0])
     ]))
@@ -161,9 +155,6 @@ module.exports = function(server) {
         Promise.resolve([]),
       Promise.resolve(res[4])
     ]))
-    .then((res) => {
-      //console.log(res);
-    })
     .catch((err) => {
       console.log(err);
     });

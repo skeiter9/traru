@@ -42,7 +42,9 @@ export default angular.module('traruRoute', [
 
         mForm.addWaypoint = () => mForm.formAux.waypoints.push({});
 
-        mForm.loadDrivers = () => W.find({filter: {include: 'cargos'}}).$promise
+        mForm.loadDrivers = () => W.find({filter:
+          {include: ['cargos', 'person']}}
+        ).$promise
           .then(items => mForm.drivers = items);
 
         mForm.loadTrucks = () => T.find().$promise
@@ -132,7 +134,9 @@ export default angular.module('traruRoute', [
     link(s, elem, attrs, vm) {
 
       const init = () => {
-        if (vm.module.crud.r.status) vm.module.model.find().$promise
+        if (vm.module.crud.r.status) vm.module.model.find({filter: {
+          include: ['truck', {client: ['person', 'company']}, {worker: 'person'}]
+        }}).$promise
 
           .then(items => {
             vm.items = items;

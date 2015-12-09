@@ -10,19 +10,12 @@ export function routes(stateProvider) {
     .state('home', {
       parent: 'layout',
       url: '/',
-      resolve: {
-        r: ['layout', '$q', (l, $q) => {
-          return $q.all([
-            l.loadTranslatePart('home'),
-            l.loadTranslatePart('login')
-          ]);
-        }]
-      },
+      resolve: {r: ['layout', (l) => l.resolveState('home', ['login'])]},
       views: {
         content: {
           controllerAs: 'home',
           template: require('./templates/home.jade')(),
-          controller: ['layout', () => {
+          controller: ['layout', '$q', (l, $q) => {
           }]
         }
       }
