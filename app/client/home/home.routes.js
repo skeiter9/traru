@@ -15,7 +15,8 @@ export function routes(stateProvider) {
         content: {
           controllerAs: 'home',
           template: require('./templates/home.jade')(),
-          controller: ['layout', '$q', (l, $q) => {
+          controller: ['layout', '$q', function(l, $q) {
+		l.loadStateEnd();
           }]
         }
       }

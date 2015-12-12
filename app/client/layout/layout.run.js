@@ -26,8 +26,6 @@ export default ['$rootScope', '$state', 'layout', '$log',
   (e, toState, toParams, fromState, fromParams) => {
     $l.debug('start ', toState.name, toParams);
 
-    //l.resolveState(e, toState);
-
   });
 
 }];
