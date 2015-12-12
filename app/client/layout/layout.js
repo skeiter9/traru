@@ -45,7 +45,7 @@ export default angular.module('layout', [
 
     $trP
       .useLocalStorage()
-      .addInterpolation('$translateMessageFormatInterpolation')
+      //.addInterpolation('$translateMessageFormatInterpolation')
       .useSanitizeValueStrategy('escape')
       .useLoader('$translatePartialLoader', {
         urlTemplate: '/api/settings/i18n/{part}/{lang}'
@@ -274,7 +274,7 @@ export default angular.module('layout', [
 
       .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}));
 
-    this.setI18nInitial = (dataU, reset = false) => $rS.initialize && !reset ?
+    this.setI18nInitial = (dataU) => $rS.initialize?
         $q.when(dataU) : setI18n(dataU);
 
     const loadStateStart = () => {
@@ -301,40 +301,38 @@ export default angular.module('layout', [
       .then(dataUser => this.checkInitCompany(dataUser))
       .then(initC => {
         const toState = $st.get(toStateName);
+        this.bootState = angular.isDefined(this.bootState) ? this.bootState : true;
         if (initC.status) {
-            return $q((r, r2) => r2('initCompany'));
-          throw new Error('initCompany');
+          return $q((r, r2) => r2('initCompany'));
         } else if (this.loggued && toState.name === 'login') {
-          throw new Error('dashboard');
+          return $q((r, r2) => r2('dashboard'));
         } else if (!this.loggued && !!toState.auth) {
           $l.debug('no Loggued');
-          throw 'login';
+          return $q((r, r2) => r2('login'));
         } else if (!!!toState.auth) return;
         else if (!!toState.auth  && this.isLoggued()) return;
         else return;
       })
-      .then(() => $q.all([
-        this.loadTranslatePart(toStateName),
-        this.loadTranslatePart(i18Parts)
-      ]))
-      .then(() => $tr.refresh())
-      .then(() => {
-        this.bootState = angular.isUndefined(this.bootState) ?
-            true : !!this.bootState;
-        console.log(this.bootState, $st.current);
-        return; 
-        })
       .catch(err => {
+        console.log(err, this.bootState);
         if (this.bootState) {
-            this.bootState = false;
-            $st.go('initCompany');
+          this.bootState = false;
+          $st.go('initCompany');
         }
+        return;
+      })
+      .then(() => {
+        this.loadTranslatePart(toStateName);
+        this.loadTranslatePart(i18Parts);
+        return $tr.refresh();
       });
 
     this.loadStateEnd = () => {
-      this.loadStateInProgress = false;
-      if (!!!$rS.initialize) $rS.initialize = true;
-      return $q.when();
+      return $tr.refresh()
+        .then(() => {
+          this.loadStateInProgress = false;
+          if (!!!$rS.initialize) $rS.initialize = true;
+        });
     };
 
     this.sidenavRightAction = ({ item, toStateName, toStateParams = {}}

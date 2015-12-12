@@ -37,7 +37,7 @@ export function routes(stateProvider) {
         template: require('./templates/init-company.jade')(),
         controllerAs: 'vm',
         controller: ['$state', 'layout', function($st, l) {
-            l.loadStateEnd();
+          l.loadStateEnd();
           this.formSuccess = () => {
             $st.reload();
             return;
