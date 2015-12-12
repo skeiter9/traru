@@ -25,7 +25,6 @@ export default ['$rootScope', '$state', 'layout', '$log',
   $rS.$on('$stateChangeStart',
   (e, toState, toParams, fromState, fromParams) => {
     $l.debug('start ', toState.name, toParams);
-
   });
 
 }];

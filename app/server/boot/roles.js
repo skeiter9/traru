@@ -135,7 +135,7 @@ module.exports = function(server) {
           principalId: res[1].id
         }) :
         Promise.resolve(res[2][0]),
-      parseAclsToSend(res[0], res[4], res[3], ['r']),
+      parseAclsToSend(res[0], res[4], res[3], ['c', 'r', 'u', 'd']),
       res[5].length === 0 ?
         server.models.settings.create({
           userId: res[1].id,

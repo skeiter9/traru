@@ -71,10 +71,15 @@ export function routes(stateProvider) {
   .state('help', {
     url: '/help',
     parent: 'layout',
+    resolve: {r: ['layout', (l) => l.resolveState('help')]},
     views: {
       content: {
-        template: require('./views/help.jade')()
-      }
+        template: require('./views/help.jade')(),
+        controllerAs: 'vmHelp',
+        controller: ['layout', function(l) { 
+            l.loadStateEnd();
+        }]
+     }
     }
   })
 
