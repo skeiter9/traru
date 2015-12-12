@@ -18,6 +18,7 @@ import utilsAM from '../utils/utils.factory.js';
 import {themes} from './themes.js';
 import layoutRun from './layout.run.js';
 
+require('./styles/help.css')
 require('./styles/layout.css');
 
 export default angular.module('layout', [

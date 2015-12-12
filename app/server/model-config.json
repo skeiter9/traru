@@ -34,19 +34,19 @@
     "public": false
   },
   "user": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "accessToken": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "settings": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "truck": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "picture": {
@@ -54,47 +54,47 @@
     "public": true
   },
   "acl": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "role": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "roleMapping": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "route": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "person": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "client": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "company": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "worker": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "department": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "cargo": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   },
   "cargoMapping": {
-    "dataSource": "mongoDs",
+    "dataSource": "db",
     "public": true
   }
 }
