@@ -294,6 +294,7 @@ export default angular.module('layout', [
       .then(initC => {
         const toState = $st.get(toStateName);
         if (initC.status) {
+            return $q((r, r2) => r2('initCompany'));
           throw new Error('initCompany');
         } else if (this.loggued && toState.name === 'login') {
           throw new Error('dashboard');
@@ -310,7 +311,7 @@ export default angular.module('layout', [
       ]))
       .then(() => $tr.refresh())
       .catch(err => {
-        $st.go(err);
+        $st.go('initCompany');
       });
 
     this.loadStateEnd = () => {

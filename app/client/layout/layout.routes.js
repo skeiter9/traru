@@ -88,8 +88,9 @@ export function routes(stateProvider) {
       content: {
         template: require('./views/e404.jade')(),
         controllerAs: 'vm',
-        controller: ['$state', function($st) {
-          this.failState = $st.params.failState;
+        controller: ['layout', '$state', function(l, $st) {
+          //this.failState = $st.params.failState;
+          l.loadStateEnd();
         }]
       }
     }
