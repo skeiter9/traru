@@ -3,5 +3,12 @@
     "HOME": {
       "WELCOME": "Truck your trucks will be easy."
     }
+  },
+  "SECTIONS": {
+    "LOGIN": "login"
+  },
+  "FIELDS": {
+    "USERNAME": "user",
+    "PASSWORD": "password"
   }
 }

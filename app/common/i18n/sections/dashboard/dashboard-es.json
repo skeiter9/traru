@@ -1,2 +1,13 @@
 {
+  "MODEL": {
+    "TRUCK": "camión",
+    "TRUCK_PLURAL": "camiones",
+    "WORKER": "trabajador",
+    "WORKER_PLURAL": "trabajadores",
+    "CLIENT": "cliente",
+    "CLIENT_PLURAL": "clientes",
+    "ROUTE": "ruta",
+    "ROUTE_PLURAL": "rutas"
+  }
 }
+

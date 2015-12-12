@@ -8,17 +8,17 @@
     "ADD_CARGO": "agregar cargo"
   },
   "MODEL": {
-    "COMPANY": "empresa",
-    "COMPANY_PLURAL": "empresas"
+    "COMPANY": "organización",
+    "COMPANY_PLURAL": "organizaciones"
   },
   "SENTENCES": { 
     "SUMMARY": "resumen"
   },
   "FIELDS": {
     "NAME": "name",
-    "COMERCIALNAME": "comercial name",
-    "SOCIALNAME": "social name",
+    "COMERCIALNAME": "nombre comercial",
+    "SOCIALNAME": "razón social",
     "RUC": "RUC",
-    "PHONE": "phone"
+    "PHONE": "teléfono"
   }
 }
