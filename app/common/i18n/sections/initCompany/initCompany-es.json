@@ -1,7 +1,7 @@
 {
   "SECTIONS" : {
     "INIT_COMPANY": {
-      "MESSAGE" : "Hi root user, The system doesn't have a main company registered, please register a company to continue"
+      "MESSAGE" : "Hola usuario root, el sistema no tiene una empresa principal registrada, por favor registra una empresa para continuar"
     }
   }
 }

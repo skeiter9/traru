@@ -1,6 +1,6 @@
 {
   "MODEL": {
-    "CARGO": "cargo",
-    "CARGO_PLURAL": "cargos"
+    "CARGO": "position",
+    "CARGO_PLURAL": "positions"
   }
 }

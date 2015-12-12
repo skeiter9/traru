@@ -82,6 +82,21 @@ export function routes(stateProvider) {
     }
   })
 
+  .state('blog', {
+    url: '/blog',
+    parent: 'layout',
+    resolve: {r: ['layout', (l) => l.resolveState('blog')]},
+    views: {
+      content: {
+        template: require('./views/blog.jade')(),
+        controllerAs: 'vmBlog',
+        controller: ['layout', function(l) { 
+            l.loadStateEnd();
+        }]
+     }
+    }
+  })
+
   .state('e404', {
     url: '/{failState:[a-zA-Z0-9-]+}',
     parent: 'layout',

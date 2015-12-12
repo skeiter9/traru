@@ -1,4 +1,9 @@
 {
+  "SECTION" : {
+    "HOME": {
+      "WELCOME": "Truck your trucks will be easy."
+    }
+  },
   "SECTIONS": {
     "LOGIN": "login"
   },
