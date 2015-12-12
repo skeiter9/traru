@@ -282,8 +282,16 @@ export default angular.module('layout', [
       return $q.when();
     };
 
+    this.setDataUser = () => getDataUser()
+      .then(dataUser => this.setI18nInitial(dataUser))
+      .then(dataUser => {
+        this.dataUser = dataUser;
+        this.loggued = this.isLoggued() ? true : false;
+        return dataUser;
+      });
+
     this.resolveState = (toStateName, i18Parts = []) => loadStateStart()
-      .then(() =>getDataUser())
+      .then(() => getDataUser())
       .then(dataUser => this.setI18nInitial(dataUser))
       .then(dataUser => {
         this.dataUser = dataUser;
@@ -310,8 +318,17 @@ export default angular.module('layout', [
         this.loadTranslatePart(i18Parts)
       ]))
       .then(() => $tr.refresh())
+      .then(() => {
+        this.bootState = angular.isUndefined(this.bootState) ?
+            true : !!this.bootState;
+        console.log(this.bootState, $st.current);
+        return; 
+        })
       .catch(err => {
-        $st.go('initCompany');
+        if (this.bootState) {
+            this.bootState = false;
+            $st.go('initCompany');
+        }
       });
 
     this.loadStateEnd = () => {
