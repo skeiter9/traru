@@ -1,4 +1,7 @@
 {
+  "APP": {
+    "TITLE_PRE_READY": "set your info"
+  },
   "HTTP": {
     "FAIL_REQUEST": "couldn't retrieve {{moduleName}} items, reload app",
     "404": {

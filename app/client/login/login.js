@@ -30,7 +30,7 @@ module.exports = angular
         .then(result => U.login(mForm.form).$promise)
         .then(user => l.setDataUser())
         .then(() => {
-          //$st.go(attrs.toState || 'dashboard');
+          $st.go(attrs.toState || 'dashboard');
           return;
         })
         .catch((err) => {

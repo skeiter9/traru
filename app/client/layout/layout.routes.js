@@ -88,8 +88,8 @@ export function routes(stateProvider) {
     resolve: {r: ['layout', (l) => l.resolveState('blog')]},
     views: {
       content: {
-        template: require('./views/blog.jade')(),
-        controllerAs: 'vmBlog',
+        //template: require('./views/help.jade')(),
+        controllerAs: 'vmHelp',
         controller: ['layout', function(l) { 
             l.loadStateEnd();
         }]

@@ -261,7 +261,7 @@ export default angular.module('layout', [
       this.isLoggued() ?
         U.findById({id: U.getCurrentId(),
           filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
-        S.findOne({filter: {where: {userId: 'public'}}}).$promise
+        S.findOne({filter: {where: {userId: '0'}}}).$promise
     )
 
       .then(res => this.isLoggued() ?
