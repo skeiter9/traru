@@ -1,6 +1,15 @@
 {
+  "WORKER": {
+    "ADD_CARGO": "agrega un cargo como mínimo para este trabajador"
+  },
   "MODEL": {
-    "WORKER": "trabajador",
-    "WORKER_PLURAL": "trabajadores"
+    "WORKER": "worker",
+    "WORKER_PLURAL": "workers"
+  },
+  "MODULE": {
+    "NO_WORKER_ITEMS": "no existen trabajadores"
+  },
+  "SENTENCES": {
+    "WARN_WORKER_NO_CARGOS": "No hay cargos, registre al menos un cargo para registrar un nuevo trabajador"
   }
 }

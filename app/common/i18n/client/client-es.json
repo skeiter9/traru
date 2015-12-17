@@ -1,6 +1,17 @@
-{
+{	
+	"SENTENCES": {
+    "SELECT_PERSON": "Selecciona o crea una persona",
+    "SELECT_COMPANY": "Selecciona o crea una organización",
+    "REGISTER_PERSON": "Registra una persona",
+    "REGISTER_COMPANY": "Registra una organización"
+  },
   "MODEL": {
     "CLIENT": "cliente",
     "CLIENT_PLURAL": "clientes"
+  },
+  "MODULE": {
+    "NO_CLIENT_ITEMS": "No hay clientes registrados",
+    "NEW_CLIENT": "nuevo cliente",
+    "EDIT_CLIENT": "editar: {{name}}"
   }
 }

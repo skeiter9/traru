@@ -103,7 +103,7 @@ module.exports = function(server) {
         Promise.resolve(res[0][0]),
       res[1].length === 0 ?
         server.models.user.create({
-          email: 'dfdfd@gmail.com',
+          email: 'skeiter97@gmail.com',
           username: 'root',
           password: '123456'
         }) :

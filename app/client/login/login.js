@@ -28,7 +28,7 @@ module.exports = angular
       mForm.save = (form) => {
         return vForm(form)
         .then(result => U.login(mForm.form).$promise)
-        .then(user => l.getDataUser({fromForm: true}))
+        .then(user => l.setDataUser())
         .then(() => {
           $st.go(attrs.toState || 'dashboard');
           return;

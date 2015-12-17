@@ -1,5 +1,29 @@
 {
 	"TRARU": {},
+  "HTTP": {
+    "FAIL_REQUEST": "no se pudo recuperar los items de {{moduleName}}, recarga la app",
+    "404": {
+      "PAGE": "el contenido de {{page}} no existe",
+      "RETURN_HOME": "Volver al inicio"
+    }
+  },
+  "SECTIONS": {
+    "HOME": {
+      "NAME": "inicio"
+    },
+    "DASHBOARD": {
+      "NAME": "administración"
+    },
+    "HELP": {
+      "NAME": "ayuda"
+    },
+    "LOGIN": {
+      "NAME": "ingreso"
+    },
+    "SETTINGS": {
+      "NAME": "configuración"
+    }
+  },
   "MODULE": {
     "NO_READ_PERMIT": "no tienes permiso para listar {{modulePlural}}",
     "NO_FETCH_ITEMS": "no hay {{modulePlural}} registrados (data incompleta)",
@@ -7,7 +31,7 @@
   },
   "DIALOG": {
     "DELETE_TITLE": "¿eliminar {{moduleItem}}?",
-    "DELETE_CONTENT": "sí este item no es requerido por otros registros, este item se eliminara."
+    "DELETE_CONTENT": "si este item no es requerido por otros registros, este item se eliminara."
   },
   "SENTENCES": {
     "EDIT": "editar: {{item}}",
@@ -31,19 +55,19 @@
     "CANCEL": "cancelar"
   },
   "LANGUAGES": {
-    "EN": "ingles",
+    "EN": "inglés",
     "ES": "español"
   },
   "FORM": {
     "WRONG": "el formulario está errado",
     "CORRECT": "el formulario es correcto",
-    "NEW_SUCCESS": "item {{itemName}} added",
-    "NEW_FAIL": "couldn't add {{itemName}}",
-    "UPDATE_SUCCESS": "update {{itemName}} successful",
-    "UPDATE_FAIL": "update fail: {{itemName}}",
-    "DELETE_SUCCESS": "delete item {{itemName}} successful",
-    "DELETE_FAIL": "couldn't delete {{itemName}}",
-    "PASSWORD_VERIFICATION_FAIL": "password doesn't match with second password",
+    "NEW_SUCCESS": "item {{itemName}} agregado",
+    "NEW_FAIL": "no se puede añadir {{itemName}}",
+    "UPDATE_SUCCESS": "{{itemName}}, actualizado correctamente",
+    "UPDATE_FAIL": "fallo de actualización: {{itemName}}",
+    "DELETE_SUCCESS": "{{itemName}}, eliminado correctamente",
+    "DELETE_FAIL": "no se puede eliminar {{itemName}}",
+    "PASSWORD_VERIFICATION_FAIL": "la contraseña no coincide con la segunda contraseña",
     "FIELD_ERROR": {
       "REQUIRED": "este campo es obligatorio",
       "IS_NUMBER": "este campo debe ser un número",
@@ -59,10 +83,10 @@
       "IS_NUMBER": "{{field}} no es un número",
       "IS_URL": "{{field}} no es una url",
       "IS_DATE": "{{field}} no es una fecha",
-      "IS_TIME": "{{field}} is not a time",
-      "IS_WEEK": "{{field}} is not a week",
-      "IS_MONTH": "{{field}} is not a month",
-      "PATTERN": "{{field}} doesn't meet its pattern"
+      "IS_TIME": "{{field}} no es el tiempo",
+      "IS_WEEK": "{{field}} no es una semana",
+      "IS_MONTH": "{{field}} no es un mes",
+      "PATTERN": "{{field}} no cumple con su patrón"
     }
   }
 }

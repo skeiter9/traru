@@ -31,14 +31,13 @@ export function routes(stateProvider) {
     url: '/init-company',
     parent: 'layout',
     auth: true,
+      resolve: {r: ['layout', (l) => l.resolveState('initCompany', ['company'])]},
     views: {
       content: {
         template: require('./templates/init-company.jade')(),
         controllerAs: 'vm',
         controller: ['$state', 'layout', function($st, l) {
-
-          l.loadTranslatePart('initCompany')
-            .then(() => l.loadStateEnd());
+          l.loadStateEnd();
           this.formSuccess = () => {
             $st.reload();
             return;
@@ -71,10 +70,30 @@ export function routes(stateProvider) {
   .state('help', {
     url: '/help',
     parent: 'layout',
+    resolve: {r: ['layout', (l) => l.resolveState('help')]},
     views: {
       content: {
-        template: require('./views/help.jade')()
-      }
+        template: require('./views/help.jade')(),
+        controllerAs: 'vmHelp',
+        controller: ['layout', function(l) { 
+            l.loadStateEnd();
+        }]
+     }
+    }
+  })
+
+  .state('blog', {
+    url: '/blog',
+    parent: 'layout',
+    resolve: {r: ['layout', (l) => l.resolveState('blog')]},
+    views: {
+      content: {
+        //template: require('./views/help.jade')(),
+        controllerAs: 'vmHelp',
+        controller: ['layout', function(l) { 
+            l.loadStateEnd();
+        }]
+     }
     }
   })
 
@@ -88,8 +107,9 @@ export function routes(stateProvider) {
       content: {
         template: require('./views/e404.jade')(),
         controllerAs: 'vm',
-        controller: ['$state', function($st) {
-          this.failState = $st.params.failState;
+        controller: ['layout', '$state', function(l, $st) {
+          //this.failState = $st.params.failState;
+          l.loadStateEnd();
         }]
       }
     }

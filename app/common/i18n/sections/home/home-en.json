@@ -3,5 +3,9 @@
     "HOME": {
       "WELCOME": "Truck your trucks will be easy."
     }
+  },
+  "FIELDS": {
+    "USERNAME": "user",
+    "PASSWORD": "password"
   }
 }

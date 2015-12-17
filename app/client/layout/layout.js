@@ -18,6 +18,7 @@ import utilsAM from '../utils/utils.factory.js';
 import {themes} from './themes.js';
 import layoutRun from './layout.run.js';
 
+require('./styles/help.css')
 require('./styles/layout.css');
 
 export default angular.module('layout', [
@@ -45,7 +46,7 @@ export default angular.module('layout', [
 
     $trP
       .useLocalStorage()
-      .addInterpolation('$translateMessageFormatInterpolation')
+      //.addInterpolation('$translateMessageFormatInterpolation')
       .useSanitizeValueStrategy('escape')
       .useLoader('$translatePartialLoader', {
         urlTemplate: '/api/settings/i18n/{part}/{lang}'
@@ -260,7 +261,7 @@ export default angular.module('layout', [
       this.isLoggued() ?
         U.findById({id: U.getCurrentId(),
           filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
-        S.findOne({filter: {where: {userId: 'public'}}}).$promise
+        S.findOne({filter: {where: {userId: '0'}}}).$promise
     )
 
       .then(res => this.isLoggued() ?
@@ -274,7 +275,7 @@ export default angular.module('layout', [
 
       .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}));
 
-    this.setI18nInitial = (dataU, reset = false) => $rS.initialize && !reset ?
+    this.setI18nInitial = (dataU) => $rS.initialize?
         $q.when(dataU) : setI18n(dataU);
 
     const loadStateStart = () => {
@@ -282,8 +283,16 @@ export default angular.module('layout', [
       return $q.when();
     };
 
+    this.setDataUser = () => getDataUser()
+      .then(dataUser => this.setI18nInitial(dataUser))
+      .then(dataUser => {
+        this.dataUser = dataUser;
+        this.loggued = this.isLoggued() ? true : false;
+        return dataUser;
+      });
+
     this.resolveState = (toStateName, i18Parts = []) => loadStateStart()
-      .then(() =>getDataUser())
+      .then(() => getDataUser())
       .then(dataUser => this.setI18nInitial(dataUser))
       .then(dataUser => {
         this.dataUser = dataUser;
@@ -293,30 +302,38 @@ export default angular.module('layout', [
       .then(dataUser => this.checkInitCompany(dataUser))
       .then(initC => {
         const toState = $st.get(toStateName);
+        this.bootState = angular.isDefined(this.bootState) ? this.bootState : true;
         if (initC.status) {
-          throw new Error('initCompany');
+          return $q((r, r2) => r2('initCompany'));
         } else if (this.loggued && toState.name === 'login') {
-          throw new Error('dashboard');
+          return $q((r, r2) => r2('dashboard'));
         } else if (!this.loggued && !!toState.auth) {
           $l.debug('no Loggued');
-          throw 'login';
+          return $q((r, r2) => r2('login'));
         } else if (!!!toState.auth) return;
         else if (!!toState.auth  && this.isLoggued()) return;
         else return;
       })
-      .then(() => $q.all([
-        this.loadTranslatePart(toStateName),
-        this.loadTranslatePart(i18Parts)
-      ]))
-      .then(() => $tr.refresh())
       .catch(err => {
-        $st.go(err);
+        console.log(err, this.bootState);
+        if (this.bootState) {
+          this.bootState = false;
+          $st.go('initCompany');
+        }
+        return;
+      })
+      .then(() => {
+        this.loadTranslatePart(toStateName);
+        this.loadTranslatePart(i18Parts);
+        return $tr.refresh();
       });
 
     this.loadStateEnd = () => {
-      this.loadStateInProgress = false;
-      if (!!!$rS.initialize) $rS.initialize = true;
-      return $q.when();
+      return $tr.refresh()
+        .then(() => {
+          this.loadStateInProgress = false;
+          if (!!!$rS.initialize) $rS.initialize = true;
+        });
     };
 
     this.sidenavRightAction = ({ item, toStateName, toStateParams = {}}

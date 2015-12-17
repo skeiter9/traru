@@ -6,8 +6,13 @@
     "OUT_SERVICE": "fuera de servicio"
   },
   "MODEL": {
-    "TRUCK": "camion",
+    "TRUCK": "camión",
     "TRUCK_PLURAL": "camiones"
+  },
+  "MODULE": {
+    "NO_TRUCK_ITEMS": "no hay camiones registrados",
+    "NEW_TRUCK": "nuevo camión",
+    "EDIT_TRUCK": "editar: {{name}}"
   },
   "FIELDS": {
     "LICENSEPLATE": "placa",

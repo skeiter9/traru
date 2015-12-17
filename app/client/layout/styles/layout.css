@@ -2,5 +2,5 @@
 @import '_variables.css';
 @import '_placeholders.css';
 @import 'angular-material/angular-material.css';
-@import 'mdi/css/materialdesignicons.css';
+@import '../../lib_components/mdi/css/materialdesignicons.css';
 @import 'base.css';

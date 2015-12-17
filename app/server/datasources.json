@@ -3,11 +3,6 @@
     "name": "db",
     "connector": "memory"
   },
-  "mongoDs": {
-    "database": "traru",
-    "name": "mongoDs",
-    "connector": "mongodb"
-  },
   "storage": {
     "name": "storage",
     "connector": "loopback-component-storage",

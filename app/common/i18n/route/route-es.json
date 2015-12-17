@@ -1,10 +1,17 @@
 {
   "SENTENCES": {
-    "SELECT_TRUCK": "elegir camion"
+    "SELECT_TRUCK": "elegir camion",
+    "SELECT_CLIENT": "elegir cliente",
+    "SELECT_DRIVER": "elegir conductor"
   },
   "MODEL": {
     "ROUTE": "ruta",
     "ROUTE_PLURAL": "rutas"
+  },
+  "MODULE": {
+    "NO_ROUTE_ITEMS": "no hay rutas registradas",
+    "NEW_ROUTE": "nueva ruta",
+    "EDIT_ROUTE": "editar: {{name}}"
   },
   "FIELDS": {
     "WEIGHT": "carga",

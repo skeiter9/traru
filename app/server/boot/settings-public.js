@@ -7,7 +7,7 @@ module.exports = (app) => {
         preferredLanguage: 'es',
         langFallback: 'en',
         langsAvailables: ['en', 'es'],
-        userId: 'public'
+        userId: 0
       })
     )
 

@@ -1,6 +1,8 @@
 {
-  "SECTIONS": {
-    "LOGIN": "login"
+  "SECTION" : {
+    "HOME": {
+      "WELCOME": "Truck your trucks will be easy."
+    }
   },
   "FIELDS": {
     "USERNAME": "usuario",

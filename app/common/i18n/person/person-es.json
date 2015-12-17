@@ -1,1 +1,19 @@
-{}
+{
+  "SENTENCES": {
+    "PERUVIAN": "peruano",
+    "FOREIGN": "extranjero"
+  },
+  "FIELDS": {
+    "IDENTITY_DOCUMENT": "documento de identidad",
+    "DNI": "dni",
+    "FOREIGN_CARD": "carné de extranjería",
+    "BIRTHDAYDATE": "fecha de cumpleaños",
+    "FIRSTNAME": "primer nombre",
+    "MIDDLE_NAME": "segundo nombre",
+    "FULL_NAME": "nombre completo",
+    "LAST_NAME": "primer apellido",
+    "SECOND_LAST_NAME": "segundo apellido",
+    "EMAIL": "email",
+    "PHONE": "teléfono"
+  }
+}
