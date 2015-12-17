@@ -70,7 +70,7 @@ html {
 }
 
 body {
-  background-color: var(--bg-color); 
+  background-color: var(--bg-color);
 }
 
 main {
@@ -78,7 +78,7 @@ main {
   @nest & > div {
     height: 100%;
     @nest & > md-content {
-      background-color: transparent; 
+      background-color: transparent;
       /*
       height: calc(100% - 56px);
 

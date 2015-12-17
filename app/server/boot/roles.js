@@ -93,8 +93,8 @@ module.exports = function(server) {
   });
 
   Promise.all([
-    server.models.role.find({where: {name: 'client'}}),
-    server.models.user.find({where: {username: 'walter1'}})
+    server.models.role.find({where: {name: 'root'}}),
+    server.models.user.find({where: {username: 'root'}})
   ])
 
     .then((res) => Promise.all([
@@ -103,8 +103,8 @@ module.exports = function(server) {
         Promise.resolve(res[0][0]),
       res[1].length === 0 ?
         server.models.user.create({
-          email: 'walter56ghgh7@gmail.com',
-          username: 'walter1',
+          email: 'dfdfd@gmail.com',
+          username: 'root',
           password: '123456'
         }) :
         Promise.resolve(res[1][0])
@@ -135,7 +135,7 @@ module.exports = function(server) {
           principalId: res[1].id
         }) :
         Promise.resolve(res[2][0]),
-      parseAclsToSend(res[0], res[4], res[3], ['r']),
+      parseAclsToSend(res[0], res[4], res[3], ['c', 'r', 'u', 'd']),
       res[5].length === 0 ?
         server.models.settings.create({
           userId: res[1].id,
