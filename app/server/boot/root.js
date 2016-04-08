@@ -8,7 +8,6 @@ module.exports = function(server) {
 
   server.set('view engine', 'jade');
   server.set('views', path.resolve(__dirname, '../views'));
-  console.log('vie nov 27 18:21:36 PET 2015');
   /*
   server.use((req, res, next) => {
     res.set('X-Powered-By', 'Traru');

@@ -7,11 +7,6 @@ section(layout layout-wrap layout-align='center start' class='view--home')
       md-card-content
         span {{'SECTION.HOME.WELCOME' | translate | capitalize}} 
 
-    md-card
-      ye-cover(picture='static/images/truck-wallpaper-2.jpg' class='br-1100')
-      md-card-content
-        span {{'SECTION.HOME.WELCOME' | translate | capitalize}} 
-
   section(flex-sm='100' flex-gt-sm="40" flex-gt-md="25" class='container-cards')
     md-card(ng-if='!layout.ui.loggued'): login-form
     md-card(ng-if='layout.ui.loggued'): md-card-content
