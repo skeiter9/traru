@@ -126,7 +126,10 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/dashboard',
       auth: true,
-      resolve: {r: ['layout', (l) => l.resolveState('dashboard')]},
+      resolve: {r: ['layout', (l) => l.resolveState('dashboard', [
+        'truck', 'company', 'worker', 'route', 'department', 'cargo'
+        ])]
+      },
       views: {
         content: {
           controllerAs: 'dashboard',
@@ -274,4 +277,3 @@ export function routes(stateProvider) {
     }));
 
 }
-

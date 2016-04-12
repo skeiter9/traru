@@ -223,7 +223,7 @@ export default angular.module('layout', [
       )
       .catch((err) => {
         console.log(err);
-        return 'noFetchCompanyMain';
+        return {status: false, detail: 'noFetchCompanyMain'};
       })
       .then(res => {
         if (angular.isString(res)) return {status: false, detail: res};
@@ -312,12 +312,13 @@ export default angular.module('layout', [
         //console.log(initC, toState);
         let stateRedirect = '';
         if (initC.status) stateRedirect = 'initCompany';
-        else if (!initC.status && this.loggued) stateRedirect = 'dashboard';
+        //else if (!initC.status && this.loggued && toState.name !== 'dashboard') stateRedirect = 'dashboard';
+        else if (!initC.status && toState.name === 'initCompany' && this.loggued) stateRedirect = 'dashboard';
         else if (!initC.status && !this.loggued) stateRedirect = 'login';
         else if (this.loggued && toState.name === 'login') stateRedirect = 'dashboard';
         else if (!this.loggued && !!toState.auth) stateRedirect = 'login';
         if (stateRedirect === '') return {name: toState.name}
-        return $q((r, re) => re(stateRedirect));
+        return $q((r, re) => re({name: stateRedirect}));
       })
       .then((toState) => {
         this.loadTranslatePart(toState.name);
@@ -326,10 +327,11 @@ export default angular.module('layout', [
       })
       .catch((stateRedirect) => {
         if (this.statusLoadState === 1) {
-          this.loadTranslatePart(stateRedirect);
-          //console.log('redirect', stateRedirect);
+          this.loadTranslatePart(stateRedirect.name);
+          console.log('redirect', stateRedirect, i18Parts);
+          this.loadTranslatePart(i18Parts);
           this.statusLoadState = 0;
-          return $st.go(stateRedirect);
+          return $st.go(stateRedirect.name);
         }
       });
 

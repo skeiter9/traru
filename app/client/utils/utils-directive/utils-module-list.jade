@@ -24,8 +24,7 @@ md-subheader(
 md-subheader(
   ng-if='vm.initialize && vm.module.crud.r.status && !!!vm.items'
   class='md-warn md-no-sticky fx-fade-down fx-dur-300 fx-ease-sine'
-) {{'MODULE.NO_FETCH_ITEMS' | translate:{modulePlural: vm.pluralName} |
-  | capitalize}}
+) {{'MODULE.NO_' + vm.module.name + '_ITEMS' | uppercase | translate | capitalize}}
 
 md-subheader(
   ng-if='vm.initialize && vm.module.crud.r.status && !!vm.items &&\
@@ -39,4 +38,3 @@ div(
   ng-transclude
   class='fx-fade-down fx-dur-300 fx-ease-sine'
 )
-
