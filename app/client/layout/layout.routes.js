@@ -37,11 +37,10 @@ export function routes(stateProvider) {
         template: require('./templates/init-company.jade')(),
         controllerAs: 'vm',
         controller: ['$state', 'layout', function($st, l) {
-          l.loadStateEnd();
-          this.formSuccess = () => {
-            $st.reload();
-            return;
-          };
+          l.loadStateEnd()
+          .then(() => {
+            this.formSuccess = () => $st.reload();
+          });
         }]
       }
     }
@@ -75,7 +74,7 @@ export function routes(stateProvider) {
       content: {
         template: require('./views/help.jade')(),
         controllerAs: 'vmHelp',
-        controller: ['layout', function(l) { 
+        controller: ['layout', function(l) {
             l.loadStateEnd();
         }]
      }
@@ -90,7 +89,7 @@ export function routes(stateProvider) {
       content: {
         //template: require('./views/help.jade')(),
         controllerAs: 'vmHelp',
-        controller: ['layout', function(l) { 
+        controller: ['layout', function(l) {
             l.loadStateEnd();
         }]
      }

@@ -92,7 +92,10 @@ export default angular.module('layout', [
     this.loggued = false;
     this.loaded = [];
 
-    this.refresh = () => $st.reload();
+    this.refresh = () => {
+      this.statusLoadState = 0;
+      return $st.reload();
+    }
 
     this.isLoggued = () => U.isAuthenticated();
 
@@ -278,10 +281,13 @@ export default angular.module('layout', [
     this.setI18nInitial = (dataU) => $rS.initialize?
         $q.when(dataU) : setI18n(dataU);
 
-    const loadStateStart = () => {
-      this.loadStateInProgress = false;
-      return $q.when();
-    };
+    const loadStateStart = () => $q((resolve, reject) => {
+      if (this.statusLoadState !== 0) {
+        this.loadStateInProgress = true;
+        this.statusLoadState = 1;
+        return resolve();
+      } else return reject();
+    });
 
     this.setDataUser = () => getDataUser()
       .then(dataUser => this.setI18nInitial(dataUser))
@@ -303,38 +309,36 @@ export default angular.module('layout', [
       .then(initC => {
         const toState = $st.get(toStateName);
         this.bootState = angular.isDefined(this.bootState) ? this.bootState : true;
-        if (initC.status) {
-          return $q((r, r2) => r2('initCompany'));
-        } else if (this.loggued && toState.name === 'login') {
-          return $q((r, r2) => r2('dashboard'));
-        } else if (!this.loggued && !!toState.auth) {
-          $l.debug('no Loggued');
-          return $q((r, r2) => r2('login'));
-        } else if (!!!toState.auth) return;
-        else if (!!toState.auth  && this.isLoggued()) return;
-        else return;
+        //console.log(initC, toState);
+        let stateRedirect = '';
+        if (initC.status) stateRedirect = 'initCompany';
+        else if (!initC.status && this.loggued) stateRedirect = 'dashboard';
+        else if (!initC.status && !this.loggued) stateRedirect = 'login';
+        else if (this.loggued && toState.name === 'login') stateRedirect = 'dashboard';
+        else if (!this.loggued && !!toState.auth) stateRedirect = 'login';
+        if (stateRedirect === '') return {name: toState.name}
+        return $q((r, re) => re(stateRedirect));
       })
-      .catch(err => {
-        console.log(err, this.bootState);
-        if (this.bootState) {
-          this.bootState = false;
-          $st.go('initCompany');
-        }
-        return;
-      })
-      .then(() => {
-        this.loadTranslatePart(toStateName);
+      .then((toState) => {
+        this.loadTranslatePart(toState.name);
         this.loadTranslatePart(i18Parts);
-        return $tr.refresh();
+        this.statusLoadState = 0;
+      })
+      .catch((stateRedirect) => {
+        if (this.statusLoadState === 1) {
+          this.loadTranslatePart(stateRedirect);
+          //console.log('redirect', stateRedirect);
+          this.statusLoadState = 0;
+          return $st.go(stateRedirect);
+        }
       });
 
-    this.loadStateEnd = () => {
-      return $tr.refresh()
-        .then(() => {
-          this.loadStateInProgress = false;
-          if (!!!$rS.initialize) $rS.initialize = true;
-        });
-    };
+    this.loadStateEnd = (toState, i18Parts) => $tr.refresh()
+      .then(() => {
+        this.loadStateInProgress = false;
+        this.statusLoadState = 1;
+        if (!!!$rS.initialize) $rS.initialize = true;
+      });
 
     this.sidenavRightAction = ({ item, toStateName, toStateParams = {}}
     ) => !!toStateName ?

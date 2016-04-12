@@ -29,10 +29,7 @@ module.exports = angular
         return vForm(form)
         .then(result => U.login(mForm.form).$promise)
         .then(user => l.setDataUser())
-        .then(() => {
-          $st.go(attrs.toState || 'dashboard');
-          return;
-        })
+        .then(() => $st.go(attrs.toState || 'dashboard'))
         .catch((err) => {
           $l.debug(err);
           vFormU.catchError({err: err});
