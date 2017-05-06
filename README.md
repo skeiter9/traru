@@ -27,6 +27,19 @@ install all dependencies:
 ```
   npm install
 ```
+
+### Run the app
+```
+  npm start
+```
+
+- Default root user:
+
+```
+  user: root
+  password: 123456
+```
+
 ## Tests
 
   test written with [tape](https://github.com/substack/tape)
