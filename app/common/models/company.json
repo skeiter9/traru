@@ -12,9 +12,41 @@
     }
   },
   "properties": {
+    "comercialName": {
+      "type": "string",
+      "required": true
+    },
     "socialName": {
       "type": "string",
       "required": true
+    },
+    "fiscalAddress": {
+      "type": "string",
+      "required": true
+    },
+    "direction": {
+      "type": "string",
+      "required": true
+    },
+    "photo": {
+      "type": "string"
+    },
+    "main": {
+      "type": "boolean"
+    },
+    "ruc": {
+      "type": "number",
+      "required": true
+    },
+    "phone": {
+      "type": "number",
+      "required": true
+    },
+    "geoFiscalAddress": {
+      "type": "geopoint"
+    },
+    "geoDirection": {
+      "type": "geopoint"
     }
   },
   "validations": [],

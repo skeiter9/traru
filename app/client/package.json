@@ -17,7 +17,7 @@
     "angular-translate-loader-partial": "^2.8.1",
     "angular-translate-storage-cookie": "^2.11.0",
     "angular-translate-storage-local": "^2.8.1",
-    "angular-ui-router": "^0.2.15",
+    "angular-ui-router": "^0.4.2",
     "async": "^1.5.0",
     "install": "^0.4.0",
     "mdi": "^1.2.65",

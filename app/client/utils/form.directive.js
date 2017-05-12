@@ -230,23 +230,3 @@ export default angular
       }
     };
   }])
-
-  .directive('form', [() => {
-    return {
-      restrict: 'E',
-      compile(tE, tA) {
-        //tE.attr('ng-class',
-        //  `mForm.showSpinner ? 'ye-fade-form' : 'ye-appear'`);
-        /*
-        tE.after(angular.element(`
-          <aside class='content-spinner'
-            ng-class="!mForm.showSpinner ? 'ye-fade' : 'ye-appear'">
-            <md-progress-circular
-              md-mode="indeterminate"
-              md-theme="${tA.mdTheme || 'default'}"/>
-          </aside>
-        `));
-        */
-      }
-    };
-  }]);

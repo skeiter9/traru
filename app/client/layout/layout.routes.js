@@ -21,7 +21,6 @@ export function routes(stateProvider) {
 
   .state('layout', {
     abstract: true,
-
     template: require('./templates/layout.jade')(),
     controller: 'LayoutController',
     controllerAs: 'layout'

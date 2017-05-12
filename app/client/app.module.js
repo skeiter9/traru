@@ -5,9 +5,8 @@ export default angular.module('app', [routesAM.name])
   .config(['$logProvider', 'appConfigProvider', 'gmapProvider',
   ($lP, appCP, gmP) => {
     $lP.debugEnabled(true);
-    //load initial data
     gmP.setDefaultCoordinates({lat: -6.776864, lng: -79.843937});
-    appCP.setName('Chiclayo Limpio');
+    appCP.setName('Dipropan');
   }])
 
   .controller('rootController', ['$rootScope', function($rS) {

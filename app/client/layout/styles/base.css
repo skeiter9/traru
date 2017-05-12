@@ -40,8 +40,10 @@ label {
   height: 100%;
   position: absolute;
   z-index: 3;
-  background-color: rgb(0,150,136);
-  color: rgb(255,171,64);
+  //background-color: rgb(0,150,136);
+  background-color: #F7D358;
+  //color: rgb(255,171,64);
+  color: #2E64FE;
 }
 
 section.container-cards {
@@ -248,6 +250,31 @@ md-list-item {
 
 }
 
-.md-subheader {
-  line-height: 1.5;
+
+@media screen and (min-width: 960px) {
+  md-toolbar[md-scroll-shrink] {
+    position: fixed;
+  }
+
+  .md-subheader {
+    line-height: 1.5;
+  }
+
+  .sidenav--large {
+    position: fixed !important;
+    top: 64px;
+    @nest & md-list {
+      overflow: scroll;
+      height: 100%;
+    }
+  }
+  .content--large {
+    width: calc(100% - 324px);
+    padding-left: calc(324px + 0px);
+    padding-top: calc(64px + 8px);;
+  }
+}
+
+md-content.md-traru-theme {
+  overflow: scroll !important;
 }

@@ -40,6 +40,7 @@ module.exports = function(Model, ops) {
     item.photo = !!item.photo ? item.photo : 'default.jpg';
 
     if (item.photo === 'default.jpg') return next(null);
+    if (item.photo === 'dipropan.png') return next(null);
     if (item.photo === item[ops.photoName] + path.extname(item.photo)) return next(null);
 
     const uploadPhoto = (tmpPhoto, photoName) => {

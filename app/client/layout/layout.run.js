@@ -22,10 +22,18 @@ export default ['$rootScope', '$state', 'layout', '$log',
     $st.go('e404', {failState: unfoundState.to});
   });
 
+  $rS.$on('$stateChangeError', (evt, to, toParams, from, fromParams, error) => {
+    console.log(from, to, error)
+    if (!!error && error.redirectTo) {
+      //$st.go(error.redirectTo);
+    } else {
+      //$st.go('login')
+    }
+  })
+
   $rS.$on('$stateChangeStart',
   (e, toState, toParams, fromState, fromParams) => {
     $l.debug('start ', toState.name, toParams);
   });
 
 }];
-

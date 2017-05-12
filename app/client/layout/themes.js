@@ -18,58 +18,62 @@ pink
 blue
 light-green -
 light-blue -
+
+AMARILLO #F7D358
+AZUL #2E64FE
+
 */
 export function themes(mdTP) {
 
   mdTP
     .theme('default')
-      .primaryPalette('teal')
+      .primaryPalette('yellow2')
       .accentPalette('orange')
       .backgroundPalette('grey');
 
   mdTP
     .theme('truck')
-      .primaryPalette('orange')
+      .primaryPalette('blue2')
       .accentPalette('purple');
 
   mdTP
     .theme('route')
-      .primaryPalette('brown')
+      .primaryPalette('blue2')
       .accentPalette('deep-purple');
 
   mdTP
     .theme('client')
-      .primaryPalette('light-green')
+      .primaryPalette('blue2')
       .accentPalette('indigo');
 
   mdTP
     .theme('person')
-      .primaryPalette('cyan')
+      .primaryPalette('blue2')
       .accentPalette('amber');
 
   mdTP
     .theme('company')
-      .primaryPalette('light-blue')
+      .primaryPalette('blue2')
       .accentPalette('purple');
 
   mdTP
     .theme('worker')
-      .primaryPalette('lime')
+      .primaryPalette('blue2')
       .accentPalette('purple');
 
   mdTP
     .theme('traru')
-      .primaryPalette('blue')
+      .primaryPalette('blue2')
       .accentPalette('green');
 
   mdTP
     .theme('department')
-      .primaryPalette('lime')
+      .primaryPalette('blue2')
       .accentPalette('indigo');
 
   mdTP
     .theme('cargo')
-      .primaryPalette('brown')
+      .primaryPalette('blue2')
       .accentPalette('indigo');
 
 }

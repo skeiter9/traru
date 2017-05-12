@@ -1,6 +1,8 @@
 {
   "MODEL": {
-    "CARGO": "position",
-    "CARGO_PLURAL": "positions"
-  }
+    "CARGO": "Cargo",
+    "CARGO_PLURAL": "Cargos",
+    "ADD_CARGO": "Add cargo"
+  },
+  "MODULE.NEW_CARGO": "new cargo"
 }

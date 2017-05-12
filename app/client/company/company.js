@@ -42,7 +42,12 @@ export default angular.module(`traru${modelName}`, [])
         moduleName: 'department',
         vm: vm.vmDepartment
       });
+      l.crudRoutes({
+        moduleName: 'cargo',
+        vm: vm.vmCargo
+      });
 
+      /*
       vm.formItem = (e, parentModel, item, mN) => l.sidenavRightAction({
         scope: s,
         title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
@@ -80,7 +85,7 @@ export default angular.module(`traru${modelName}`, [])
         tag: `${tagModule}-show`,
         item: item
       });
-
+      */
     }
   })])
 
@@ -150,7 +155,7 @@ export default angular.module(`traru${modelName}`, [])
 
       mForm.form = angular.isObject(mForm.item) ?
         angular.extend({}, mForm.item) :
-        {companyId: attrs.companyId};
+        {companyId: attrs.companyId || 1};
 
       mForm.update = !!mForm.form.id ? true : false;
 
@@ -191,7 +196,7 @@ export default angular.module(`traru${modelName}`, [])
         $l.debug('pass a departmentId to register a Cargo');
         return;
       }
-
+      console.log(mForm, attrs)
       mForm.form = angular.isObject(mForm.item) ?
         angular.extend({}, mForm.item) :
         {departmentId: attrs.departmentId};
@@ -253,4 +258,3 @@ export default angular.module(`traru${modelName}`, [])
     controllerAs: 'vm',
     template: require('./templates/department-show.jade')()
   })]);
-

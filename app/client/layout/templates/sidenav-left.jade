@@ -1,4 +1,5 @@
-ye-cover(picture='static/images/cover.jpg')
+//ye-cover(picture='static/images/cover.jpg')
+ye-cover(picture='static/images/dipropan.png')
 
 md-list
 
@@ -16,13 +17,71 @@ md-list
     p {{layout.ui.loggued ? 'SECTIONS.DASHBOARD.NAME' : "SECTIONS.LOGIN.NAME" |
       | translate | capitalize}}
 
-  md-list-item(
-    ng-repeat='item in layout.menu'
-    ng-if='layout.ui.loggued && !item.noDisplay'
-    ng-click='layout.go(item.pluralName , true)'
-  )
-    md-icon(md-font-icon = 'mdi mdi-{{item.icon}}')
-    p {{item.name | uppercase | translate | capitalize}}
+  //
+    md-list-item(
+      ng-repeat='item in layout.ui.menu'
+      ng-if='layout.ui.loggued && item.crud.r.status && !item.noDisplay'
+      ng-click='layout.go(item.name , true)'
+    )
+      md-icon(md-font-icon = 'mdi mdi-{{item.icon}}')
+      p {{item.name | uppercase | translate | capitalize}}
+  section(ng-if="layout.ui.loggued")
+    md-list-item(
+      ng-click="$mdOpenMenu($event)"
+    )
+      md-icon(md-font-icon = 'mdi mdi-plus')
+      p mantenimientos
+      md-menu(
+        md-position-mode="target-right target"
+        class='md-menu-in-list-item'
+      )
+        md-button(
+          aria-label="menu for Manetinimientos"
+          class="md-icon-button"
+          ng-click="$mdOpenMenu($event)"
+        )
+          md-icon(md-menu-origin md-font-icon="mdi mdi-arrow-right")
+          
+        md-menu-content(width="5")
+          md-menu-item
+            md-button(
+              ng-click=""
+            )
+              div(layout="row" layout-align="space-between center")
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-plus")
+                p(flex) Clientes
+          md-menu-item
+            md-button(
+              ng-click=""
+            )
+              div(layout="row" layout-align="space-between center")
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-plus")
+                p(flex) Camiones
+          md-menu-item
+            md-button(
+              ng-click=""
+            )
+              div(layout="row" layout-align="space-between center")
+                md-icon(md-menu-align-target md-font-icon="mdi mdi-plus")
+                p(flex) Trabajadores
+      
+    md-list-item(
+      ng-click='layout.go("matenimientos" , true)'
+    )
+      md-icon(md-font-icon = 'mdi mdi-plus')
+      p Rutas
+      
+    md-list-item(
+      ng-click='layout.go("matenimientos" , true)'
+    )
+      md-icon(md-font-icon = 'mdi mdi-plus')
+      p Monitoreo
+      
+    md-list-item(
+      ng-click='layout.go("matenimientos" , true)'
+    )
+      md-icon(md-font-icon = 'mdi mdi-plus')
+      p Reportes
 
   md-divider
 

@@ -39,6 +39,17 @@ export default angular.module('layout', [
   .config(['$translateProvider', 'tmhDynamicLocaleProvider',
   '$translatePartialLoaderProvider', '$provide', '$mdThemingProvider',
   ($trP, tmhDLP, $tPLP, $p, $mdTP) => {
+    var pallete1 = $mdTP.extendPalette('yellow', {
+      '500': '#F7D358',
+      'contrastDefaultColor': 'dark'
+    });
+    var pallete2 = $mdTP.extendPalette('blue', {
+      '500': '#2E64FE',
+      'contrastDefaultColor': 'light'
+    });
+    // Register the new color palette map with the name <code>neonRed</code>
+    $mdTP.definePalette('yellow2', pallete1);
+    $mdTP.definePalette('blue2', pallete2);
 
     themes($mdTP);
 
@@ -46,7 +57,7 @@ export default angular.module('layout', [
 
     $trP
       .useLocalStorage()
-      //.addInterpolation('$translateMessageFormatInterpolation')
+      .addInterpolation('$translateMessageFormatInterpolation')
       .useSanitizeValueStrategy('escape')
       .useLoader('$translatePartialLoader', {
         urlTemplate: '/api/settings/i18n/{part}/{lang}'
@@ -79,10 +90,11 @@ export default angular.module('layout', [
   'tmhDynamicLocale', '$mdDialog', 'capitalizeFilter', '$mdToast', 'async',
   '$document', 'yeValidForm', 'validFormUtils',
   'Company', 'Truck', 'Route', 'Client', 'Worker', 'Department', 'Cargo',
-  'Person',
+  'Person', 'LoopBackAuth',
   function(utils, $t, $st, $mdS, U, $tr, $rS, $tPL, appC, S, $q, $l, tmhD, $mdD,
-  capitalizeF, $mdT, async, $d, vForm, vFormU, C, T, R, Cl, W, D, Ca, P) {
+  capitalizeF, $mdT, async, $d, vForm, vFormU, C, T, R, Cl, W, D, Ca, P, LoopBackAuth) {
 
+    this.leftSidenavLocked = window.innerWidth >= 960;
     this.title = appC.name;
     this.sidenavRightToolbarTitle = '';
     this.sidenavRightToolbarTitleVars = {};
@@ -260,23 +272,41 @@ export default angular.module('layout', [
     };
 
     const getDataUser = () => (
-      $rS.ininitialize ? $q.when(this.dataUser) :
+      //$rS.ininitialize ? $q.when(this.dataUser) :
       this.isLoggued() ?
         U.findById({id: U.getCurrentId(),
           filter: {include: ['settings', {roles: 'acls'}]}}).$promise :
         S.findOne({filter: {where: {userId: '0'}}}).$promise
     )
-
       .then(res => this.isLoggued() ?
         getCrud(res.roles, this.isLoggued())
           .then(modules => {
             res.modules = modules;
+            console.log(modules)
+            let menu = [];
+            angular.forEach(modules, (m, i) => {
+              menu.push(m);
+            })
+            this.menu = menu
             return res;
           }) :
         setDataUser(res)
       )
 
-      .catch(err => setDataUser({err: 'FAIL_FETCH_DATAUSER'}));
+      .catch(err => {
+        console.log(err);
+        /*
+        if (!!err && err.status === 401 ) {
+          LoopBackAuth.clearUser();
+          LoopBackAuth.clearStorage();
+          return S.findOne({filter: {where: {userId: '0'}}}).$promise
+          .then((res) => {
+            console.log('HEYYYYYYY');
+            return setDataUser(res)
+          })
+        }
+        */
+      });
 
     this.setI18nInitial = (dataU) => $rS.initialize?
         $q.when(dataU) : setI18n(dataU);
@@ -309,31 +339,36 @@ export default angular.module('layout', [
       .then(initC => {
         const toState = $st.get(toStateName);
         this.bootState = angular.isDefined(this.bootState) ? this.bootState : true;
-        //console.log(initC, toState);
         let stateRedirect = '';
-        if (initC.status) stateRedirect = 'initCompany';
-        //else if (!initC.status && this.loggued && toState.name !== 'dashboard') stateRedirect = 'dashboard';
-        else if (!initC.status && toState.name === 'initCompany' && this.loggued) stateRedirect = 'dashboard';
-        else if (!initC.status && !this.loggued) stateRedirect = 'login';
-        else if (this.loggued && toState.name === 'login') stateRedirect = 'dashboard';
-        else if (!this.loggued && !!toState.auth) stateRedirect = 'login';
+        // if (initC.status) stateRedirect = 'initCompany';
+        if (initC.status) stateRedirect = 'dashboard';
+        else if (toStateName === 'home') stateRedirect = '';
+        else if (
+          (!initC.status && toState.name === 'initCompany' && this.loggued) ||
+          (this.loggued && toState.name === 'login')
+        ) stateRedirect = 'dashboard';
+        else if (
+          (!initC.status && !this.loggued) ||
+          (!this.loggued && !!toState.auth)
+        ) stateRedirect = 'login';
         if (stateRedirect === '') return {name: toState.name}
-        return $q((r, re) => re({name: stateRedirect}));
+        return {name: stateRedirect, redirect: true};
       })
       .then((toState) => {
+        console.log(toState)
         this.loadTranslatePart(toState.name);
         this.loadTranslatePart(i18Parts);
         this.statusLoadState = 0;
-      })
-      .catch((stateRedirect) => {
-        if (this.statusLoadState === 1) {
-          this.loadTranslatePart(stateRedirect.name);
-          console.log('redirect', stateRedirect, i18Parts);
-          this.loadTranslatePart(i18Parts);
-          this.statusLoadState = 0;
-          return $st.go(stateRedirect.name);
+        if (toState.name === 'login' && toState.redirect) {
+          //console.log('redirect', toState.name, i18Parts);
+          //this.loadTranslatePart(toState.name);
+          //this.loadTranslatePart(i18Parts);
+          //this.statusLoadState = 0;
+          //this.loadStateEnd()
+          //return $q((resolve, r) => r(toState.name));
         }
-      });
+        return $q.resolve();
+      })
 
     this.loadStateEnd = (toState, i18Parts) => $tr.refresh()
       .then(() => {
@@ -342,10 +377,13 @@ export default angular.module('layout', [
         if (!!!$rS.initialize) $rS.initialize = true;
       });
 
-    this.sidenavRightAction = ({ item, toStateName, toStateParams = {}}
-    ) => !!toStateName ?
-      $st.go(toStateName, toStateParams) :
-      this.openSidenav('right');
+    this.sidenavRightAction = ({item, toStateName, toStateParams = {}}
+    ) => {
+      console.log('Go to: ', toStateName, toStateParams)
+      return !!toStateName ?
+        $st.go(toStateName, toStateParams) :
+        this.openSidenav('right');
+    }
 
     this.crudRoutes = ({moduleName, vm}) => {
       vm.showItem = (e, item) => this.sidenavRightAction({
@@ -353,10 +391,13 @@ export default angular.module('layout', [
         toStateParams: {id: item.id}
       });
 
-      vm.formItem = (e, item) => this.sidenavRightAction({
-        toStateName: `.${moduleName}${!!item ? 'Update' : 'Create'}`,
-        toStateParams: !!item ? {id: item.id} : {}
-      });
+      vm.formItem = (e, item = null, extraData = {}) => {
+        var mergeData = angular.extend({}, (!!item ? {id: item.id} : {}), extraData)
+        return this.sidenavRightAction({
+          toStateName: `.${moduleName}${!!item ? 'Update' : 'Create'}`,
+          toStateParams: mergeData
+        });
+      }
 
       vm.deleteItem = (e, item) => this.sidenavRightAction({
         toStateName: `.${moduleName}Delete`,

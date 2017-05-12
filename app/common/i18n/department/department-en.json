@@ -1,6 +1,7 @@
 {
   "MODEL": {
     "DEPARTMENT": "department",
-    "DEPARTMENT_PLURAL": "departments"
+    "DEPARTMENT_PLURAL": "departments",
+    "DEPARTMENT.NO_ITEMS": "There's not departments registered."
   }
 }

@@ -14,10 +14,15 @@
   },
   "validations": [],
   "relations": {
-    "department": {
+    "area": {
       "type": "belongsTo",
       "model": "department",
       "foreignKey": "departmentId"
+    },
+    "trabajadores": {
+      "type": "hasAndBelongsToMany",
+      "model": "trabajador",
+      "foreignKey": "cargoId"
     }
   },
   "acls": [],

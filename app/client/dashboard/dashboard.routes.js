@@ -32,7 +32,7 @@ propTitle, includeModules = []}) => ({
               item: item,
               title: formatPropTitle(true, item, propTitle),
               modelName: moduleName,
-              formSuccess: () => $st.go('^'),
+              formSuccess: () => $st.go('^').then(() => $st.reload()),
               formError: () => $st.go('^')
             })
           );
@@ -42,7 +42,7 @@ propTitle, includeModules = []}) => ({
 });
 
 const formItem = ({moduleName, modulePluralName = moduleName + 's',
-update = false, propTitle, includeModules = []}) => ({
+update = false, propTitle = '', includeModules = []}) => ({
   url: update ?
     `^/${modulePluralName}/:id/edit` :
     `^/${modulePluralName}/create`,
@@ -56,13 +56,17 @@ update = false, propTitle, includeModules = []}) => ({
           item='vmFormItem.item'
           md-theme="${moduleName}"
           form-success='vmFormItem.formSuccess()'
+          extra-data='vmFormItem.extraData'
         />
       `,
       controllerAs: 'vmFormItem',
-      controller: ['layout', '$state', '$q', `${formatModel(moduleName)}`,
-      function(l, $st, $q, M) {
+      controller: ['layout', '$state', '$stateParams', '$q', `${formatModel(moduleName)}`,
+      function(l, $st, $stP, $q, M) {
+        console.log($st.params, M);
+        this.extraData = $st.params.extraData;
         this.formSuccess = () => l.closeSidenav('right')
-          .then(() => $st.go('^'));
+          .then(() => $st.go('^', {reload: true}))
+          .then(() => $st.reload());
         (update ?
           M.find({filter: {where: {id: $st.params.id},
             include: includeModules}}).$promise :
@@ -78,6 +82,8 @@ update = false, propTitle, includeModules = []}) => ({
               `MODULE.NEW_${moduleName.toUpperCase()}`;
             l.sidenavRightToolbarTitleVars = update ? {name: nameItem} : {};
             this.initialize = true;
+            console.log('HEYEYEYEYE');
+            l.openSidenav('right')
             return l.loadStateEnd().then(() => l.openSidenav('right'));
           });
       }]
@@ -126,9 +132,15 @@ export function routes(stateProvider) {
       parent: 'layout',
       url: '/dashboard',
       auth: true,
-      resolve: {r: ['layout', (l) => l.resolveState('dashboard', [
-        'truck', 'company', 'worker', 'route', 'department', 'cargo'
-        ])]
+      resolve: {r: ['layout', '$q', (l, $q) => {
+        var deferred = $q.defer();
+        l.resolveState('dashboard', [
+          'truck', 'company', 'worker', 'route', 'department', 'cargo', 'client', 'person', 'home', 'login'
+          ])
+          .then(() => deferred.resolve({}))
+          .catch((err) => deferred.reject({redirectTo: 'login'}))
+        return deferred.promise;
+      }]
       },
       views: {
         content: {
@@ -205,9 +217,44 @@ export function routes(stateProvider) {
     }))
 
     //- cargo
-    .state(`dashboard.${'cargo'}Create`, formItem({
-      moduleName: 'cargo'
-    }))
+    .state(`dashboard.cargoCreate`, {
+      url: `^department/:departmentId/cargos/create`,
+      auth: true,
+      onExit: ['layout', (l) => l.closeSidenav('right')],
+      views: {
+        'sidenavRight@layout': {
+          template: `
+            <cargo-form
+              ng-if='vmFormItem.initialize'
+              item='vmFormItem.item'
+              md-theme="cargo"
+              form-success='vmFormItem.formSuccess()'
+              department-id='{{vmFormItem.departmentId}}'
+            />
+          `,
+          controllerAs: 'vmFormItem',
+          controller: ['layout', '$state', '$stateParams', '$q', 'Cargo',
+          function(l, $st, $stP, $q, M) {
+            console.log($st.params);
+            let moduleName = 'cargo';
+            this.departmentId = $st.params.departmentId;
+            this.formSuccess = () => l.closeSidenav('right')
+              .then(() => $st.go('^', {reload: true}))
+              .then(() => $st.reload());
+            $q.when()
+              .then(data => {
+                this.item = null;
+                l.loadTranslatePart(moduleName);
+                l.sidenavRighTheme = moduleName;
+                l.sidenavRightToolbarTitle = `MODULE.NEW_${moduleName.toUpperCase()}`;
+                l.sidenavRightToolbarTitleVars = {};
+                this.initialize = true;
+                return l.loadStateEnd().then(() => l.openSidenav('right'));
+              });
+          }]
+        }
+      }
+    })
     .state(`dashboard.${'cargo'}Show`, showItem({
       moduleName: 'cargo'
     }))
