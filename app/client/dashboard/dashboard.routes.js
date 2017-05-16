@@ -63,9 +63,10 @@ update = false, propTitle = '', includeModules = [], url = ''}) => ({
       controller: ['layout', '$state', '$stateParams', '$q', '$rootScope', `${formatModel(moduleName)}`,
       function(l, $st, $stP, $q, $rs, M) {
         this.extraData = $st.params.extraData;
+        console.log(`refresh${modulePluralName}`);
         this.formSuccess = () => l.closeSidenav('right')
           .then(() => $st.go('^'))
-          .then(() => $rs.$broadcast('refreshDepartments'));
+          .then(() => $rs.$broadcast(`refresh_${modulePluralName}`));
         (update ?
           M.find({filter: {where: {id: $st.params.id},
             include: includeModules}}).$promise :

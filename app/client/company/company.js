@@ -45,7 +45,7 @@ export default angular.module(`traru${modelName}`, [])
         moduleName: 'cargo',
         vm: vm.vmCargo
       });
-      $rs.$on('refreshDepartments', () => {
+      $rs.$on('refresh_departments', () => {
         init(true);
       });
     }

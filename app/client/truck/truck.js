@@ -31,9 +31,7 @@ export default angular.module('truck', [
     link(e, elem, attrs, mForm) {
 
       let defaultAttributes = {
-        status: [
-          {value: 1, label: 'SENTENCES.AVAILABLE'}
-        ]
+        status: 1
       };
 
       mForm.form = angular.isObject(mForm.item) ?
@@ -58,7 +56,6 @@ export default angular.module('truck', [
         propTitle: 'licensePlate',
         formSuccess: mForm.formSuccess
       });
-
     }
   })])
 
@@ -83,8 +80,8 @@ export default angular.module('truck', [
   })])
 
   .directive(`${moduleName}List`, ['layout', 'gmap', modelName, '$translate',
-  '$log',
-  (l, gm, T, $tr, $l) => ({
+  '$log', '$rootScope',
+  (l, gm, T, $tr, $l, $rs) => ({
     restrict: 'E',
     scope: {
       module: '='
@@ -118,6 +115,11 @@ export default angular.module('truck', [
       vm.ubicationItem = (e, item) => l.sidenavRightAction({
         toStateName: '.truckUbication',
         toStateParams: {id: item.id}
+      });
+
+      $rs.$on('refresh_trucks', () => {
+        console.log('refreshTrucks')
+        init();
       });
 
     }

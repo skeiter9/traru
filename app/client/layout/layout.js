@@ -416,7 +416,7 @@ export default angular.module('layout', [
     });
 
     const saveData = (Model, mForm, upsertItem = false, dataToSend = null
-    ) => !!mForm.item ?
+    ) => !!mForm.item && angular.isDefined(mForm.item.id) ?
       Model[upsertItem ?  'upsertItem' : 'prototype$updateAttributes']({
         where: {id: mForm.item.id}},
         !!dataToSend ? dataToSend : mForm.form
@@ -432,7 +432,7 @@ export default angular.module('layout', [
       module.crud.r.status ? resolve(module) : reject());
 
     this.isFormUpdate = (mForm) => angular.isObject(mForm.item) &&
-      angular.isString(mForm.item.id);
+      angular.isDefined(mForm.item.id);
 
     this.saveItem = ({
       Model,
