@@ -87,6 +87,7 @@ export default angular.module(`traru${modelName}`, [
           angular.extend({}, mForm.item) :
           {person: {}, company: {}};
 
+        mForm.form.clientType = 0;
         return M.find().$promise
           .then(cs => {
             mForm.initialize = true;

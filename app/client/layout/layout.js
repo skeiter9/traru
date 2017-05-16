@@ -47,7 +47,7 @@ export default angular.module('layout', [
       '500': '#2E64FE',
       'contrastDefaultColor': 'light'
     });
-    // Register the new color palette map with the name <code>neonRed</code>
+
     $mdTP.definePalette('yellow2', pallete1);
     $mdTP.definePalette('blue2', pallete2);
 
@@ -295,17 +295,17 @@ export default angular.module('layout', [
 
       .catch(err => {
         console.log(err);
-        /*
         if (!!err && err.status === 401 ) {
           LoopBackAuth.clearUser();
           LoopBackAuth.clearStorage();
+          /*
           return S.findOne({filter: {where: {userId: '0'}}}).$promise
-          .then((res) => {
-            console.log('HEYYYYYYY');
-            return setDataUser(res)
-          })
+            .then((res) => {
+              console.log('HEYYYYYYY');
+              return setDataUser(res)
+            })
+          */
         }
-        */
       });
 
     this.setI18nInitial = (dataU) => $rS.initialize?

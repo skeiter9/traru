@@ -23,62 +23,63 @@ section
       item='mForm.form.person'
       is-embed
     )
+    
+    div(layout-gt-md)
+      div(flex="50")
+        md-subheader(class='md-no-sticky md-primary'
+        ) {{'MODEL.CARGO_PLURAL' | translate | capitalize}}   
 
-    //- Cargos
-    md-subheader(class='md-no-sticky md-primary'
-    ) {{'MODEL.CARGO_PLURAL' | translate | capitalize}}   
+        div(ng-repeat='d in mForm.departments' ng-if="d.cargos.length > 0")
+          md-subheader(class='md-no-sticky'
+          ) {{d.name | translate | capitalize}}   
 
-    div(ng-repeat='d in mForm.departments')
-      md-subheader(class='md-no-sticky'
-      ) {{d.name | translate | capitalize}}   
+          md-input-container: md-checkbox(
+            ng-repeat='c in d.cargos'
+            ng-model='mForm.formAux.cargos[c.id]'
+          ) {{c.name | translate | capitalize}}
+      div(flex="50")
+        md-list-item
+          p {{'SENTENCES.ADD_USER' | translate | capitalize}}
+          md-switch(class='md-secondary' ng-model='mForm.addUser')
 
-      md-input-container: md-checkbox(
-        ng-repeat='c in d.cargos'
-        ng-model='mForm.formAux.cargos[c.id]'
-      ) {{c.name | translate | capitalize}}
+        section(ng-if='mForm.addUser')
 
-    md-list-item
-      p {{'SENTENCES.ADD_USER' | translate | capitalize}}
-      md-switch(class='md-secondary' ng-model='mForm.addUser')
+          ye-input(
+            label='fields.username'
+            field='user.username'
+            icon='mdi mdi-account'
+            md-no-float
+            ng-required='mForm.addUser'
+          )
 
-    section(ng-if='mForm.addUser')
+          ye-input(
+            label='fields.password'
+            field='user.password'
+            icon='mdi mdi-key'
+            type='password'
+            ng-required='mForm.addUser'
+            md-no-float
+          )
 
-      ye-input(
-        label='fields.username'
-        field='user.username'
-        icon='mdi mdi-account'
-        md-no-float
-        ng-required='mForm.addUser'
-      )
+          ye-input(
+            label='fields.passwordReiterer'
+            field='passwordReiter'
+            mForm='mFormAux'
+            icon='mdi mdi-key'
+            type='password'
+            ng-required='mForm.addUser'
+            md-no-float
+          )
 
-      ye-input(
-        label='fields.password'
-        field='user.password'
-        icon='mdi mdi-key'
-        type='password'
-        ng-required='mForm.addUser'
-        md-no-float
-      )
-
-      ye-input(
-        label='fields.passwordReiterer'
-        field='passwordReiter'
-        mForm='mFormAux'
-        icon='mdi mdi-key'
-        type='password'
-        ng-required='mForm.addUser'
-        md-no-float
-      )
-
-      md-select(
-        placeholder='{{"SENTENCES.PREFERRED_LANGUAGE"| translate | capitalize}}'
-        ng-model='mForm.form.user.settings.preferredLanguage'
-        name='preferredLanguage'
-        required
-      )
-        md-option(
-          ng-repeat='lang in ["en", "es"]'
-          ng-value='lang'
-        ) {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
+          md-select(
+            placeholder='{{"SENTENCES.PREFERRED_LANGUAGE"| translate | capitalize}}'
+            ng-model='mForm.form.user.settings.preferredLanguage'
+            name='preferredLanguage'
+            required
+          )
+            md-option(
+              ng-repeat='lang in ["en", "es"]'
+              ng-value='lang'
+            ) {{'LANGUAGES.' + lang | uppercase | translate | capitalize}}
 
     form-actions

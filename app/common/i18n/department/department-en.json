@@ -1,4 +1,9 @@
 {
+  "MODULE": {
+    "SHOW_DEPARTMENT": "HHHH {{itemName}}",
+    "EDIT_DEPARTMENT": "Edit: {{itemName}}",
+    "NEW_DEPARTMENT": "new departament"
+  },
   "MODEL": {
     "DEPARTMENT": "department",
     "DEPARTMENT_PLURAL": "departments",

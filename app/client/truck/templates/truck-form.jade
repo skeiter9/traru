@@ -1,33 +1,34 @@
-form(name="form" novalidate='')
+form(name="form" novalidate='' )
 
-  file-uploader(
-    font-icon='mdi mdi-camera'
-    font-icon-bg='mdi mdi-truck'
-    ng-model='mForm.form.photo'
-    container='trucks'
-  )
+  section(layout-gt-md)
+    div(flex)
+      file-uploader(
+        font-icon='mdi mdi-camera'
+        font-icon-bg='mdi mdi-truck'
+        ng-model='mForm.form.photo'
+        container='trucks'
+      )
+      ye-input(label='fields.licensePlate' field='licensePlate' required)
+      ye-input(label='fields.licensePlateLateral' field='licensePlateLateral' required)
+    div(flex)
+      ye-input(label='fields.model' field='model' required)
+      ye-input(label='fields.brand' field='brand' required)
+      ye-input(label='fields.aka' field='aka')
+      ye-input(label='fields.tare' field='tare' type='number')
+      //
+        md-radio-group(ng-model="mForm.form.status")
+          md-radio-button(
+            ng-repeat='option in mForm.formAux.status'
+            ng-value="option.value") {{option.label | translate | capitalize}}
+      ye-input(
+        label='fields.ubication'
+        field='ubication'
+        title='{{::mForm.form.licensePlate}}'
+        geoposition
+        required
+      )
 
-  ye-input(label='fields.licensePlate' field='licensePlate' required)
-  ye-input(label='fields.licensePlateLateral' field='licensePlateLateral' required)
-  ye-input(label='fields.model' field='model' required)
-  ye-input(label='fields.brand' field='brand' required)
-  ye-input(label='fields.aka' field='aka')
-  ye-input(label='fields.tare' field='tare' type='number')
+      ye-input(label='fields.description' field='description' textarea maxlength )
 
-  md-radio-group(ng-model="mForm.form.status")
-    md-radio-button(
-      ng-repeat='option in mForm.formAux.status'
-      ng-value="option.value") {{option.label | translate | capitalize}}
-
-  ye-input(
-    label='fields.ubication'
-    field='ubication'
-    title='{{::mForm.form.licensePlate}}'
-    geoposition
-    required
-  )
-
-  ye-input(label='fields.description' field='description' textarea maxlength )
-  
 
   form-actions

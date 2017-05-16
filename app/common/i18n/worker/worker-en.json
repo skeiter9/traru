@@ -7,7 +7,8 @@
     "WORKER_PLURAL": "workers"
   },
   "MODULE": {
-    "NO_WORKER_ITEMS": "there's no workers"
+    "NO_WORKER_ITEMS": "there's no workers",
+    "NEW_WORKER": "new worker"
   },
   "SENTENCES": {
     "WARN_WORKER_NO_CARGOS": "there aren't cargos, please register at least one cargo to register new worker"

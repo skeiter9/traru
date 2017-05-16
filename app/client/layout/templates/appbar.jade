@@ -11,13 +11,6 @@ div(class='md-toolbar-tools md-whiteframe-z1')
 
   span(flex = true)
 
-  md-button(
-    ng-click = 'layout.ui.refresh()'
-    aria-label = 'refresh page'
-    class = 'md-icon-button'
-  )
-    md-icon(md-font-icon='mdi mdi-refresh')
-
   md-menu(
     md-position-mode="target-right target"
     ng-if='layout.ui.langsAvailables.length > 1'

@@ -33,11 +33,30 @@ export default angular.module('traruRoute', [
         mForm.theme = 'route';
 
         mForm.form = angular.isObject(mForm.item) ?
-          angular.extend({}, mForm.item) : {waypoints: []};
+          angular.extend({}, {waypoints: []}, mForm.item) : {waypoints: []};
 
         mForm.formAux = {
           waypoints: []
         };
+
+        const validData = () => $q.all([
+          W.find({filter:
+            {include: ['cargos', 'person']}}
+          ).$promise,
+          T.find().$promise,
+          C.find({
+            filter: {include: ['person', 'company']}
+          }).$promise
+        ])
+          .then((results) => {
+            if (results[0].length === 0) mForm.lackData = 'worker';
+            else if (results[1].length === 0) mForm.lackData = 'truck';
+            else if (results[2].length === 0) mForm.lackData = 'client';
+          })
+
+        mForm.lackData = '';
+        validData();
+
         mForm.update = !!mForm.form.id ? true : false;
 
         mForm.addWaypoint = () => mForm.formAux.waypoints.push({});

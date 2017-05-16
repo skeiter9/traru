@@ -29,28 +29,28 @@ md-card(md-theme='traru')
         md-tab-body
 
           company-show(item='company')
-
-          md-divider
-          section(layout layout-align='end center')
-            md-button(
-              class='md-icon-button'
-              aria-label='Edit Compnay'
-              ng-click='vm.formItem($event, company, null, "department")'
-            ): md-icon(md-font-icon='mdi mdi-pencil')
+          //
+            md-divider
+            section(layout layout-align='end center')
+              md-button(
+                class='md-icon-button'
+                aria-label='Edit Compnay'
+                ng-click='vm.formItem($event, company, null, "department")'
+              ): md-icon(md-font-icon='mdi mdi-pencil')
 
       md-tab
-        md-tab-label {{ 'MODEL.DEPARTMENT_PLURAL' | translate | capitalize }} 
+        md-tab-label {{ 'MODEL.DEPARTMENT_PLURAL' | uppercase | translate | capitalize }} 
         md-tab-body
 
           md-subheader(
             class='md-warn md-no-sticky'
-            ng-show='company.departments.length == 0'
+            ng-if='vm.departments.length == 0'
           ) {{'MODEL.DEPARTMENT.NO_ITEMS' | translate | capitalize}}
 
-          md-content(style={'max-height': '220px'}): md-list
+          md-content(ng-if='company.departments.length > 0' style={'max-height': '220px'}): md-list
 
             md-list-item(
-              ng-repeat-start='d in company.departments'
+              ng-repeat-start='d in vm.departments'
               ng-click='vm.vmDepartment.showItem($event, d, d.name, "department")'
               ng-init='aux.departments[$index] = 0'
               class='md-3-line fx-stagger-150 fx-fade-down fx-dur-750 fx-ease-none'
@@ -86,14 +86,14 @@ md-card(md-theme='traru')
                         md-icon(md-menu-align-target md-font-icon="mdi mdi-plus")
                   md-menu-item
                     md-button(
-                      ng-click="vm.formItem($event, company, d, 'department')"
+                      ng-click="vm.vmDepartment.formItem($event, d)"
                     )
                       div(layout="row" layout-align="space-between center")
                         p(flex) {{'MODULE.EDIT' | translate | capitalize}}
                         md-icon(md-menu-align-target md-font-icon="mdi mdi-pencil")
                   md-menu-item
                     md-button(
-                      ng-click="vm.deleteItem($event, d, 'department')"
+                      ng-click="vm.vmDepartment.deleteItem($event, d, 'department')"
                     )
                       div(layout="row" layout-align="space-between center")
                         p(flex) {{'MODULE.DELETE' | translate | capitalize}}
@@ -111,7 +111,7 @@ md-card(md-theme='traru')
               md-list
                 md-list-item(
                   ng-repeat='cargo in d.cargos'
-                  ng-click='vm.showItem($event, cargo, cargo.name, "cargo")'
+                  ng-click='vm.vmCargo.showItem($event, cargo, cargo.name, "cargo")'
                   class='md-2-line'
                 )
                   div(class='md-list-item-text')
@@ -130,13 +130,13 @@ md-card(md-theme='traru')
                       md-icon(md-menu-origin md-font-icon="mdi mdi-dots-vertical")
                     md-menu-content(width="3")
                       md-menu-item
-                        md-button(ng-click="vm.formItem($event, d, cargo, 'cargo')")
+                        md-button(ng-click="vm.vmCargo.formItem($event, d, cargo, 'cargo')")
                           div(layout="row"  layout-align="space-between center")
                             p(flex) {{'MODULE.EDIT' | translate | capitalize}}
                             md-icon(md-menu-align-target
                               md-font-icon="mdi mdi-pencil")
                       md-menu-item
-                        md-button(ng-click="vm.deleteItem($event, cargo, 'cargo')")
+                        md-button(ng-click="vm.vmCargo.deleteItem($event, cargo, 'cargo')")
                           div(layout="row"  layout-align="space-between center")
                             p(flex) {{'MODULE.DELETE' | translate | capitalize}}
                             md-icon(md-menu-align-target

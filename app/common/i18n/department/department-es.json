@@ -1,6 +1,12 @@
 {
+  "MODULE": {
+    "SHOW_DEPARTMENT": "{{itemName}}",
+    "EDIT_DEPARTMENT": "Editar: {{itemName}}",
+    "NEW_DEPARTMENT": "nuevo departamento"
+  },
   "MODEL": {
-    "DEPARTMENT": "área",
-    "DEPARTMENT_PLURAL": "áreas"
+    "DEPARTMENT": "departamento",
+    "DEPARTMENT_PLURAL": "departamentos",
+    "DEPARTMENT.NO_ITEMS": "no hay departamentos registrados"
   }
 }

@@ -1,16 +1,18 @@
 form(name="form" novalidate='')
 
-  file-uploader(
-    font-icon-bg='mdi mdi-factory'
-    ng-model='mForm.form.photo'
-    container='companies'
-    theme='{{::mForm.theme}}'
-  )
+  section(layout-gt-md)
+    div(flex)
+      file-uploader(
+        font-icon-bg='mdi mdi-factory'
+        ng-model='mForm.form.photo'
+        container='companies'
+        theme='{{::mForm.theme}}'
+      )
 
-  ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
-  ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)
-  ye-input(label='FIELDS.RUC' field='ruc' type='number' required)
-  ye-input(label='FIELDS.PHONE' field='phone' type='tel' required)
+    div(flex)
+      ye-input(label='FIELDS.COMERCIALNAME' field='comercialName' required)
+      ye-input(label='FIELDS.SOCIALNAME' field='socialName' required)
+      ye-input(label='FIELDS.RUC' field='ruc' type='number' required)
+      ye-input(label='FIELDS.PHONE' field='phone' type='tel' required)
 
   form-actions(ng-if='!mForm.hideSave')
-

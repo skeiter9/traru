@@ -2,7 +2,8 @@
   "SENTENCES": {
     "SELECT_TRUCK": "elegir camion",
     "SELECT_CLIENT": "elegir cliente",
-    "SELECT_DRIVER": "elegir conductor"
+    "SELECT_DRIVER": "elegir conductor",
+    "ROUTE_NOT_AVAILABLE_LACK_DATA": "por favor registre al menos un {{moduleName}} primero."
   },
   "MODEL": {
     "ROUTE": "ruta",

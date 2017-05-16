@@ -5,8 +5,8 @@ const modelName = moduleName.slice(0, 1).toUpperCase() +
 export default angular.module(`traru${modelName}`, [])
 
   .directive('traruList', ['layout', 'Company', 'appConfig', '$translate',
-  'Cargo', 'Department',
-  (l, M, traru, $tr, C, D) => ({
+  'Cargo', 'Department', '$rootScope',
+  (l, M, traru, $tr, C, D, $rs) => ({
     restrict: 'E',
     scope: {
       module: '=',
@@ -22,18 +22,17 @@ export default angular.module(`traru${modelName}`, [])
       vm.vmDepartment = {};
       vm.vmCargo = {};
 
-      const init = () => l.validModule(vm.module)
+      vm.title = traru.name;
 
+      const init = (refreshView = false) => l.validModule(vm.module)
         .then(() => vm.module.model.find({
           filter: {where: {main: true}, include: {departments: 'cargos'}}
         }).$promise)
-
-        .then((items) => {
-          vm.title = traru.name;
+        .then(items => {
           vm.items = items;
           vm.initialize = true;
+          vm.departments = items[0].departments;
         })
-
         .catch(() => vm.initialize = true);
 
       init();
@@ -46,46 +45,9 @@ export default angular.module(`traru${modelName}`, [])
         moduleName: 'cargo',
         vm: vm.vmCargo
       });
-
-      /*
-      vm.formItem = (e, parentModel, item, mN) => l.sidenavRightAction({
-        scope: s,
-        title: !!item ? 'SENTENCES.EDIT'  : 'SENTENCES.NEW',
-        titleVars: {
-          moduleName: $tr.instant('MODEL.' + mN.toUpperCase()),
-          item: !!item ? item.name : ''
-        },
-        tag: `${mN}-form`,
-        item: item,
-        attrs: `
-          in-company
-          ${mN === 'cargo' ? 'department-id=\'' + parentModel.id + '\'' : ''}
-          ${mN === 'department' ? 'company-id=\'' + parentModel.id + '\'' : ''}
-          form-success='vm.formSuccess()'
-        `,
-        theme: mN
+      $rs.$on('refreshDepartments', () => {
+        init(true);
       });
-
-      vm.deleteItem = (e, item, modelN) => l.removeItem({
-        evt: e,
-        model: modelN === 'cargo' ? C :
-          modelN === 'department' ? D :
-          modelN === 'company' ? M : null,
-        item: item,
-        title: item.name,
-        modelName: modelN
-      });
-
-      vm.formSuccess = (item) => l.closeSidenav('right');
-
-      vm.showItem = (e, item, title, tagModule) => l.sidenavRightAction({
-        scope: s,
-        title: title,
-        theme: tagModule,
-        tag: `${tagModule}-show`,
-        item: item
-      });
-      */
     }
   })])
 
@@ -132,12 +94,13 @@ export default angular.module(`traru${modelName}`, [])
     }
   })])
 
-	.directive('departmentForm', ['layout', 'Department', '$log',
-  (l, M, $l) => ({
+	.directive('departmentForm', ['layout', 'Department', '$log', '$rootScope',
+  (l, M, $l, $rs) => ({
     restrict: 'E',
     scope: {
       item: '=',
-      formSuccess: '&'
+      formSuccess: '&',
+      extraData: '='
     },
     bindToController: true,
     controller: angular.noop,
@@ -153,15 +116,10 @@ export default angular.module(`traru${modelName}`, [])
         return;
       } else mForm.showSelect = true;
 
-      mForm.form = angular.isObject(mForm.item) ?
-        angular.extend({}, mForm.item) :
-        {companyId: attrs.companyId || 1};
-
+      mForm.form = angular.extend({}, mForm.item, {companyId: mForm.extraData.companyId});
       mForm.update = !!mForm.form.id ? true : false;
-
-      mForm.loadDepartments = () => D.find().$promise
-        .then((items) => mForm.departments = items);
-
+      //mForm.loadDepartments = () => D.find().$promise
+      //  .then((items) => mForm.departments = items);
       mForm.save = (form) => l.saveItem({
         form: form,
         Model: M,
@@ -171,7 +129,6 @@ export default angular.module(`traru${modelName}`, [])
         showToast: true,
         formSuccess: mForm.formSuccess
       });
-
     }
   })])
 
@@ -180,7 +137,8 @@ export default angular.module(`traru${modelName}`, [])
     restrict: 'E',
     scope: {
       item: '=',
-      formSuccess: '&'
+      formSuccess: '&',
+      extraData: '='
     },
     bindToController: true,
     controller: angular.noop,
@@ -196,10 +154,7 @@ export default angular.module(`traru${modelName}`, [])
         $l.debug('pass a departmentId to register a Cargo');
         return;
       }
-      console.log(mForm, attrs)
-      mForm.form = angular.isObject(mForm.item) ?
-        angular.extend({}, mForm.item) :
-        {departmentId: attrs.departmentId};
+      mForm.form = angular.extend({}, mForm.item, {departmentId: mForm.extraData.departmentId});
 
       mForm.update = !!mForm.form.id ? true : false;
 

@@ -1,7 +1,7 @@
 const formatModel = (moduleName) => moduleName.slice(0, 1).toUpperCase() +
   moduleName.slice(1);
 
-const formatPropTitle = (update, item, propTitle) => !update ? '' :
+const formatPropTitle = (update, item, propTitle = 'name') => !update ? '' :
   angular.isObject(item) ?
     angular.isString(propTitle) ? item[propTitle] :
     angular.isFunction(propTitle) ? propTitle(item) : '' :
@@ -42,10 +42,10 @@ propTitle, includeModules = []}) => ({
 });
 
 const formItem = ({moduleName, modulePluralName = moduleName + 's',
-update = false, propTitle = '', includeModules = []}) => ({
+update = false, propTitle = '', includeModules = [], url = ''}) => ({
   url: update ?
-    `^/${modulePluralName}/:id/edit` :
-    `^/${modulePluralName}/create`,
+    (url || `^/${modulePluralName}/:id/edit`) :
+    (url || `^/${modulePluralName}/create`),
   auth: true,
   onExit: ['layout', (l) => l.closeSidenav('right')],
   views: {
@@ -60,20 +60,20 @@ update = false, propTitle = '', includeModules = []}) => ({
         />
       `,
       controllerAs: 'vmFormItem',
-      controller: ['layout', '$state', '$stateParams', '$q', `${formatModel(moduleName)}`,
-      function(l, $st, $stP, $q, M) {
-        console.log($st.params, M);
+      controller: ['layout', '$state', '$stateParams', '$q', '$rootScope', `${formatModel(moduleName)}`,
+      function(l, $st, $stP, $q, $rs, M) {
         this.extraData = $st.params.extraData;
         this.formSuccess = () => l.closeSidenav('right')
-          .then(() => $st.go('^', {reload: true}))
-          .then(() => $st.reload());
+          .then(() => $st.go('^'))
+          .then(() => $rs.$broadcast('refreshDepartments'));
         (update ?
           M.find({filter: {where: {id: $st.params.id},
             include: includeModules}}).$promise :
           $q.when()
         )
           .then(data => {
-            this.item = update ? data[0] : null;
+            this.item = update ? data[0] : {};
+            this.extraData = $st.params;
             const nameItem = formatPropTitle(update, this.item, propTitle);
             l.loadTranslatePart(moduleName);
             l.sidenavRighTheme = moduleName;
@@ -82,7 +82,6 @@ update = false, propTitle = '', includeModules = []}) => ({
               `MODULE.NEW_${moduleName.toUpperCase()}`;
             l.sidenavRightToolbarTitleVars = update ? {name: nameItem} : {};
             this.initialize = true;
-            console.log('HEYEYEYEYE');
             l.openSidenav('right')
             return l.loadStateEnd().then(() => l.openSidenav('right'));
           });
@@ -98,17 +97,19 @@ const showItem = ({moduleName, modulePluralName = moduleName + 's'}) => ({
   views: {
     'sidenavRight@layout': {
       template: `
-        <${modulePluralName} ng-if='vmShow.initialize' item='vmShow.item'/>
+        <${moduleName}-show ng-if='vmShow.initialize' item='vmShow.item'/>
       `,
       controllerAs: 'vmShow',
       controller: ['layout', `${formatModel(moduleName)}`, '$state',
-      function(l, M, $st) {
+      '$translate',
+      function (l, M, $st, $tr) {
         M.find({filter: {where: {id: $st.params.id}}}).$promise
-          .then((trucks) => {
-            this.item = trucks[0];
+          .then((res) => {
+            this.item = res[0];
             l.loadTranslatePart(moduleName);
             l.sidenavRighTheme = moduleName;
-            l.sidenavRightToolbarTitle = this.item.licensePlate;
+            const nameItem = formatPropTitle(true, res[0], 'name');
+            l.sidenavRightToolbarTitle = nameItem;
             l.loadStateEnd().then(() => {
               this.initialize = true;
               return l.openSidenav('right');
@@ -135,7 +136,8 @@ export function routes(stateProvider) {
       resolve: {r: ['layout', '$q', (l, $q) => {
         var deferred = $q.defer();
         l.resolveState('dashboard', [
-          'truck', 'company', 'worker', 'route', 'department', 'cargo', 'client', 'person', 'home', 'login'
+          'truck', 'company', 'worker', 'route', 'department',
+          'cargo', 'client', 'person', 'home', 'login'
           ])
           .then(() => deferred.resolve({}))
           .catch((err) => deferred.reject({redirectTo: 'login'}))
@@ -201,7 +203,8 @@ export function routes(stateProvider) {
 
     //- department
     .state('dashboard.departmentCreate', formItem({
-      moduleName: 'department'
+      moduleName: 'department',
+      url: `^/companies/:companyId/departments/create`
     }))
     .state('dashboard.departmentShow', showItem({
       moduleName: 'department'
@@ -217,52 +220,18 @@ export function routes(stateProvider) {
     }))
 
     //- cargo
-    .state(`dashboard.cargoCreate`, {
-      url: `^department/:departmentId/cargos/create`,
-      auth: true,
-      onExit: ['layout', (l) => l.closeSidenav('right')],
-      views: {
-        'sidenavRight@layout': {
-          template: `
-            <cargo-form
-              ng-if='vmFormItem.initialize'
-              item='vmFormItem.item'
-              md-theme="cargo"
-              form-success='vmFormItem.formSuccess()'
-              department-id='{{vmFormItem.departmentId}}'
-            />
-          `,
-          controllerAs: 'vmFormItem',
-          controller: ['layout', '$state', '$stateParams', '$q', 'Cargo',
-          function(l, $st, $stP, $q, M) {
-            console.log($st.params);
-            let moduleName = 'cargo';
-            this.departmentId = $st.params.departmentId;
-            this.formSuccess = () => l.closeSidenav('right')
-              .then(() => $st.go('^', {reload: true}))
-              .then(() => $st.reload());
-            $q.when()
-              .then(data => {
-                this.item = null;
-                l.loadTranslatePart(moduleName);
-                l.sidenavRighTheme = moduleName;
-                l.sidenavRightToolbarTitle = `MODULE.NEW_${moduleName.toUpperCase()}`;
-                l.sidenavRightToolbarTitleVars = {};
-                this.initialize = true;
-                return l.loadStateEnd().then(() => l.openSidenav('right'));
-              });
-          }]
-        }
-      }
-    })
-    .state(`dashboard.${'cargo'}Show`, showItem({
+    .state(`dashboard.cargoCreate`, formItem({
+      moduleName: 'cargo',
+      url: `^/companies/:companyId/departments/:departmentId/cargos/create`
+    }))
+    .state(`dashboard.cargoShow`, showItem({
       moduleName: 'cargo'
     }))
-    .state(`dashboard.${'cargo'}Delete`, deleteItem({
+    .state(`dashboard.cargoDelete`, deleteItem({
       moduleName: 'cargo',
       propTitle: 'id'
     }))
-    .state(`dashboard.${'cargo'}Update`, formItem({
+    .state(`dashboard.cargoUpdate`, formItem({
       moduleName: 'cargo',
       update: true,
       propTitle: 'id'

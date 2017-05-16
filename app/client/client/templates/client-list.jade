@@ -6,11 +6,6 @@ md-card(md-theme='client')
       class='fx-dur-450 fx-fade-normal'
     ) {{'MODEL.CLIENT_PLURAL' | translate | capitalize}}
     span(flex)
-    md-button(
-      ng-click="vm.refresh($event)"
-      class='md-icon-button'
-      aria-label='refresh clients'
-    ): md-icon(md-font-icon='mdi mdi-refresh')
     md-button(ng-if='vm.module.crud.c.status'
       ng-click="vm.formItem($event)"
       class='md-icon-button'

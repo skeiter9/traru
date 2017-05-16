@@ -30,8 +30,14 @@ export default angular.module('truck', [
     template: require(`./templates/${moduleName}-form.jade`)(),
     link(e, elem, attrs, mForm) {
 
+      let defaultAttributes = {
+        status: [
+          {value: 1, label: 'SENTENCES.AVAILABLE'}
+        ]
+      };
+
       mForm.form = angular.isObject(mForm.item) ?
-        angular.extend({}, mForm.item) : {};
+        angular.extend({}, defaultAttributes, mForm.item) : defaultAttributes;
 
       mForm.formAux = {
         status: [
@@ -117,4 +123,3 @@ export default angular.module('truck', [
     }
 
   })]);
-

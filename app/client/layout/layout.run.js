@@ -19,7 +19,8 @@ export default ['$rootScope', '$state', 'layout', '$log',
 
   $rS.$on('$stateNotFound', (e, unfoundState, fromState, fromParams) => {
     e.preventDefault();
-    $st.go('e404', {failState: unfoundState.to});
+    //$st.go('e404', {failState: unfoundState.to});
+    $st.go('home');
   });
 
   $rS.$on('$stateChangeError', (evt, to, toParams, from, fromParams, error) => {
@@ -29,11 +30,6 @@ export default ['$rootScope', '$state', 'layout', '$log',
     } else {
       //$st.go('login')
     }
-  })
-
-  $rS.$on('$stateChangeStart',
-  (e, toState, toParams, fromState, fromParams) => {
-    $l.debug('start ', toState.name, toParams);
   });
 
 }];

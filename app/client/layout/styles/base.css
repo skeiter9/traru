@@ -260,9 +260,10 @@ md-list-item {
     line-height: 1.5;
   }
 
-  .sidenav--large {
+  .md-sidenav-left {
     position: fixed !important;
     top: 64px;
+    z-index: 1;
     @nest & md-list {
       overflow: scroll;
       height: 100%;
@@ -271,7 +272,12 @@ md-list-item {
   .content--large {
     width: calc(100% - 324px);
     padding-left: calc(324px + 0px);
-    padding-top: calc(64px + 8px);;
+    padding-top: calc(64px + 8px);
+  }
+  .md-sidenav-right {
+    width: 804px;
+    min-width: 804px;
+    max-width: 804px;
   }
 }
 

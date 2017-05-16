@@ -213,7 +213,6 @@ export default angular
     controller:angular.noop,
     template: require('./google-map-route.jade')(),
     link(s, elem, attrs, gmRoute) {
-
       let map;
       let directionsDisplay;
       let mapNode;
@@ -249,7 +248,7 @@ export default angular
 
       const directionsService =  new google.maps.DirectionsService();
 
-      const setRoute = ({origin, destination}) => directionsService.route({
+      const setRoute = ({origin, destination, waypoints = []}) => directionsService.route({
         origin: origin,
         destination: destination,
         travelMode: google.maps.TravelMode.DRIVING,
@@ -257,6 +256,7 @@ export default angular
         waypoints: gmRoute.waypoints,
         optimizeWaypoints: true
       }, (response, status) => {
+        console.log(gmRoute.waypoints)
         if (status === google.maps.DirectionsStatus.OK) {
           directionsDisplay.setDirections(response);
         } else $l.warn('Directions request failed due to ' + status);
@@ -284,24 +284,30 @@ export default angular
       });
 
       const wWPs = s.$watchCollection(() => gmRoute.waypoints, (nV, oV) => {
-        if (nV.length === 0) return;
+        if (angular.isUndefined(nV) ||nV.length === 0) return;
         else if (
           !gm.validCoordinates({coordinates: gmRoute.geopointInitial}) ||
           !gm.validCoordinates({coordinates: gmRoute.geopointFinal})
         ) return;
-
+        let wPoints = [];
         async.each(nV,
         (waypoint, cb) => {
           if (!angular.isObject(waypoint)) cb(new Error('no waypoint'));
-          else if (!gm.validCoordinates({coordinates: waypoint.location})
+          else if (!angular.isObject(waypoint.location) ||
+            (
+              !gm.validCoordinates({coordinates: waypoint.location}) &&
+              !angular.isFunction(waypoint.location.lat)
+            )
           ) cb(new Error('waypoint location is incorrect'));
           else cb(null);
         },
 
         (err) => {
-          if (!!!err) setRoute({
+          if (err) console.log(err);
+          else setRoute({
             origin: gmRoute.geopointInitial,
-            destination: gmRoute.geopointFinal
+            destination: gmRoute.geopointFinal,
+            waypoints: nV
           });
         });
       });

@@ -2,7 +2,8 @@
   "SENTENCES": {
     "SELECT_TRUCK": "select truck",
     "SELECT_CLIENT": "select client",
-    "SELECT_DRIVER": "select driver"
+    "SELECT_DRIVER": "select driver",
+    "ROUTE_NOT_AVAILABLE_LACK_DATA": "Please set a {{moduleName}} first."
   },
   "MODEL": {
     "ROUTE": "route",

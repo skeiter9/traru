@@ -1,7 +1,7 @@
 section(ng-if='vm.item')
 
   md-list-item(class='md-2-line'): div(class="md-list-item-text")
-    h4 {{::vm.item.description || '...' | capitalize}}
+    h4 Description: {{::vm.item.description || '...' | capitalize}}
 
   section(ng-if='!!vm.item.cargos')
 
