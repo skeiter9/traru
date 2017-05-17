@@ -31,4 +31,6 @@ md-card(md-theme='route')
         )
 
         div(class="md-list-item-text")
-          h3 {{item.id}}
+          h3 {{'MODEL.TRUCK' | translate | capitalize}}: {{item.truck.licensePlate}} - {{item.truck.aka}}
+          h4 {{item.description}}
+          p From POINT to POINT

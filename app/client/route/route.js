@@ -98,11 +98,20 @@ export default angular.module('traruRoute', [
         .catch((err) => $.debug('don\'t fetch clients from api'));
 
         mForm.save = (form) => vForm(form)
-        .then(() => $q.all([!!mForm.item ?
-          R.prototype$updateAttributes({where: {id: mForm.item.id}},
-            mForm.form).$promise :
-          R.create(mForm.form).$promise
-        ]))
+        .then(() => {
+          console.log(mForm)
+          const parsedWaypoints = mForm.form.waypoints.map((w) => {
+            console.log(w);
+            return w.location
+          });
+          const dataToSend = angular.extend({}, mForm.form, {waypoints: parsedWaypoints});
+          console.log(dataToSend);
+          return $q.all([!!mForm.item && angular.isDefined(mForm.item.id) ?
+            R.prototype$updateAttributes({where: {id: mForm.item.id}},
+              dataToSend).$promise :
+            R.create(dataToSend).$promise
+          ])
+        })
         .then((route) => {
           $l.debug('route is registered: ', route[0]);
           return l.closeSidenav('right');
@@ -158,6 +167,7 @@ export default angular.module('traruRoute', [
         }}).$promise
 
           .then(items => {
+            console.log(items)
             vm.items = items;
             vm.initialize = true;
           })
